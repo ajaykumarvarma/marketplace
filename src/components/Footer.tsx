@@ -35,9 +35,9 @@ export function Footer() {
             <h4 className="font-display font-semibold text-sm text-foreground mb-4">Buyers</h4>
             <ul className="space-y-2.5">
               <li><Link href="/marketplace" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Browse Marketplace</Link></li>
-              <li><Link href="/how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How It Works</Link></li>
-              <li><Link href="/buyer-protection" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Buyer Protection</Link></li>
-              <li><Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link></li>
+              <li><Link href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How It Works</Link></li>
+              <li><Link href="/security" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Buyer Protection</Link></li>
+              <li><Link href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
@@ -45,19 +45,18 @@ export function Footer() {
             <h4 className="font-display font-semibold text-sm text-foreground mb-4">Sellers</h4>
             <ul className="space-y-2.5">
               <li><Link href="/sell" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Start Selling</Link></li>
-              <li><Link href="/seller-fees" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fees & Payouts</Link></li>
-              <li><Link href="/seller-tools" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Seller Tools</Link></li>
-              <li><Link href="/api-docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">API Documentation</Link></li>
+              <li><Link href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Fees & Payouts</Link></li>
+              <li><Link href="/seller/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Seller Tools</Link></li>
+              <li><Link href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">API Documentation</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-display font-semibold text-sm text-foreground mb-4">Company</h4>
             <ul className="space-y-2.5">
-              <li><Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
-              <li><Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link></li>
+              <li><Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
               <li><Link href="/security" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Security</Link></li>
-              <li><Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link></li>
+              <li><Link href="/help" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link></li>
             </ul>
           </div>
         </div>

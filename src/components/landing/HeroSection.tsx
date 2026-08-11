@@ -58,14 +58,18 @@ export function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium">
-                Browse Marketplace
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2 border-border hover:bg-muted font-medium">
-                Start Selling
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <Link href="/marketplace">
+                <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium">
+                  Browse Marketplace
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/sell">
+                <Button size="lg" variant="outline" className="gap-2 border-border hover:bg-muted font-medium">
+                  Start Selling
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
             </div>
 
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
