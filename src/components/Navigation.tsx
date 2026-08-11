@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useState } from "react";
-import { Shield, Menu, X, ShoppingCart, User, Store, ChevronDown } from "lucide-react";
+import { Shield, Menu, X, ShoppingCart, User, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 
 export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { totalItems } = useCart();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -35,17 +37,28 @@ export function Navigation() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-            <ShoppingCart className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-            <User className="h-4 w-4" />
-            <span className="text-sm">Sign In</span>
-          </Button>
-          <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Store className="h-4 w-4" />
-            <span>Get Started</span>
-          </Button>
+          <Link href="/cart">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground relative">
+              <ShoppingCart className="h-5 w-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Button>
+          </Link>
+          <Link href="/auth/login">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+              <User className="h-4 w-4" />
+              <span className="text-sm">Sign In</span>
+            </Button>
+          </Link>
+          <Link href="/auth/register">
+            <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Store className="h-4 w-4" />
+              <span>Get Started</span>
+            </Button>
+          </Link>
         </div>
 
         <button
@@ -72,14 +85,18 @@ export function Navigation() {
               Start Selling
             </Link>
             <div className="pt-3 border-t border-border flex flex-col gap-2">
-              <Button variant="outline" className="w-full justify-start gap-2">
-                <User className="h-4 w-4" />
-                Sign In
-              </Button>
-              <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90">
-                <Store className="h-4 w-4" />
-                Get Started
-              </Button>
+              <Link href="/auth/login">
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <User className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/register">
+                <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90">
+                  <Store className="h-4 w-4" />
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

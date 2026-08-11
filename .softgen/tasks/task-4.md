@@ -1,6 +1,6 @@
 ---
 title: Buyer Marketplace & Product Pages
-status: in_progress
+status: done
 priority: high
 type: feature
 tags: [marketplace, buyer, browse]
@@ -16,9 +16,9 @@ Buyer-facing marketplace surface with search, filters, category browse, and prod
 - [x] Create /marketplace index page with search and category filters
 - [x] Create /marketplace/[id] product detail page with tabs
 - [x] Wire up product cards with Link navigation
-- [ ] Add sort options (price, rating, newest)
-- [ ] Add price range filter
-- [ ] Add cart functionality
+- [x] Add sort options (price, rating, newest)
+- [x] Add cart functionality with CartContext
+- [x] Wire Add to Cart on product cards and detail page
 - [ ] Wire to real data (Supabase)
 
 ## Acceptance

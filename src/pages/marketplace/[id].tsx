@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
+import { useCart } from "@/contexts/CartContext";
 
 const productData: Record<string, {
   title: string;
@@ -67,6 +68,7 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const { id } = router.query;
   const product = productData[id as string];
+  const { addItem } = useCart();
 
   if (!product) {
     return (
@@ -188,7 +190,10 @@ export default function ProductDetailPage() {
               </div>
 
               <div className="space-y-3">
-                <Button className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground h-12">
+                <Button
+                  className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground h-12"
+                  onClick={() => addItem({ id: id as string, title: product.title, price: product.price, seller: product.seller })}
+                >
                   <ShoppingCart className="h-4 w-4" />
                   Add to Cart
                 </Button>
