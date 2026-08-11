@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface CartItem {
   id: string;
@@ -23,6 +24,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [mounted, setMounted] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     setMounted(true);
@@ -44,14 +46,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
+        toast({ title: "Cart updated", description: `Increased quantity of ${item.title}` });
         return prev.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i));
       }
+      toast({ title: "Added to cart", description: item.title });
       return [...prev, { ...item, quantity: 1 }];
     });
   };
 
   const removeItem = (id: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    setItems((prev) => {
+      const item = prev.find((i) => i.id === id);
+      if (item) toast({ title: "Removed from cart", description: item.title });
+      return prev.filter((i) => i.id !== id);
+    });
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -62,7 +70,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => {
+    setItems([]);
+    toast({ title: "Cart cleared" });
+  };
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
