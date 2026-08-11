@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Shield, Eye, EyeOff, Github, Mail } from "lucide-react";
+import { Shield, Eye, EyeOff, Github, Mail, Lock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,31 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const [locked, setLocked] = useState(false);
+  const [lockTimer, setLockTimer] = useState(0);
+
+  useEffect(() => {
+    if (lockTimer > 0) {
+      const t = setTimeout(() => setLockTimer((s) => s - 1), 1000);
+      return () => clearTimeout(t);
+    }
+    if (lockTimer === 0 && locked) setLocked(false);
+  }, [lockTimer, locked]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (locked) return;
+    // Mock auth failure for rate limiting demo
+    setAttempts((a) => {
+      const next = a + 1;
+      if (next >= 5) {
+        setLocked(true);
+        setLockTimer(300);
+      }
+      return next;
+    });
+  };
 
   return (
     <>
@@ -23,6 +48,23 @@ export default function LoginPage() {
             <h1 className="font-display text-2xl font-bold text-foreground">Welcome back</h1>
             <p className="text-sm text-muted-foreground">Sign in to your TradeVault account</p>
           </div>
+
+          {locked && (
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-destructive">Account temporarily locked</p>
+                <p className="text-xs text-muted-foreground">Too many failed attempts. Try again in {Math.floor(lockTimer / 60)}:{String(lockTimer % 60).padStart(2, "0")}.</p>
+              </div>
+            </div>
+          )}
+
+          {attempts > 0 && !locked && (
+            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
+              <p className="text-xs text-muted-foreground">{5 - attempts} attempts remaining before temporary lock</p>
+            </div>
+          )}
 
           <div className="space-y-4">
             <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
@@ -44,7 +86,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -54,6 +96,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-muted border-border"
+                disabled={locked}
               />
             </div>
             <div className="space-y-2">
@@ -71,6 +114,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-muted border-border pr-10"
+                  disabled={locked}
                 />
                 <button
                   type="button"
@@ -82,7 +126,8 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={locked}>
+              <Lock className="h-4 w-4 mr-2" />
               Sign In
             </Button>
           </form>
