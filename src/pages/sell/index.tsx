@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Store, Shield, TrendingUp, Wallet, BarChart3, Zap, ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 
 const features = [
