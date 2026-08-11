@@ -193,15 +193,18 @@ export default function MarketplacePage() {
             <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
               <Link href={`/marketplace/${product.id}`}>
                 <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
-                    {product.title.split(" ")[0]} {product.title.split(" ")[1]}
-                  </div>
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
                   {product.badge && (
-                    <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs">
+                    <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs z-10">
                       {product.badge}
                     </Badge>
                   )}
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-foreground">
+                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-foreground z-10">
                     <Clock className="h-3 w-3" />
                     {product.delivery}
                   </div>

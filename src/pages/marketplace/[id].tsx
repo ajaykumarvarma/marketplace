@@ -140,6 +140,15 @@ const productData: Record<string, {
   },
 };
 
+const productImages: Record<string, string> = {
+  "prod-1": "/generated/game-keys-bundle.png",
+  "prod-2": "/generated/spotify-sub.png",
+  "prod-3": "/generated/adobe-suite.png",
+  "prod-4": "/generated/discord-nitro.png",
+  "prod-5": "/generated/fortnite-account.png",
+  "prod-6": "/generated/canva-pro.png",
+};
+
 export default function ProductDetailPage() {
   const router = useRouter();
   const { id } = router.query;
@@ -168,8 +177,12 @@ export default function ProductDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="aspect-[16/9] bg-muted rounded-lg flex items-center justify-center text-muted-foreground">
-              {product.title.split(" ").slice(0, 3).join(" ")}
+            <div className="aspect-[16/9] bg-muted rounded-lg relative overflow-hidden">
+              <img
+                src={productImages[id as string] || ""}
+                alt={product.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
             </div>
 
             <div>
