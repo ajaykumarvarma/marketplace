@@ -1,0 +1,143 @@
+import { useState } from "react";
+import Link from "next/link";
+import { Shield, Eye, EyeOff, Github, Mail, Store, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SEO } from "@/components/SEO";
+
+export default function RegisterPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [accountType, setAccountType] = useState<"buyer" | "seller">("buyer");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  return (
+    <>
+      <SEO title="Create Account — TradeVault" description="Create your TradeVault account. Start buying or selling digital goods securely today." />
+      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-3">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto">
+              <Shield className="h-6 w-6 text-primary" />
+            </div>
+            <h1 className="font-display text-2xl font-bold text-foreground">Create your account</h1>
+            <p className="text-sm text-muted-foreground">Join thousands trading digital goods securely</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg">
+            <button
+              type="button"
+              onClick={() => setAccountType("buyer")}
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all ${accountType === "buyer" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <User className="h-4 w-4" />
+              Buyer
+            </button>
+            <button
+              type="button"
+              onClick={() => setAccountType("seller")}
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all ${accountType === "seller" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <Store className="h-4 w-4" />
+              Seller
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+              <Github className="h-4 w-4" />
+              Continue with GitHub
+            </Button>
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+              <Mail className="h-4 w-4" />
+              Continue with Google
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+              </div>
+            </div>
+          </div>
+
+          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="trader123"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="bg-muted border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-muted border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Min. 8 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-muted border-border pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">Must be at least 8 characters with a number and symbol</p>
+            </div>
+
+            <div className="flex items-start gap-2">
+              <input type="checkbox" id="terms" className="mt-1 h-3.5 w-3.5 rounded border-border bg-muted accent-primary" />
+              <label htmlFor="terms" className="text-xs text-muted-foreground">
+                I agree to the{" "}
+                <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+              </label>
+            </div>
+
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+              Create Account
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link href="/auth/login" className="text-primary hover:underline font-medium">
+              Sign in
+            </Link>
+          </p>
+
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <Shield className="h-3 w-3 text-success" />
+            <span>256-bit SSL encrypted</span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

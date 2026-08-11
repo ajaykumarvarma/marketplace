@@ -1,29 +1,28 @@
 ---
 title: Buyer Marketplace & Product Pages
-status: todo
+status: in_progress
 priority: high
 type: feature
-tags: [buyer, marketplace, search]
+tags: [marketplace, buyer, browse]
 created_by: agent
 created_at: 2026-08-09T15:06:00Z
 position: 4
 ---
 
 ## Notes
-The core shopping experience — browsing, searching, filtering, and viewing product details.
+Buyer-facing marketplace surface with search, filters, category browse, and product detail pages. Must feel like a secure trading terminal — dense data, clear hierarchy, trust signals everywhere.
 
 ## Checklist
-- [ ] Marketplace browse page with search and filters
-- [ ] Category filtering sidebar
-- [ ] Product grid with cards (image, title, price, seller rating)
-- [ ] Product detail page with full description, seller info, reviews
-- [ ] Add to cart functionality
-- [ ] Cart drawer/page
-- [ ] Related products section
-- [ ] Seller storefront page
+- [x] Create /marketplace index page with search and category filters
+- [x] Create /marketplace/[id] product detail page with tabs
+- [x] Wire up product cards with Link navigation
+- [ ] Add sort options (price, rating, newest)
+- [ ] Add price range filter
+- [ ] Add cart functionality
+- [ ] Wire to real data (Supabase)
 
 ## Acceptance
-- Buyer can search products by keyword
-- Buyer can filter by category and price range
+- Buyer can browse products by category
+- Buyer can search by product name or seller
 - Buyer can view product details and seller reputation
 - Buyer can add items to cart

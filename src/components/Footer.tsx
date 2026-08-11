@@ -9,7 +9,7 @@ export function Footer() {
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 border border-primary/20">
-                <Shield className="h-4.5 w-4.5 text-primary" />
+                <Shield className="h-[18px] w-[18px] text-primary" />
               </div>
               <span className="font-display text-lg font-semibold tracking-tight text-foreground">
                 Trade<span className="text-primary">Vault</span>

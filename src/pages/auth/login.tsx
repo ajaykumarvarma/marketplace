@@ -1,0 +1,105 @@
+import { useState } from "react";
+import Link from "next/link";
+import { Shield, Eye, EyeOff, Github, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SEO } from "@/components/SEO";
+
+export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  return (
+    <>
+      <SEO title="Sign In — TradeVault" description="Sign in to your TradeVault account to buy and sell digital goods securely." />
+      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-3">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto">
+              <Shield className="h-6 w-6 text-primary" />
+            </div>
+            <h1 className="font-display text-2xl font-bold text-foreground">Welcome back</h1>
+            <p className="text-sm text-muted-foreground">Sign in to your TradeVault account</p>
+          </div>
+
+          <div className="space-y-4">
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+              <Github className="h-4 w-4" />
+              Continue with GitHub
+            </Button>
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+              <Mail className="h-4 w-4" />
+              Continue with Google
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+              </div>
+            </div>
+          </div>
+
+          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-muted border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-muted border-border pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+              Sign In
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Don't have an account?{" "}
+            <Link href="/auth/register" className="text-primary hover:underline font-medium">
+              Create one
+            </Link>
+          </p>
+
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <Shield className="h-3 w-3 text-success" />
+            <span>256-bit SSL encrypted</span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
