@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /seller/dashboard
+Disallow: /checkout/
+Disallow: /cart/
+
+Sitemap: https://tradevault.app/sitemap.xml

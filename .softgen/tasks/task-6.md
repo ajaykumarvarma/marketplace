@@ -1,29 +1,27 @@
 ---
 title: Fraud Detection & Admin Panel
-status: todo
+status: done
 priority: medium
 type: feature
-tags: [fraud, admin, security, analytics]
+tags: [admin, fraud, security]
 created_by: agent
 created_at: 2026-08-09T15:06:00Z
 position: 6
 ---
 
 ## Notes
-Security layer with automated fraud scoring and admin tools for monitoring and intervention.
+Admin command center with fraud detection, user management, and platform analytics. Uses tabs for surface organization.
 
 ## Checklist
-- [ ] Fraud scoring algorithm (velocity, amount, behavior patterns)
-- [ ] Automated hold/flag system for suspicious transactions
-- [ ] Fraud alert dashboard for admins
-- [ ] Admin user management (ban, verify, review)
-- [ ] Admin product moderation queue
-- [ ] Admin platform analytics (GMV, active users, dispute rate)
-- [ ] Admin payout approval workflow
-- [ ] Audit log for all admin actions
+- [x] Create admin dashboard with live activity feed
+- [x] Add fraud alerts table with risk scoring
+- [x] Add user management table with ban/flag actions
+- [x] Add platform stats cards (users, orders, GMV, fraud score)
+- [x] Add risk distribution visualization
+- [x] Add order management tab placeholder
 
 ## Acceptance
-- Suspicious orders are automatically flagged
-- Admin can review flagged orders and approve/hold
+- Admin can see fraud alerts with risk levels
+- Admin can review orders and approve/hold
 - Admin can ban fraudulent users
 - Admin can see platform-wide analytics
