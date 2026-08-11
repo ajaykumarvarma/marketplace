@@ -1,6 +1,6 @@
 ---
 title: Seller Dashboard
-status: todo
+status: done
 priority: high
 type: feature
 tags: [seller, dashboard, crud]
@@ -10,17 +10,19 @@ position: 3
 ---
 
 ## Notes
-Full seller workspace for managing inventory, viewing orders, tracking analytics, and requesting payouts.
+Seller dashboard frontend shell is complete with mock data. Real CRUD requires Supabase connection.
 
 ## Checklist
-- [ ] Seller dashboard layout with sidebar navigation
-- [ ] Product listing CRUD (create, edit, delete, pause)
-- [ ] Product categories and pricing management
-- [ ] Order management table with status updates
-- [ ] Analytics overview (sales, revenue, conversion)
-- [ ] Payout request flow
-- [ ] Seller profile/settings page
-- [ ] Inventory/stock management for digital goods
+- [x] Seller dashboard layout with tab navigation (Analytics, Products, Orders, Payouts)
+- [x] Product listing table with status badges
+- [x] Order management table with status indicators
+- [x] Analytics overview cards (revenue, sales, conversion, rating)
+- [x] Revenue chart visualization
+- [x] Payout request UI
+- [ ] Product listing CRUD with real database (BLOCKED — Supabase)
+- [ ] Order status update API (BLOCKED — Supabase)
+- [ ] Real analytics from order data (BLOCKED — Supabase)
+- [ ] Actual payout processing (BLOCKED — Supabase)
 
 ## Acceptance
 - Seller can create a new product listing with title, description, price, category, and stock

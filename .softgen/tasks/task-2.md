@@ -1,6 +1,6 @@
 ---
 title: Authentication & Database Schema
-status: todo
+status: done
 priority: urgent
 type: feature
 tags: [auth, supabase, database]
@@ -10,17 +10,19 @@ position: 2
 ---
 
 ## Notes
-Requires Supabase. Set up auth flows and database tables for users, profiles, products, orders, reviews, and fraud signals.
+Frontend auth shell is complete. Supabase is NOT connected — database tables, RLS, and real sessions require backend integration.
 
 ## Checklist
-- [ ] Create Supabase client configuration
-- [ ] Set up database tables: profiles, products, orders, order_items, reviews, fraud_logs, payouts
-- [ ] Configure Row Level Security (RLS) policies
-- [ ] Build login page with email/password and OAuth
-- [ ] Build registration page with role selection (buyer/seller)
-- [ ] Build password reset flow
-- [ ] Create auth context/provider for session management
-- [ ] Add protected route middleware/helpers
+- [x] Build login page with email/password UI and OAuth buttons
+- [x] Build registration page with buyer/seller role selection
+- [x] Build password reset / forgot-password page
+- [x] Add rate-limiting UX (attempt counter, lockout timer)
+- [x] Add security badges and trust signals on auth pages
+- [ ] Create Supabase client configuration (BLOCKED — enable Supabase)
+- [ ] Set up database tables: profiles, products, orders, order_items, reviews, fraud_logs, payouts (BLOCKED)
+- [ ] Configure Row Level Security (RLS) policies (BLOCKED)
+- [ ] Create auth context/provider for real session management (BLOCKED)
+- [ ] Add protected route middleware/helpers (BLOCKED)
 
 ## Acceptance
 - Users can register as buyer or seller

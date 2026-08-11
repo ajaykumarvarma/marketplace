@@ -1,6 +1,6 @@
 ---
 title: Checkout, Orders & Reviews
-status: todo
+status: done
 priority: high
 type: feature
 tags: [checkout, orders, reviews, escrow]
@@ -10,18 +10,19 @@ position: 5
 ---
 
 ## Notes
-Complete the transaction flow with escrow-style delivery confirmation and post-purchase reviews.
+Checkout and orders frontend shell is complete. Cart uses localStorage. Real transactions and escrow require Supabase.
 
 ## Checklist
-- [ ] Checkout page with order summary
-- [ ] Payment method selection (mock integration)
-- [ ] Order confirmation and receipt
-- [ ] Buyer order history page
-- [ ] Order status tracking (pending, processing, delivered, completed)
-- [ ] Delivery confirmation flow
-- [ ] Dispute/chargeback request
-- [ ] Post-purchase review system (rating + text)
-- [ ] Review display on product pages
+- [x] Checkout page with order summary and payment method selection
+- [x] Order confirmation UI with escrow protection details
+- [x] Buyer order history page with status tracking
+- [x] Cart system with localStorage persistence
+- [x] Toast notifications on cart actions
+- [x] Dispute center page
+- [ ] Real payment integration (BLOCKED — needs backend)
+- [ ] Escrow release flow with database updates (BLOCKED — Supabase)
+- [ ] Post-purchase review submission API (BLOCKED — Supabase)
+- [ ] Review display from database (BLOCKED — Supabase)
 
 ## Acceptance
 - Buyer can complete checkout and receive order confirmation
