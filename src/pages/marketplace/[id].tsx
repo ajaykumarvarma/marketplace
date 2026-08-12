@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -152,8 +153,28 @@ const productImages: Record<string, string> = {
 export default function ProductDetailPage() {
   const router = useRouter();
   const { id } = router.query;
-  const product = productData[id as string];
   const { addItem } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const product = id ? productData[id as string] : undefined;
+
+  if (!mounted) {
+    return (
+      <>
+        <SEO title="Product — TradeVault" description="Browse digital goods on TradeVault." />
+        <div className="container py-12">
+          <div className="animate-pulse max-w-6xl mx-auto space-y-4">
+            <div className="h-8 bg-muted rounded w-1/4" />
+            <div className="h-64 bg-muted rounded-lg" />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   if (!product) {
     return (

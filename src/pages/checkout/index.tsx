@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, Shield, Lock, CheckCircle, CreditCard, Bitcoin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,25 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<"card" | "crypto">("card");
   const [processing, setProcessing] = useState(false);
   const [done, setDone] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <>
+        <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
+        <div className="container py-12">
+          <div className="animate-pulse max-w-4xl mx-auto space-y-4">
+            <div className="h-8 bg-muted rounded w-1/3" />
+            <div className="h-48 bg-muted rounded-lg" />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   if (items.length === 0 && !done) {
     return (
