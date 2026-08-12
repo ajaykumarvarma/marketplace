@@ -148,10 +148,10 @@ export default function SellerDashboardPage() {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
-                            <button className="text-muted-foreground hover:text-foreground">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" aria-label="View product">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button className="text-muted-foreground hover:text-primary">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-primary transition-colors" aria-label="Analytics">
                               <BarChart3 className="h-4 w-4" />
                             </button>
                           </div>

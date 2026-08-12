@@ -95,7 +95,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 space-y-8">
             <div>
               <h2 className="font-display text-xl font-semibold text-foreground mb-4">Payment Method</h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-card border border-border rounded-lg p-6 space-y-4 sticky top-24">
+            <div className="bg-card border border-border rounded-lg p-4 md:p-6 space-y-4 sm:sticky sm:top-24">
               <h3 className="font-display font-semibold text-foreground">Order Summary</h3>
               <div className="space-y-3">
                 {items.map((item) => (

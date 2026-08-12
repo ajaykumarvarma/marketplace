@@ -181,14 +181,14 @@ export default function AdminDashboardPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <button className="text-muted-foreground hover:text-success" title="Approve">
+                          <div className="flex items-center gap-1">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-success transition-colors" title="Approve" aria-label="Approve">
                               <CheckCircle className="h-4 w-4" />
                             </button>
-                            <button className="text-muted-foreground hover:text-destructive" title="Block">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors" title="Block" aria-label="Block">
                               <Ban className="h-4 w-4" />
                             </button>
-                            <button className="text-muted-foreground hover:text-foreground" title="Review">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" title="Review" aria-label="Review">
                               <Eye className="h-4 w-4" />
                             </button>
                           </div>
@@ -243,11 +243,11 @@ export default function AdminDashboardPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <button className="text-muted-foreground hover:text-foreground" title="View">
+                          <div className="flex items-center gap-1">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" title="View" aria-label="View user">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button className="text-muted-foreground hover:text-destructive" title="Ban">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors" title="Ban" aria-label="Ban user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>

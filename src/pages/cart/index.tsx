@@ -62,24 +62,27 @@ export default function CartPage() {
                       <p className="text-sm text-muted-foreground">{item.seller}</p>
                       <p className="font-mono text-sm text-foreground mt-1">${item.price.toFixed(2)}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="h-8 w-8 flex items-center justify-center rounded-md border border-border hover:bg-muted transition-colors"
+                        className="h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border border-border hover:bg-muted transition-colors"
+                        aria-label="Decrease quantity"
                       >
                         <Minus className="h-3 w-3" />
                       </button>
-                      <span className="font-mono text-sm w-6 text-center">{item.quantity}</span>
+                      <span className="font-mono text-sm w-8 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="h-8 w-8 flex items-center justify-center rounded-md border border-border hover:bg-muted transition-colors"
+                        className="h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border border-border hover:bg-muted transition-colors"
+                        aria-label="Increase quantity"
                       >
                         <Plus className="h-3 w-3" />
                       </button>
                     </div>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="text-muted-foreground hover:text-destructive transition-colors"
+                      className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors"
+                      aria-label="Remove item"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -88,7 +91,7 @@ export default function CartPage() {
               </div>
 
               <div className="space-y-4">
-                <div className="bg-card border border-border rounded-lg p-6 space-y-4 sticky top-24">
+                <div className="bg-card border border-border rounded-lg p-4 md:p-6 space-y-4 sm:sticky sm:top-24">
                   <h3 className="font-display font-semibold text-foreground">Order Summary</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center justify-between">
