@@ -5,8 +5,8 @@ import NotFoundPage from "@/pages/404";
 describe("404 Page", () => {
   it("renders 404 page with correct heading", () => {
     render(<NotFoundPage />);
-    expect(screen.getByText(/404/i)).toBeInTheDocument();
-    expect(screen.getByText(/page not found/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /404/i })).toBeInTheDocument();
+    expect(screen.getByText(/this page doesn't exist or has been moved/i)).toBeInTheDocument();
   });
 
   it("has navigation links back to home and marketplace", () => {

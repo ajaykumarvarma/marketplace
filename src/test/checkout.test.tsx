@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import CheckoutPage from "@/pages/checkout/index";
+import { CartProvider } from "@/contexts/CartContext";
 
 // Mock next/router
 vi.mock("next/router", () => ({
@@ -9,9 +10,13 @@ vi.mock("next/router", () => ({
   }),
 }));
 
+function renderWithCart(ui: React.ReactNode) {
+  return render(<CartProvider>{ui}</CartProvider>);
+}
+
 describe("Checkout Page", () => {
   it("renders checkout form with required fields", () => {
-    render(<CheckoutPage />);
+    renderWithCart(<CheckoutPage />);
 
     expect(screen.getByText(/delivery email/i)).toBeInTheDocument();
     expect(screen.getByText(/payment method/i)).toBeInTheDocument();
@@ -19,13 +24,13 @@ describe("Checkout Page", () => {
   });
 
   it("displays escrow protection info", () => {
-    render(<CheckoutPage />);
+    renderWithCart(<CheckoutPage />);
     expect(screen.getByText(/escrow protected/i)).toBeInTheDocument();
     expect(screen.getByText(/money-back guarantee/i)).toBeInTheDocument();
   });
 
   it("shows payment method options", () => {
-    render(<CheckoutPage />);
+    renderWithCart(<CheckoutPage />);
 
     expect(screen.getByText(/credit card/i)).toBeInTheDocument();
     expect(screen.getByText(/paypal/i)).toBeInTheDocument();
@@ -33,7 +38,7 @@ describe("Checkout Page", () => {
   });
 
   it("has link back to cart", () => {
-    render(<CheckoutPage />);
+    renderWithCart(<CheckoutPage />);
     const backLink = screen.getByText(/back to cart/i);
     expect(backLink.closest("a")).toHaveAttribute("href", "/cart");
   });
