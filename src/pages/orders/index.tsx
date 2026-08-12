@@ -85,6 +85,12 @@ export default function OrdersPage() {
                     </div>
                   </div>
                 )}
+                <Link href={`/orders/${order.id}`}>
+                  <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary/80">
+                    Details
+                    <ArrowRight className="h-3 w-3" />
+                  </Button>
+                </Link>
               </div>
             );
           })}
