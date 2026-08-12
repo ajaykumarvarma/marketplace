@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -167,9 +168,19 @@ export default function ProductDetailPage() {
       <>
         <SEO title="Product — TradeVault" description="Browse digital goods on TradeVault." />
         <div className="container py-12">
-          <div className="animate-pulse max-w-6xl mx-auto space-y-4">
+          <div className="animate-pulse max-w-6xl mx-auto space-y-6">
             <div className="h-8 bg-muted rounded w-1/4" />
-            <div className="h-64 bg-muted rounded-lg" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-4">
+                <div className="aspect-[16/9] bg-muted rounded-lg" />
+                <div className="h-6 bg-muted rounded w-3/4" />
+                <div className="h-4 bg-muted rounded w-1/2" />
+                <div className="h-32 bg-muted rounded-lg" />
+              </div>
+              <div className="space-y-4">
+                <div className="bg-muted rounded-lg h-64" />
+              </div>
+            </div>
           </div>
         </div>
       </>
@@ -199,10 +210,13 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="aspect-[16/9] bg-muted rounded-lg relative overflow-hidden">
-              <img
+              <Image
                 src={productImages[id as string] || ""}
                 alt={product.title}
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-cover"
+                priority
               />
             </div>
 

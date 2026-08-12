@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Search, SlidersHorizontal, Star, Shield, ArrowRight, TrendingUp, Clock, ArrowUpDown, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -116,11 +117,33 @@ const products = [
 
 type SortOption = "featured" | "price_low" | "price_high" | "rating" | "newest";
 
+function ProductCardSkeleton() {
+  return (
+    <div className="bg-card border border-border rounded-lg overflow-hidden animate-pulse">
+      <div className="aspect-[4/3] bg-muted" />
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-muted rounded w-3/4" />
+        <div className="h-3 bg-muted rounded w-1/2" />
+        <div className="h-5 bg-muted rounded w-1/3" />
+        <div className="h-8 bg-muted rounded w-full" />
+      </div>
+    </div>
+  );
+}
+
 export default function MarketplacePage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("featured");
+  const [loading, setLoading] = useState(false);
   const { addItem } = useCart();
+
+  // Simulate loading state for demo
+  const handleCategoryChange = (cat: string) => {
+    setLoading(true);
+    setActiveCategory(cat);
+    setTimeout(() => setLoading(false), 300);
+  };
 
   const filteredProducts = products.filter((p) => {
     const matchesCategory = activeCategory === "All" || p.category === activeCategory;
@@ -180,7 +203,7 @@ export default function MarketplacePage() {
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => handleCategoryChange(cat)}
               className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeCategory === cat ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
             >
               {cat}
@@ -188,71 +211,81 @@ export default function MarketplacePage() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedProducts.map((product) => (
-            <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
-              <Link href={`/marketplace/${product.id}`}>
-                <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  {product.badge && (
-                    <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs z-10">
-                      {product.badge}
-                    </Badge>
-                  )}
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-foreground z-10">
-                    <Clock className="h-3 w-3" />
-                    {product.delivery}
-                  </div>
-                </div>
-              </Link>
-              <div className="p-4 space-y-3">
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedProducts.map((product) => (
+              <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
                 <Link href={`/marketplace/${product.id}`}>
-                  <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.title}</h3>
-                </Link>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{product.seller}</span>
-                  {product.verified && <Shield className="h-3 w-3 text-success" />}
-                  <div className="flex items-center gap-0.5">
-                    <Star className="h-3 w-3 fill-warning text-warning" />
-                    <span className="text-xs text-muted-foreground">{product.sellerRating}</span>
+                  <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                      loading="lazy"
+                    />
+                    {product.badge && (
+                      <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs z-10">
+                        {product.badge}
+                      </Badge>
+                    )}
+                    <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-foreground z-10">
+                      <Clock className="h-3 w-3" />
+                      {product.delivery}
+                    </div>
                   </div>
-                  <span className="text-xs text-muted-foreground">({product.sellerSales.toLocaleString()})</span>
+                </Link>
+                <div className="p-4 space-y-3">
+                  <Link href={`/marketplace/${product.id}`}>
+                    <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.title}</h3>
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">{product.seller}</span>
+                    {product.verified && <Shield className="h-3 w-3 text-success" />}
+                    <div className="flex items-center gap-0.5">
+                      <Star className="h-3 w-3 fill-warning text-warning" />
+                      <span className="text-xs text-muted-foreground">{product.sellerRating}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">({product.sellerSales.toLocaleString()})</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
+                    {product.originalPrice && (
+                      <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {product.tags.map((tag) => (
+                      <span key={tag} className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <Button
+                    size="sm"
+                    className="w-full gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller });
+                    }}
+                  >
+                    <ShoppingCart className="h-3.5 w-3.5" />
+                    Add to Cart
+                  </Button>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {product.tags.map((tag) => (
-                    <span key={tag} className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <Button
-                  size="sm"
-                  className="w-full gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller });
-                  }}
-                >
-                  <ShoppingCart className="h-3.5 w-3.5" />
-                  Add to Cart
-                </Button>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {sortedProducts.length === 0 && (
+        {!loading && sortedProducts.length === 0 && (
           <div className="text-center py-16 space-y-4">
             <Search className="h-12 w-12 text-muted-foreground mx-auto" />
             <h3 className="font-display text-lg font-medium text-foreground">No products found</h3>
