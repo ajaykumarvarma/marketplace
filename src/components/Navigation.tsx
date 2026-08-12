@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Shield, Menu, X, ShoppingCart, User, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeSwitch } from "./ThemeSwitch";
 import { useCart } from "@/contexts/CartContext";
 
 export function Navigation() {
