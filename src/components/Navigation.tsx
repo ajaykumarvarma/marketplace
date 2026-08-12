@@ -47,6 +47,7 @@ export function Navigation() {
               )}
             </Button>
           </Link>
+          <ThemeSwitch />
           <Link href="/auth/login">
             <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
               <User className="h-4 w-4" />
