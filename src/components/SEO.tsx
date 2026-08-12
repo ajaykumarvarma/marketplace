@@ -7,58 +7,52 @@ interface SEOProps {
   url?: string;
 }
 
-export function SEOElements({
-  title = "TradeVault — Secure Digital Goods Marketplace",
-  description = "Buy and sell digital goods with escrow protection, fraud detection, and instant delivery. The trusted marketplace for game keys, accounts, software, and services.",
-  image = "/og-image.png",
-  url = "https://tradevault.app",
-}: SEOProps) {
+export function SEOElements({ title, description, image, url }: SEOProps) {
+  const siteTitle = title ? `${title} | TradeVault` : "TradeVault — Secure Digital Goods Marketplace";
+  const siteDesc = description || "Buy and sell digital goods with escrow protection. Game keys, accounts, software, and more on TradeVault.";
+  const siteUrl = url || "https://tradevault.app";
+  const siteImage = image || "https://tradevault.app/og-image.png";
+
   return (
     <>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <link rel="icon" href="/favicon.ico" />
-      <link rel="canonical" href={url} />
-
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      {image && <meta property="og:image" content={image} />}
-      {url && <meta property="og:url" content={url} />}
+      <title>{siteTitle}</title>
+      <meta name="description" content={siteDesc} />
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href={siteUrl} />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="TradeVault" />
-
+      <meta property="og:title" content={siteTitle} />
+      <meta property="og:description" content={siteDesc} />
+      <meta property="og:url" content={siteUrl} />
+      <meta property="og:image" content={siteImage} />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      {image && <meta name="twitter:image" content={image} />}
+      <meta name="twitter:title" content={siteTitle} />
+      <meta name="twitter:description" content={siteDesc} />
+      <meta name="twitter:image" content={siteImage} />
     </>
   );
 }
 
-export function SEO({
-  title = "TradeVault — Secure Digital Goods Marketplace",
-  description = "Buy and sell digital goods with escrow protection, fraud detection, and instant delivery. The trusted marketplace for game keys, accounts, software, and services.",
-  image = "/og-image.png",
-  url = "https://tradevault.app",
-}: SEOProps) {
+export function SEO({ title, description, image, url }: SEOProps) {
+  const siteTitle = title ? `${title} | TradeVault` : "TradeVault — Secure Digital Goods Marketplace";
+  const siteDesc = description || "Buy and sell digital goods with escrow protection. Game keys, accounts, software, and more on TradeVault.";
+  const siteUrl = url || "https://tradevault.app";
+  const siteImage = image || "https://tradevault.app/og-image.png";
+
   return (
     <Head>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <link rel="icon" href="/favicon.ico" />
-      <link rel="canonical" href={url} />
-
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      {image && <meta property="og:image" content={image} />}
-      {url && <meta property="og:url" content={url} />}
+      <title>{siteTitle}</title>
+      <meta name="description" content={siteDesc} />
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href={siteUrl} />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="TradeVault" />
-
+      <meta property="og:title" content={siteTitle} />
+      <meta property="og:description" content={siteDesc} />
+      <meta property="og:url" content={siteUrl} />
+      <meta property="og:image" content={siteImage} />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      {image && <meta name="twitter:image" content={image} />}
+      <meta name="twitter:title" content={siteTitle} />
+      <meta name="twitter:description" content={siteDesc} />
+      <meta name="twitter:image" content={siteImage} />
     </Head>
   );
 }
