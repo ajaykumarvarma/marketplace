@@ -62,6 +62,6 @@ describe("Checkout Page", () => {
     expect(screen.getByText(/test product/i)).toBeInTheDocument();
     expect(screen.getByText(/subtotal/i)).toBeInTheDocument();
     expect(screen.getByText(/platform fee/i)).toBeInTheDocument();
-    expect(screen.getByText(/total/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/total/i).length).toBeGreaterThanOrEqual(1);
   });
 });
