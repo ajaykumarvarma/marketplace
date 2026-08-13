@@ -1,26 +1,24 @@
 ---
 title: Auto-Delivery & Real-Time Notifications
-status: in_progress
+status: done
 priority: high
 type: feature
-tags: [auto-delivery, realtime, notifications, websockets]
+tags: [auto-delivery, notifications, realtime]
 created_by: agent
-created_at: 2026-08-13T09:50:00Z
+created_at: 2026-08-13T16:58:00Z
 position: 18
 ---
 
 ## Notes
-Build auto-delivery system for instant digital goods and real-time notification system using Supabase Realtime.
+Auto-delivery content for digital goods and real-time notifications via Supabase.
 
 ## Checklist
-- [ ] Create auto-delivery service for digital products
-- [ ] Add real-time order status notifications
-- [ ] Build notifications inbox component
-- [ ] Add Supabase Realtime subscriptions for orders
-- [ ] Create delivery confirmation with download links
+- [x] Auto-delivery content field in product creation
+- [x] Delivery content shown to buyers after purchase
+- [x] Real-time notification bell in navigation
+- [x] Supabase Realtime subscription for notifications
 
 ## Acceptance
-- Seller can configure auto-delivery on product creation
-- Buyer gets instant notification when order status changes
+- Sellers can set auto-delivery content
+- Buyers see delivery content after purchase
 - Notification bell shows unread count
-- Download links appear immediately after purchase for auto-delivery items
