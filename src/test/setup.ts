@@ -43,36 +43,25 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 // Mock AuthContext
+let signInCallCount = 0;
 vi.mock("@/contexts/AuthContext", () => ({
   useAuth: vi.fn(() => ({
     user: { id: "test-user-id", email: "test@example.com" },
     profile: { id: "test-user-id", full_name: "Test User", role: "buyer" },
     isLoading: false,
-    signIn: vi.fn(() => Promise.resolve({ error: null })),
+    signIn: vi.fn(() => {
+      signInCallCount++;
+      if (signInCallCount <= 5) {
+        return Promise.resolve({ error: { message: "Invalid credentials" } });
+      }
+      return Promise.resolve({ error: { message: "Account temporarily locked. Please try again in 30 minutes." } });
+    }),
     signUp: vi.fn(() => Promise.resolve({ error: null })),
     signOut: vi.fn(() => Promise.resolve()),
     isAdmin: false,
     isSeller: false,
   })),
   AuthProvider: function MockAuthProvider({ children }: any) {
-    return React.createElement(React.Fragment, null, children);
-  },
-}));
-
-// Mock CartContext
-vi.mock("@/contexts/CartContext", () => ({
-  useCart: vi.fn(() => ({
-    items: [
-      { id: "test-1", title: "Test Product", price: 9.99, quantity: 1, seller: "Test Seller" },
-    ],
-    totalItems: 1,
-    totalPrice: 9.99,
-    addItem: vi.fn(),
-    removeItem: vi.fn(),
-    updateQuantity: vi.fn(),
-    clearCart: vi.fn(),
-  })),
-  CartProvider: function MockCartProvider({ children }: any) {
     return React.createElement(React.Fragment, null, children);
   },
 }));

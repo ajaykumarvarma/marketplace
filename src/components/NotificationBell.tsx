@@ -3,7 +3,7 @@ import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-import { getNotifications, markAllNotificationsRead } from "@/services/notificationService";
+import { getNotifications, markNotificationRead, getUnreadCount } from "@/services/notificationService";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Notification {
