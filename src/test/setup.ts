@@ -45,12 +45,12 @@ vi.mock("@/integrations/supabase/client", () => ({
 // Mock AuthContext
 vi.mock("@/contexts/AuthContext", () => ({
   useAuth: vi.fn(() => ({
-    user: null,
-    profile: null,
+    user: { id: "test-user-id", email: "test@example.com" },
+    profile: { id: "test-user-id", full_name: "Test User", role: "buyer" },
     isLoading: false,
-    signIn: vi.fn(),
-    signUp: vi.fn(),
-    signOut: vi.fn(),
+    signIn: vi.fn(() => Promise.resolve({ error: null })),
+    signUp: vi.fn(() => Promise.resolve({ error: null })),
+    signOut: vi.fn(() => Promise.resolve()),
     isAdmin: false,
     isSeller: false,
   })),
@@ -62,9 +62,11 @@ vi.mock("@/contexts/AuthContext", () => ({
 // Mock CartContext
 vi.mock("@/contexts/CartContext", () => ({
   useCart: vi.fn(() => ({
-    items: [],
-    totalItems: 0,
-    totalPrice: 0,
+    items: [
+      { id: "test-1", title: "Test Product", price: 9.99, quantity: 1, seller: "Test Seller" },
+    ],
+    totalItems: 1,
+    totalPrice: 9.99,
     addItem: vi.fn(),
     removeItem: vi.fn(),
     updateQuantity: vi.fn(),

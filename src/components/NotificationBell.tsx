@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-import { getNotifications, getUnreadCount, markNotificationRead } from "@/services/notificationService";
+import { getNotifications, markAllNotificationsRead } from "@/services/notificationService";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Notification {
   id: string;
@@ -30,14 +32,14 @@ export function NotificationBell() {
     }
     load();
 
-    // Realtime subscription
+    // Subscribe to realtime notifications
     const channel = supabase
-      .channel(`notifications:${user.id}`)
+      .channel("notifications")
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
         (payload) => {
-          setNotifications((prev) => [payload.new as Notification, ...prev]);
+          setNotifications((prev) => [payload.new as any, ...prev]);
           setUnread((prev) => prev + 1);
         }
       )

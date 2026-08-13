@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Shield, Package, Clock, CheckCircle, AlertTriangle, MessageSquare, Download, Loader2 } from "lucide-react";
+import { Package, Truck, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
@@ -15,7 +15,7 @@ type Order = {
   created_at: string;
   delivery_method: string | null;
   escrow_released: boolean;
-  product: { title: string } | null;
+  product: { title: string; delivery_content: string | null } | null;
 };
 
 export default function OrderDetailPage() {
@@ -36,15 +36,19 @@ export default function OrderDetailPage() {
     setLoading(true);
     const { data, error } = await supabase
       .from("orders")
-      .select("id, status, created_at, delivery_method, escrow_released, product:product_id(title)")
+      .select(`
+        id, status, created_at, delivery_method, escrow_released,
+        product:product_id(title, delivery_content),
+        seller:seller_id(full_name)
+      `)
       .eq("id", id as string)
       .eq("buyer_id", user!.id)
-      .single();
+      .maybeSingle();
 
-    if (error) {
+    if (error || !data) {
       setOrder(null);
     } else {
-      setOrder(data as unknown as Order);
+      setOrder(data as any);
     }
     setLoading(false);
   }
@@ -193,6 +197,19 @@ export default function OrderDetailPage() {
                   </Button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {order.status === "completed" && (
+            <div className="bg-success/5 border border-success/20 rounded-lg p-4 space-y-3">
+              <h3 className="font-medium text-foreground flex items-center gap-2">
+                <Download className="h-4 w-4 text-success" />
+                Your Digital Goods
+              </h3>
+              <div className="bg-background rounded-lg p-3 font-mono text-sm text-foreground break-all">
+                {order.product?.delivery_content || "Your order has been delivered. Contact the seller for access details."}
+              </div>
+              <p className="text-xs text-muted-foreground">Save this information securely. It will not be shown again.</p>
             </div>
           )}
 
