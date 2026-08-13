@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Upload, Tag, DollarSign, Package, FileText, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,12 +64,19 @@ export default function NewProductPage() {
               </Label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {images.map((img, i) => (
-                  <div key={i} className="aspect-square bg-muted rounded-lg flex items-center justify-center relative">
-                    <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
+                  <div key={i} className="aspect-square bg-muted rounded-lg relative overflow-hidden">
+                    <Image
+                      src={img}
+                      alt={`Product image ${i + 1}`}
+                      fill
+                      sizes="(max-width: 640px) 50vw, 25vw"
+                      className="object-cover rounded-lg"
+                    />
                     <button
                       type="button"
                       onClick={() => setImages(images.filter((_, idx) => idx !== i))}
-                      className="absolute -top-2 -right-2 h-6 w-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center text-xs"
+                      className="absolute top-2 right-2 h-6 w-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center text-xs z-10"
+                      aria-label="Remove image"
                     >
                       ×
                     </button>
