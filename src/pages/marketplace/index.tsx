@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, SlidersHorizontal, Star, Shield, ArrowRight, TrendingUp, Clock, ArrowUpDown, ShoppingCart } from "lucide-react";
+import { Search, SlidersHorizontal, Star, ArrowUpDown, Loader2, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -164,9 +164,17 @@ export default function MarketplacePage() {
                   <Link href={`/marketplace/${product.id}`}>
                     <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.title}</h3>
                   </Link>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">{product.seller?.full_name || "Unknown"}</span>
-                    {product.seller?.role !== "buyer" && <Shield className="h-3 w-3 text-success" />}
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-foreground">
+                      {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
+                    </div>
+                    <span className="text-xs text-muted-foreground truncate">{product.seller?.full_name || "Unknown Seller"}</span>
+                    {product.seller?.role === "seller" && (
+                      <Badge variant="outline" className="text-[10px] h-4 px-1 bg-success/10 text-success border-success/20">
+                        <Shield className="h-2.5 w-2.5 mr-0.5" />
+                        Verified
+                      </Badge>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
