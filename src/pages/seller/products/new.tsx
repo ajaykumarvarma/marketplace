@@ -28,6 +28,7 @@ export default function NewProductPage() {
     originalPrice: "",
     stock: "",
     deliveryTime: "",
+    deliveryContent: "",
     category: "",
   });
 
@@ -63,6 +64,7 @@ export default function NewProductPage() {
       category: formData.category,
       stock: parseInt(formData.stock),
       delivery_time: formData.deliveryTime,
+      delivery_content: formData.deliveryContent || null,
       tags: tags.length > 0 ? (tags as any) : null,
       images: images.length > 0 ? (images as any) : null,
     } as any);
@@ -181,11 +183,22 @@ export default function NewProductPage() {
             <div className="space-y-4">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
                 <Package className="h-4 w-4 text-primary" />
-                Delivery
+                Delivery & Auto-Delivery
               </h3>
               <div className="space-y-2">
                 <Label htmlFor="deliveryTime">Estimated Delivery Time</Label>
                 <Input id="deliveryTime" required value={formData.deliveryTime} onChange={(e) => handleChange("deliveryTime", e.target.value)} placeholder="e.g., Instant, 5 minutes, 1 hour" className="bg-muted border-border" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="deliveryContent">Auto-Delivery Content (Optional)</Label>
+                <Textarea
+                  id="deliveryContent"
+                  value={formData.deliveryContent || ""}
+                  onChange={(e) => handleChange("deliveryContent", e.target.value)}
+                  placeholder="Enter digital content that will be automatically delivered to buyers (license keys, download links, account credentials, etc.)..."
+                  className="bg-muted border-border min-h-[100px]"
+                />
+                <p className="text-xs text-muted-foreground">This content will be shown to buyers immediately after purchase confirmation.</p>
               </div>
             </div>
 

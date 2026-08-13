@@ -2,13 +2,16 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle } from "lucide-react";
+import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { WishlistButton } from "@/components/WishlistButton";
 
 interface ProductDetail {
@@ -34,6 +37,11 @@ export default function ProductDetailPage() {
   const { addItem } = useCart();
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -89,6 +97,36 @@ export default function ProductDetailPage() {
     ? (product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length).toFixed(1)
     : "0.0";
 
+  async function submitReview() {
+    if (!user || !product) return;
+    if (!reviewText.trim()) {
+      toast({ title: "Review required", description: "Please write a review comment.", variant: "destructive" });
+      return;
+    }
+    setSubmittingReview(true);
+    const { error } = await supabase.from("reviews").insert({
+      product_id: product.id,
+      reviewer_id: user.id,
+      rating: reviewRating,
+      comment: reviewText.trim(),
+    });
+    setSubmittingReview(false);
+    if (error) {
+      toast({ title: "Error submitting review", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Review submitted!", description: "Thank you for your feedback." });
+      setReviewText("");
+      setReviewRating(5);
+      // Refresh product to show new review
+      const { data } = await supabase
+        .from("products")
+        .select("*, seller:seller_id(id, full_name, role), category:category_id(name), reviews(*)")
+        .eq("id", id as string)
+        .maybeSingle();
+      if (data) setProduct(data as ProductDetail);
+    }
+  }
+
   return (
     <>
       <SEO title={`${product.title} — TradeVault`} description={product.description.slice(0, 160)} />
@@ -140,6 +178,37 @@ export default function ProductDetailPage() {
                 </div>
               </TabsContent>
               <TabsContent value="reviews" className="mt-4 space-y-4">
+                {user && (
+                  <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+                    <h3 className="font-medium text-foreground">Write a Review</h3>
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => setReviewRating(star)}
+                          className="p-0.5"
+                        >
+                          <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-warning text-warning" : "text-muted"}`} />
+                        </button>
+                      ))}
+                    </div>
+                    <Textarea
+                      value={reviewText}
+                      onChange={(e) => setReviewText(e.target.value)}
+                      placeholder="Share your experience with this product..."
+                      className="bg-muted border-border min-h-[80px]"
+                    />
+                    <Button
+                      onClick={submitReview}
+                      disabled={submittingReview}
+                      size="sm"
+                      className="gap-2 bg-primary hover:bg-primary/90"
+                    >
+                      <Send className="h-3.5 w-3.5" />
+                      {submittingReview ? "Submitting..." : "Submit Review"}
+                    </Button>
+                  </div>
+                )}
                 {product.reviews?.map((review, i) => (
                   <div key={i} className="bg-card border border-border rounded-lg p-4 space-y-2">
                     <div className="flex items-center justify-between">

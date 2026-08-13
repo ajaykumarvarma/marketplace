@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Shield, Lock, CheckCircle, CreditCard, Bitcoin } from "lucide-react";
+import { ArrowLeft, CreditCard, Shield, Zap, Bitcoin, AlertTriangle, CheckCircle, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { checkFraudRisk, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -16,7 +20,7 @@ export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "crypto">("card");
   const [processing, setProcessing] = useState(false);
-  const [done, setDone] = useState(false);
+  const [fraudResult, setFraudResult] = useState<{ riskScore: number; flags: string[]; blocked: boolean } | null>(null);
   const [mounted, setMounted] = useState(false);
   const [orderId, setOrderId] = useState("");
 
@@ -135,6 +139,70 @@ export default function CheckoutPage() {
     setProcessing(false);
   };
 
+  async function handlePlaceOrder() {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please sign in to complete your purchase.", variant: "destructive" });
+      return;
+    }
+    if (items.length === 0) {
+      toast({ title: "Cart is empty", description: "Add items before checking out.", variant: "destructive" });
+      return;
+    }
+
+    setProcessing(true);
+
+    // Run fraud detection
+    const product = items[0];
+    const [deviceFingerprint, ipAddress] = await Promise.all([
+      getDeviceFingerprint(),
+      getClientIP(),
+    ]);
+
+    const fraudCheck = await checkFraudRisk({
+      buyerId: user.id,
+      sellerId: product.seller || "unknown",
+      productId: product.id,
+      price: product.price * product.quantity,
+      ipAddress,
+      deviceFingerprint,
+    });
+
+    setFraudResult(fraudCheck);
+
+    if (fraudCheck.blocked) {
+      await logFraudEvent("blocked", user.id, fraudCheck.flags, fraudCheck.riskScore, { ipAddress, deviceFingerprint });
+      toast({ title: "Transaction blocked", description: "This transaction was flagged as high risk. Contact support if you believe this is an error.", variant: "destructive" });
+      setProcessing(false);
+      return;
+    }
+
+    if (fraudCheck.riskScore >= 50) {
+      await logFraudEvent("auto_hold", user.id, fraudCheck.flags, fraudCheck.riskScore, { ipAddress, deviceFingerprint });
+      toast({ title: "Transaction on hold", description: "Your order is under review for security. You will be notified shortly.", variant: "default" });
+    }
+
+    // Create order
+    const { data: orderData, error } = await supabase.from("orders").insert({
+      buyer_id: user.id,
+      seller_id: product.seller || "unknown",
+      product_id: product.id,
+      quantity: product.quantity,
+      total_amount: product.price * product.quantity,
+      delivery_method: "digital",
+    }).select().single();
+
+    setProcessing(false);
+
+    if (error) {
+      toast({ title: "Checkout failed", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    clearCart();
+    toast({ title: "Order placed!", description: "Your purchase is being processed." });
+    router.push(`/orders/${orderData.id}`);
+  }
+
   return (
     <>
       <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection for digital goods." />
@@ -224,7 +292,25 @@ export default function CheckoutPage() {
 
           <div className="space-y-4">
             <div className="bg-card border border-border rounded-lg p-4 md:p-6 space-y-4 sm:sticky sm:top-24">
-              <h3 className="font-display font-semibold text-foreground">Order Summary</h3>
+              <h2 className="font-display font-semibold text-foreground">Order Summary</h2>
+              
+              {fraudResult && fraudResult.riskScore >= 50 && (
+                <div className={`p-3 rounded-lg space-y-2 ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className={`h-4 w-4 ${fraudResult.blocked ? "text-destructive" : "text-warning"}`} />
+                    <span className={`text-sm font-medium ${fraudResult.blocked ? "text-destructive" : "text-warning"}`}>
+                      {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    {fraudResult.flags.map((flag, i) => (
+                      <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
+                    ))}
+                  </div>
+                  <p className="text-xs font-mono text-muted-foreground">Risk Score: {fraudResult.riskScore}/100</p>
+                </div>
+              )}
+
               <div className="space-y-3">
                 {items.map((item) => (
                   <div key={item.id} className="flex items-center justify-between text-sm">
