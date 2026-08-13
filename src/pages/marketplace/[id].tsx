@@ -24,7 +24,7 @@ interface ProductDetail {
   created_at: string;
   seller: { id: string; full_name: string | null; role: string } | null;
   category: { name: string } | null;
-  reviews: { buyer_id: string; rating: number; comment: string; created_at: string }[] | null;
+  reviews: { reviewer_id: string; rating: number; comment: string; created_at: string }[] | null;
 }
 
 export default function ProductDetailPage() {
@@ -144,7 +144,7 @@ export default function ProductDetailPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                          {review.buyer_id[0]?.toUpperCase() || "U"}
+                          {review.reviewer_id[0]?.toUpperCase() || "U"}
                         </div>
                         <span className="font-medium text-foreground">Buyer</span>
                       </div>
