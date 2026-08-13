@@ -63,8 +63,8 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
   }
 
   // Check buyer's fraud history
-  const { data: fraudHistory } = await supabase
-    .from("fraud_logs")
+  const { data: fraudHistory } = await (supabase
+    .from("fraud_logs") as any)
     .select("id")
     .eq("buyer_id", context.buyerId)
     .eq("resolved", false);
@@ -76,8 +76,8 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
 
   // Check if IP has been flagged
   if (context.ipAddress) {
-    const { data: ipFlags } = await supabase
-      .from("fraud_logs")
+    const { data: ipFlags } = await (supabase
+      .from("fraud_logs") as any)
       .select("id")
       .eq("ip_address", context.ipAddress)
       .eq("resolved", false);
@@ -90,8 +90,8 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
 
   // Device fingerprint check
   if (context.deviceFingerprint) {
-    const { data: deviceFlags } = await supabase
-      .from("fraud_logs")
+    const { data: deviceFlags } = await (supabase
+      .from("fraud_logs") as any)
       .select("id")
       .eq("device_fingerprint", context.deviceFingerprint)
       .eq("resolved", false);
