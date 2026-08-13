@@ -1,43 +1,111 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Shield, AlertTriangle, Users, ShoppingCart, DollarSign, Ban, Eye, CheckCircle, XCircle, TrendingUp, Activity } from "lucide-react";
+import { Shield, AlertTriangle, Users, ShoppingCart, DollarSign, Ban, Eye, CheckCircle, XCircle, TrendingUp, Activity, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
-const platformStats = [
-  { label: "Total Users", value: "12,847", change: "+5.2%", icon: Users },
-  { label: "Active Orders", value: "1,234", change: "+12.1%", icon: ShoppingCart },
-  { label: "GMV (30d)", value: "$284,592", change: "+8.7%", icon: DollarSign },
-  { label: "Fraud Score", value: "0.3%", change: "-0.1%", icon: Shield, good: true },
-];
+interface FraudLog {
+  id: string;
+  user_id: string;
+  event_type: string;
+  risk_score: number;
+  reason: string;
+  metadata: { ip_address?: string; device_fingerprint?: string } | null;
+  created_at: string;
+  reviewed_at: string | null;
+}
 
-const fraudAlerts = [
-  { id: "FRD-001", user: "SuspiciousUser99", type: "Velocity", risk: "high", reason: "5 orders in 2 minutes", time: "2 min ago", status: "open" },
-  { id: "FRD-002", user: "QuickFlipper", type: "Chargeback", risk: "medium", reason: "Previous dispute filed", time: "15 min ago", status: "open" },
-  { id: "FRD-003", user: "NewAccount_X", type: "Identity", risk: "high", reason: "VPN + new account + high value", time: "1 hr ago", status: "reviewing" },
-  { id: "FRD-004", user: "LegitSeller", type: "Velocity", risk: "low", reason: "Unusual spike in sales", time: "3 hrs ago", status: "resolved" },
-];
+interface UserProfile {
+  id: string;
+  full_name: string | null;
+  role: string;
+  verification_tier: string;
+  created_at: string;
+}
 
-const users = [
-  { id: "u-1", name: "GameVault", email: "support@gamevault.io", role: "seller", status: "active", joined: "2023-05-12", sales: 2847, risk: "low" },
-  { id: "u-2", name: "SuspiciousUser99", email: "temp@mail.ru", role: "buyer", status: "flagged", joined: "2026-08-11", sales: 0, risk: "high" },
-  { id: "u-3", name: "SubMaster", email: "hello@submaster.net", role: "seller", status: "active", joined: "2024-01-20", sales: 1523, risk: "low" },
-  { id: "u-4", name: "QuickFlipper", email: "flip@proton.me", role: "buyer", status: "restricted", joined: "2025-11-03", sales: 12, risk: "medium" },
-];
+interface OrderStats {
+  total_orders: number;
+  total_revenue: number;
+  active_orders: number;
+}
 
-const riskColor = (risk: string) => {
-  const map: Record<string, string> = {
-    high: "bg-destructive/10 text-destructive border-destructive/20",
-    medium: "bg-warning/10 text-warning border-warning/20",
-    low: "bg-success/10 text-success border-success/20",
-  };
-  return map[risk] || "bg-muted text-muted-foreground";
+const riskColor = (risk: number) => {
+  if (risk >= 70) return "bg-destructive/10 text-destructive border-destructive/20";
+  if (risk >= 40) return "bg-warning/10 text-warning border-warning/20";
+  return "bg-success/10 text-success border-success/20";
 };
 
 export default function AdminDashboardPage() {
+  const { isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
+  const [fraudLogs, setFraudLogs] = useState<FraudLog[]>([]);
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [stats, setStats] = useState<OrderStats>({ total_orders: 0, total_revenue: 0, active_orders: 0 });
+  const [loading, setLoading] = useState(true);
+  const [liveOrders, setLiveOrders] = useState(0);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    loadDashboard();
+    
+    // Real-time subscription for orders
+    const channel = supabase
+      .channel("admin-orders")
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => {
+        loadDashboard();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [isAdmin]);
+
+  async function loadDashboard() {
+    setLoading(true);
+    const [fraudRes, usersRes, ordersRes] = await Promise.all([
+      supabase.from("fraud_logs").select("*").order("created_at", { ascending: false }).limit(50),
+      supabase.from("profiles").select("id, full_name, role, verification_tier, created_at").order("created_at", { ascending: false }).limit(100),
+      supabase.from("orders").select("status, total_amount"),
+    ]);
+
+    if (fraudRes.data) setFraudLogs(fraudRes.data as FraudLog[]);
+    if (usersRes.data) setUsers(usersRes.data as UserProfile[]);
+    
+    if (ordersRes.data) {
+      const totalRevenue = ordersRes.data.reduce((s, o) => s + Number(o.total_amount || 0), 0);
+      const active = ordersRes.data.filter((o) => ["pending", "processing"].includes(o.status)).length;
+      setStats({
+        total_orders: ordersRes.data.length,
+        total_revenue: totalRevenue,
+        active_orders: active,
+      });
+      setLiveOrders(ordersRes.data.length);
+    }
+    
+    setLoading(false);
+  }
+
+  async function resolveFraud(logId: string) {
+    await supabase.from("fraud_logs").update({ reviewed_at: new Date().toISOString() }).eq("id", logId);
+    loadDashboard();
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="container py-16 text-center">
+        <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h1 className="font-display text-xl font-medium text-foreground">Access Denied</h1>
+        <p className="text-muted-foreground mt-2">Admin access required</p>
+      </div>
+    );
+  }
+
+  const openAlerts = fraudLogs.filter((f) => !f.reviewed_at).length;
 
   return (
     <>
@@ -52,21 +120,24 @@ export default function AdminDashboardPage() {
             <p className="text-muted-foreground">Fraud detection, user management, and platform analytics</p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-1">
+            <Badge className={`gap-1 ${openAlerts > 0 ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-success/10 text-success border-success/20"}`}>
               <AlertTriangle className="h-3 w-3" />
-              2 Open Alerts
+              {openAlerts} Open Alert{openAlerts !== 1 ? "s" : ""}
             </Badge>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {platformStats.map((stat) => (
+          {[
+            { label: "Total Users", value: users.length.toLocaleString(), icon: Users },
+            { label: "Active Orders", value: stats.active_orders.toLocaleString(), icon: ShoppingCart },
+            { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign },
+            { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, good: true },
+          ].map((stat) => (
             <div key={stat.label} className="bg-card border border-border rounded-lg p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <stat.icon className="h-5 w-5 text-primary" />
-                <span className={`text-xs font-medium ${stat.good ? "text-success" : "text-success"}`}>
-                  {stat.change}
-                </span>
+                {stat.good && <span className="text-xs font-medium text-success">Resolved</span>}
               </div>
               <div>
                 <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
@@ -79,9 +150,9 @@ export default function AdminDashboardPage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="bg-muted border border-border">
             <TabsTrigger value="overview" className="data-[state=active]:bg-card">Overview</TabsTrigger>
-            <TabsTrigger value="fraud" className="data-[state=active]:bg-card">Fraud Alerts</TabsTrigger>
-            <TabsTrigger value="users" className="data-[state=active]:bg-card">Users</TabsTrigger>
-            <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders</TabsTrigger>
+            <TabsTrigger value="fraud" className="data-[state=active]:bg-card">Fraud Alerts ({openAlerts})</TabsTrigger>
+            <TabsTrigger value="users" className="data-[state=active]:bg-card">Users ({users.length})</TabsTrigger>
+            <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({stats.total_orders})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="mt-4 space-y-6">
@@ -91,59 +162,59 @@ export default function AdminDashboardPage() {
                   <h3 className="font-display font-semibold text-foreground">Live Activity</h3>
                   <div className="flex items-center gap-1.5">
                     <Activity className="h-3.5 w-3.5 text-success animate-pulse" />
-                    <span className="text-xs text-muted-foreground">Live</span>
+                    <span className="text-xs text-muted-foreground font-mono">{liveOrders} orders</span>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  {[
-                    { event: "New order placed", detail: "Steam Game Keys — $12.99", time: "Just now", type: "order" },
-                    { event: "Fraud alert triggered", detail: "SuspiciousUser99 — Velocity", time: "2 min ago", type: "fraud" },
-                    { event: "Seller verified", detail: "GameVault completed KYC", time: "5 min ago", type: "verify" },
-                    { event: "Dispute filed", detail: "ORD-7827 — Delivery issue", time: "12 min ago", type: "dispute" },
-                  ].map((log, i) => (
-                    <div key={i} className="flex items-start gap-3 text-sm">
-                      <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.type === "fraud" ? "bg-destructive" : log.type === "dispute" ? "bg-warning" : "bg-success"}`} />
-                      <div className="flex-1">
-                        <p className="text-foreground">{log.event}</p>
-                        <p className="text-muted-foreground text-xs">{log.detail}</p>
+                {loading ? (
+                  <div className="space-y-3">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="h-12 bg-muted rounded animate-pulse" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {fraudLogs.slice(0, 5).map((log) => (
+                      <div key={log.id} className="flex items-start gap-3 text-sm">
+                        <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.risk_score >= 70 ? "bg-destructive" : log.risk_score >= 40 ? "bg-warning" : "bg-success"}`} />
+                        <div className="flex-1">
+                          <p className="text-foreground">{log.event_type.toUpperCase()} — Risk: {log.risk_score}</p>
+                          <p className="text-muted-foreground text-xs">{log.reason.slice(0, 80)}...</p>
+                        </div>
+                        <span className="text-xs text-muted-foreground font-mono">{new Date(log.created_at).toLocaleTimeString()}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground font-mono">{log.time}</span>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                    {fraudLogs.length === 0 && <p className="text-muted-foreground text-sm">No recent activity</p>}
+                  </div>
+                )}
               </div>
 
               <div className="bg-card border border-border rounded-lg p-6 space-y-4">
                 <h3 className="font-display font-semibold text-foreground">Risk Distribution</h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-muted-foreground">Low Risk</span>
-                      <span className="font-mono text-success">94.2%</span>
+                {(() => {
+                  const high = fraudLogs.filter((f) => f.risk_score >= 70).length;
+                  const med = fraudLogs.filter((f) => f.risk_score >= 40 && f.risk_score < 70).length;
+                  const low = fraudLogs.filter((f) => f.risk_score < 40).length;
+                  const total = fraudLogs.length || 1;
+                  return (
+                    <div className="space-y-4">
+                      {[
+                        { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-success" },
+                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-warning" },
+                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-destructive" },
+                      ].map((r) => (
+                        <div key={r.label}>
+                          <div className="flex items-center justify-between text-sm mb-1">
+                            <span className="text-muted-foreground">{r.label} ({r.count})</span>
+                            <span className="font-mono text-foreground">{r.pct}%</span>
+                          </div>
+                          <div className="h-2 bg-muted rounded-full overflow-hidden">
+                            <div className={`h-full ${r.color} rounded-full`} style={{ width: `${r.pct}%` }} />
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-success rounded-full" style={{ width: "94.2%" }} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-muted-foreground">Medium Risk</span>
-                      <span className="font-mono text-warning">4.8%</span>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-warning rounded-full" style={{ width: "4.8%" }} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-muted-foreground">High Risk</span>
-                      <span className="font-mono text-destructive">1.0%</span>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-destructive rounded-full" style={{ width: "1.0%" }} />
-                    </div>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
             </div>
           </TabsContent>
@@ -154,8 +225,6 @@ export default function AdminDashboardPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/50">
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Alert ID</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Risk</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Reason</th>
@@ -164,37 +233,39 @@ export default function AdminDashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {fraudAlerts.map((alert) => (
-                      <tr key={alert.id} className="border-b border-border hover:bg-muted/30 transition-colors">
-                        <td className="px-4 py-3 font-mono text-foreground">{alert.id}</td>
-                        <td className="px-4 py-3 text-foreground">{alert.user}</td>
-                        <td className="px-4 py-3 text-muted-foreground">{alert.type}</td>
+                    {fraudLogs.map((log) => (
+                      <tr key={log.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                        <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
                         <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${riskColor(alert.risk)}`}>
-                            {alert.risk}
+                          <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
+                            {log.risk_score}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-muted-foreground max-w-[200px] truncate">{alert.reason}</td>
+                        <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.reason}</td>
                         <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${alert.status === "open" ? "bg-destructive/10 text-destructive" : alert.status === "reviewing" ? "bg-warning/10 text-warning" : "bg-success/10 text-success"}`}>
-                            {alert.status}
+                          <Badge variant="outline" className={`text-xs ${log.reviewed_at ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>
+                            {log.reviewed_at ? "Resolved" : "Open"}
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-success transition-colors" title="Approve" aria-label="Approve">
-                              <CheckCircle className="h-4 w-4" />
-                            </button>
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors" title="Block" aria-label="Block">
+                            {!log.reviewed_at && (
+                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-success transition-colors" title="Resolve" aria-label="Resolve alert">
+                                <CheckCircle className="h-4 w-4" />
+                              </button>
+                            )}
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors" title="Block User" aria-label="Block user">
                               <Ban className="h-4 w-4" />
-                            </button>
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" title="Review" aria-label="Review">
-                              <Eye className="h-4 w-4" />
                             </button>
                           </div>
                         </td>
                       </tr>
                     ))}
+                    {fraudLogs.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No fraud alerts recorded</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -209,10 +280,8 @@ export default function AdminDashboardPage() {
                     <tr className="border-b border-border bg-muted/50">
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Role</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tier</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Joined</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Sales</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Risk</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
@@ -221,8 +290,8 @@ export default function AdminDashboardPage() {
                       <tr key={user.id} className="border-b border-border hover:bg-muted/30 transition-colors">
                         <td className="px-4 py-3">
                           <div>
-                            <p className="text-foreground">{user.name}</p>
-                            <p className="text-xs text-muted-foreground">{user.email}</p>
+                            <p className="text-foreground">{user.full_name || "Anonymous"}</p>
+                            <p className="text-xs text-muted-foreground font-mono">{user.id.slice(0, 12)}...</p>
                           </div>
                         </td>
                         <td className="px-4 py-3">
@@ -231,17 +300,11 @@ export default function AdminDashboardPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${user.status === "active" ? "bg-success/10 text-success" : user.status === "flagged" ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"}`}>
-                            {user.status}
+                          <Badge variant="outline" className={`text-xs capitalize ${user.verification_tier === "gold" ? "bg-warning/10 text-warning" : user.verification_tier === "silver" ? "bg-muted text-foreground" : "bg-muted/50 text-muted-foreground"}`}>
+                            {user.verification_tier}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-muted-foreground">{user.joined}</td>
-                        <td className="px-4 py-3 font-mono text-foreground">{user.sales.toLocaleString()}</td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${riskColor(user.risk)}`}>
-                            {user.risk}
-                          </Badge>
-                        </td>
+                        <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
                             <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" title="View" aria-label="View user">
@@ -254,6 +317,11 @@ export default function AdminDashboardPage() {
                         </td>
                       </tr>
                     ))}
+                    {users.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No users found</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -263,8 +331,8 @@ export default function AdminDashboardPage() {
           <TabsContent value="orders" className="mt-4">
             <div className="bg-card border border-border rounded-lg p-8 text-center">
               <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="font-display font-semibold text-foreground">Order Management</h3>
-              <p className="text-sm text-muted-foreground mt-2">Full order moderation and refund tools coming in the next update.</p>
+              <h3 className="font-display font-semibold text-foreground">{stats.total_orders.toLocaleString()} Total Orders</h3>
+              <p className="text-sm text-muted-foreground mt-2">Full order moderation tools available in the database console.</p>
             </div>
           </TabsContent>
         </Tabs>
