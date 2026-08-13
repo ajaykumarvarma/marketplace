@@ -81,6 +81,42 @@ export type Database = {
         }
         Relationships: []
       }
+      coupons: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string | null
+          discount_percent: number
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          seller_id: string | null
+          used_count: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string | null
+          discount_percent: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          seller_id?: string | null
+          used_count?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string | null
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          seller_id?: string | null
+          used_count?: number
+        }
+        Relationships: []
+      }
       fraud_logs: {
         Row: {
           created_at: string | null
@@ -142,17 +178,93 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          order_id: string | null
+          read: boolean
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          read?: boolean
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          read?: boolean
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          id: string
+          message: string
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          message: string
+          read?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           buyer_id: string
+          coupon_id: string | null
           created_at: string | null
           delivery_email: string | null
+          device_fingerprint: string | null
+          discount_amount: number
           escrow_released: boolean
           id: string
+          ip_address: string | null
           payment_method: string | null
           platform_fee: number
           product_id: string
           quantity: number
+          risk_score: number
           seller_id: string
           status: string
           total_amount: number
@@ -160,14 +272,19 @@ export type Database = {
         }
         Insert: {
           buyer_id: string
+          coupon_id?: string | null
           created_at?: string | null
           delivery_email?: string | null
+          device_fingerprint?: string | null
+          discount_amount?: number
           escrow_released?: boolean
           id?: string
+          ip_address?: string | null
           payment_method?: string | null
           platform_fee?: number
           product_id: string
           quantity?: number
+          risk_score?: number
           seller_id: string
           status?: string
           total_amount: number
@@ -175,14 +292,19 @@ export type Database = {
         }
         Update: {
           buyer_id?: string
+          coupon_id?: string | null
           created_at?: string | null
           delivery_email?: string | null
+          device_fingerprint?: string | null
+          discount_amount?: number
           escrow_released?: boolean
           id?: string
+          ip_address?: string | null
           payment_method?: string | null
           platform_fee?: number
           product_id?: string
           quantity?: number
+          risk_score?: number
           seller_id?: string
           status?: string
           total_amount?: number
@@ -194,6 +316,13 @@ export type Database = {
             columns: ["buyer_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
             referencedColumns: ["id"]
           },
           {
@@ -212,16 +341,50 @@ export type Database = {
           },
         ]
       }
+      platform_stats: {
+        Row: {
+          date: string
+          fraud_events: number
+          id: string
+          new_sellers: number
+          new_users: number
+          total_orders: number
+          total_revenue: number
+        }
+        Insert: {
+          date?: string
+          fraud_events?: number
+          id?: string
+          new_sellers?: number
+          new_users?: number
+          total_orders?: number
+          total_revenue?: number
+        }
+        Update: {
+          date?: string
+          fraud_events?: number
+          id?: string
+          new_sellers?: number
+          new_users?: number
+          total_orders?: number
+          total_revenue?: number
+        }
+        Relationships: []
+      }
       products: {
         Row: {
+          auto_delivery: boolean
           category_id: string | null
           created_at: string | null
+          delivery_content: string | null
           delivery_time: string
           description: string
           id: string
           image_url: string | null
           original_price: number | null
           price: number
+          report_reason: string | null
+          reported: boolean
           seller_id: string
           status: string
           stock: number
@@ -230,14 +393,18 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          auto_delivery?: boolean
           category_id?: string | null
           created_at?: string | null
+          delivery_content?: string | null
           delivery_time?: string
           description: string
           id?: string
           image_url?: string | null
           original_price?: number | null
           price: number
+          report_reason?: string | null
+          reported?: boolean
           seller_id: string
           status?: string
           stock?: number
@@ -246,14 +413,18 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          auto_delivery?: boolean
           category_id?: string | null
           created_at?: string | null
+          delivery_content?: string | null
           delivery_time?: string
           description?: string
           id?: string
           image_url?: string | null
           original_price?: number | null
           price?: number
+          report_reason?: string | null
+          reported?: boolean
           seller_id?: string
           status?: string
           stock?: number
@@ -287,7 +458,10 @@ export type Database = {
           full_name: string | null
           id: string
           role: string
+          two_factor_enabled: boolean
+          two_factor_secret: string | null
           updated_at: string | null
+          verification_tier: string
         }
         Insert: {
           avatar_url?: string | null
@@ -297,7 +471,10 @@ export type Database = {
           full_name?: string | null
           id: string
           role?: string
+          two_factor_enabled?: boolean
+          two_factor_secret?: string | null
           updated_at?: string | null
+          verification_tier?: string
         }
         Update: {
           avatar_url?: string | null
@@ -307,7 +484,10 @@ export type Database = {
           full_name?: string | null
           id?: string
           role?: string
+          two_factor_enabled?: boolean
+          two_factor_secret?: string | null
           updated_at?: string | null
+          verification_tier?: string
         }
         Relationships: []
       }
@@ -369,6 +549,35 @@ export type Database = {
             columns: ["seller_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wishlist: {
+        Row: {
+          created_at: string | null
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
