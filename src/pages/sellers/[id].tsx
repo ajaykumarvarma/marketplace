@@ -25,7 +25,7 @@ interface SellerProduct {
   image_url: string | null;
   stock: number;
   status: string;
-  category: string;
+  category_id: string;
 }
 
 interface SellerStats {

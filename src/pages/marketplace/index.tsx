@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, SlidersHorizontal, Star, ArrowUpDown, Loader2, Shield } from "lucide-react";
+import { Search, SlidersHorizontal, Star, ArrowUpDown, Loader2, Shield, Clock, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";

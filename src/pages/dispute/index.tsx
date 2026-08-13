@@ -48,14 +48,14 @@ export default function DisputePage() {
       return;
     }
 
-    const { error } = await supabase.from("disputes").insert({
+    const { error } = await (supabase.from("disputes") as any).insert({
       order_id: orderId.trim(),
       buyer_id: user.id,
       seller_id: orderData.seller_id,
       reason,
       description: description.trim() || null,
       status: "open",
-    } as any);
+    });
 
     setSubmitting(false);
 

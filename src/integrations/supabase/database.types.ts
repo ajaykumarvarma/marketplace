@@ -117,6 +117,53 @@ export type Database = {
         }
         Relationships: []
       }
+      disputes: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          description: string | null
+          id: string
+          order_id: string
+          reason: string
+          resolution_notes: string | null
+          seller_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id: string
+          reason: string
+          resolution_notes?: string | null
+          seller_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string
+          reason?: string
+          resolution_notes?: string | null
+          seller_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disputes_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fraud_logs: {
         Row: {
           created_at: string | null
