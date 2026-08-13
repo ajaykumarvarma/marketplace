@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Package, Truck, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download } from "lucide-react";
+import { Package, Truck, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
