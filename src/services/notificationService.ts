@@ -12,7 +12,7 @@ export async function createNotification(
     type,
     title,
     message,
-    data: data || null,
+    data: (data || null) as any,
     read: false,
   });
 

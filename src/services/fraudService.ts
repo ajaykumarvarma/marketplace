@@ -23,7 +23,7 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const { data: recentOrders, error: velocityError } = await supabase
     .from("orders")
-    .select("id, price")
+    .select("id, product:product_id(price)")
     .eq("buyer_id", context.buyerId)
     .gte("created_at", oneHourAgo);
 
@@ -36,7 +36,7 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
       flags.push("Elevated velocity: 3+ orders in 1 hour");
     }
 
-    const totalSpend = recentOrders.reduce((s, o) => s + (o.price || 0), 0);
+    const totalSpend = recentOrders.reduce((s, o: any) => s + (o.product?.price || 0), 0);
     if (totalSpend > 500) {
       riskScore += 25;
       flags.push(`High spend: $${totalSpend.toFixed(2)} in 1 hour`);
@@ -124,7 +124,7 @@ export async function logFraudEvent(
     ip_address: metadata?.ipAddress || null,
     device_fingerprint: metadata?.deviceFingerprint || null,
     resolved: false,
-  });
+  } as any);
 
   return { error };
 }
