@@ -23,7 +23,7 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const { data: recentOrders, error: velocityError } = await supabase
     .from("orders")
-    .select("id, product:product_id(price)")
+    .select("id, total_amount")
     .eq("buyer_id", context.buyerId)
     .gte("created_at", oneHourAgo);
 
@@ -36,7 +36,7 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
       flags.push("Elevated velocity: 3+ orders in 1 hour");
     }
 
-    const totalSpend = recentOrders.reduce((s, o: any) => s + (o.product?.price || 0), 0);
+    const totalSpend = recentOrders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
     if (totalSpend > 500) {
       riskScore += 25;
       flags.push(`High spend: $${totalSpend.toFixed(2)} in 1 hour`);
@@ -62,43 +62,29 @@ export async function checkFraudRisk(context: OrderContext): Promise<FraudCheckR
     flags.push("High value order");
   }
 
-  // Check buyer's fraud history
+  // Check buyer's fraud history via user_id
   const { data: fraudHistory } = await (supabase
     .from("fraud_logs") as any)
     .select("id")
-    .eq("buyer_id", context.buyerId)
-    .eq("resolved", false);
+    .eq("user_id", context.buyerId)
+    .is("reviewed_at", null);
 
   if (fraudHistory && fraudHistory.length > 0) {
     riskScore += 40;
     flags.push(`Unresolved fraud alerts: ${fraudHistory.length}`);
   }
 
-  // Check if IP has been flagged
+  // Check if IP has been flagged in metadata
   if (context.ipAddress) {
     const { data: ipFlags } = await (supabase
       .from("fraud_logs") as any)
       .select("id")
-      .eq("ip_address", context.ipAddress)
-      .eq("resolved", false);
+      .contains("metadata", { ip_address: context.ipAddress })
+      .is("reviewed_at", null);
 
     if (ipFlags && ipFlags.length > 0) {
       riskScore += 35;
       flags.push("IP address has unresolved fraud alerts");
-    }
-  }
-
-  // Device fingerprint check
-  if (context.deviceFingerprint) {
-    const { data: deviceFlags } = await (supabase
-      .from("fraud_logs") as any)
-      .select("id")
-      .eq("device_fingerprint", context.deviceFingerprint)
-      .eq("resolved", false);
-
-    if (deviceFlags && deviceFlags.length > 0) {
-      riskScore += 30;
-      flags.push("Device has unresolved fraud alerts");
     }
   }
 
@@ -116,15 +102,17 @@ export async function logFraudEvent(
   riskScore: number,
   metadata?: { ipAddress?: string; deviceFingerprint?: string }
 ) {
-  const { error } = await supabase.from("fraud_logs").insert({
+  const { error } = await (supabase.from("fraud_logs") as any).insert({
     order_id: orderId,
-    buyer_id: buyerId,
+    user_id: buyerId,
+    event_type: riskScore >= 80 ? "block" : riskScore >= 50 ? "auto_hold" : "risk_score",
     risk_score: riskScore,
-    flags,
-    ip_address: metadata?.ipAddress || null,
-    device_fingerprint: metadata?.deviceFingerprint || null,
-    resolved: false,
-  } as any);
+    reason: flags.join("; "),
+    metadata: {
+      ip_address: metadata?.ipAddress || null,
+      device_fingerprint: metadata?.deviceFingerprint || null,
+    },
+  });
 
   return { error };
 }
