@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { ArrowLeft, Shield, Lock, CheckCircle, CreditCard, Bitcoin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,17 +7,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function CheckoutPage() {
+  const router = useRouter();
+  const { user } = useAuth();
   const { items, totalPrice, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "crypto">("card");
   const [processing, setProcessing] = useState(false);
   const [done, setDone] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [orderId, setOrderId] = useState("");
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (!user) {
+      router.push("/auth/login?redirect=/checkout");
+    }
+  }, [user, router]);
 
   if (!mounted) {
     return (
@@ -27,6 +36,20 @@ export default function CheckoutPage() {
             <div className="h-8 bg-muted rounded w-1/3" />
             <div className="h-48 bg-muted rounded-lg" />
           </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!user) {
+    return (
+      <>
+        <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
+        <div className="container py-16 text-center">
+          <h1 className="font-display text-xl font-medium text-foreground">Please sign in to checkout</h1>
+          <Link href="/auth/login?redirect=/checkout">
+            <Button className="mt-4">Sign In</Button>
+          </Link>
         </div>
       </>
     );
@@ -55,6 +78,7 @@ export default function CheckoutPage() {
             <CheckCircle className="h-8 w-8 text-success" />
           </div>
           <h1 className="font-display text-3xl font-bold text-foreground">Order Confirmed</h1>
+          <p className="font-mono text-sm text-muted-foreground">Order ID: {orderId}</p>
           <p className="text-muted-foreground max-w-md mx-auto">
             Your payment is held in escrow. The seller will be notified to deliver your digital goods.
             You can track your order in your dashboard.
@@ -72,14 +96,43 @@ export default function CheckoutPage() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setProcessing(true);
-    setTimeout(() => {
-      setProcessing(false);
-      setDone(true);
+
+    // Create orders for each cart item
+    const orderIds: string[] = [];
+    for (const item of items) {
+      const { data: product } = await supabase
+        .from("products")
+        .select("seller_id, price")
+        .eq("id", item.id)
+        .maybeSingle();
+
+      const total = item.price * item.quantity * 1.02;
+      const { data: order, error } = await supabase
+        .from("orders")
+        .insert({
+          buyer_id: user.id,
+          seller_id: product?.seller_id || user.id,
+          product_id: item.id,
+          total_amount: total,
+          payment_method: paymentMethod,
+          status: "pending",
+        })
+        .select("id")
+        .single();
+
+      if (order) orderIds.push(order.id);
+      if (error) console.error(error);
+    }
+
+    if (orderIds.length > 0) {
+      setOrderId(orderIds[0].slice(0, 8).toUpperCase());
       clearCart();
-    }, 2000);
+      setDone(true);
+    }
+    setProcessing(false);
   };
 
   return (
