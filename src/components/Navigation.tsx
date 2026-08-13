@@ -1,13 +1,27 @@
 import Link from "next/link";
 import { useState } from "react";
-import { Shield, Menu, X, ShoppingCart, User, Store } from "lucide-react";
+import { Shield, Menu, X, ShoppingCart, User, Store, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems } = useCart();
+  const { user, profile, signOut } = useAuth();
+
+  const userInitial = profile?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U";
+  const isSeller = profile?.role === "seller" || profile?.role === "admin";
+  const isAdmin = profile?.role === "admin";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -49,18 +63,68 @@ export function Navigation() {
             </Button>
           </Link>
           <ThemeSwitch />
-          <Link href="/auth/login">
-            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-              <User className="h-4 w-4" />
-              <span className="text-sm">Sign In</span>
-            </Button>
-          </Link>
-          <Link href="/auth/register">
-            <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Store className="h-4 w-4" />
-              <span>Get Started</span>
-            </Button>
-          </Link>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="gap-2 pl-2 pr-3">
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
+                      {userInitial}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-foreground max-w-[100px] truncate">
+                    {profile?.full_name || user.email?.split("@")[0]}
+                  </span>
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link href="/orders" className="flex items-center gap-2 cursor-pointer">
+                    <LayoutDashboard className="h-4 w-4" />
+                    My Orders
+                  </Link>
+                </DropdownMenuItem>
+                {isSeller && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/seller/dashboard" className="flex items-center gap-2 cursor-pointer">
+                      <Store className="h-4 w-4" />
+                      Seller Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin/dashboard" className="flex items-center gap-2 cursor-pointer">
+                      <Shield className="h-4 w-4" />
+                      Admin Panel
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive cursor-pointer">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link href="/auth/login">
+                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                  <User className="h-4 w-4" />
+                  <span className="text-sm">Sign In</span>
+                </Button>
+              </Link>
+              <Link href="/auth/register">
+                <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Store className="h-4 w-4" />
+                  <span>Get Started</span>
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -86,19 +150,47 @@ export function Navigation() {
             <Link href="/sell" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
               Start Selling
             </Link>
+
+            {user && (
+              <>
+                <Link href="/orders" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                  My Orders
+                </Link>
+                {isSeller && (
+                  <Link href="/seller/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                    Seller Dashboard
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link href="/admin/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                    Admin Panel
+                  </Link>
+                )}
+              </>
+            )}
+
             <div className="pt-3 border-t border-border flex flex-col gap-2">
-              <Link href="/auth/login">
-                <Button variant="outline" className="w-full justify-start gap-2">
-                  <User className="h-4 w-4" />
-                  Sign In
+              {user ? (
+                <Button variant="outline" className="w-full justify-start gap-2 text-destructive" onClick={signOut}>
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
                 </Button>
-              </Link>
-              <Link href="/auth/register">
-                <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90">
-                  <Store className="h-4 w-4" />
-                  Get Started
-                </Button>
-              </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <Button variant="outline" className="w-full justify-start gap-2">
+                      <User className="h-4 w-4" />
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/auth/register">
+                    <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90">
+                      <Store className="h-4 w-4" />
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
