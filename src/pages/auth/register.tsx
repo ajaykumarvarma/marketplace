@@ -1,17 +1,44 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
-import { Shield, Eye, EyeOff, Github, Mail, Store, User } from "lucide-react";
+import { Shield, Eye, EyeOff, Github, Mail, Store, User, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEO } from "@/components/SEO";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const { signUp } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState<"buyer" | "seller">("buyer");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setLoading(false);
+      return;
+    }
+
+    const { error: authError } = await signUp(email, password, accountType);
+    setLoading(false);
+
+    if (authError) {
+      setError(authError.message);
+    } else {
+      router.push("/marketplace");
+    }
+  };
 
   return (
     <>
@@ -25,6 +52,13 @@ export default function RegisterPage() {
             <h1 className="font-display text-2xl font-bold text-foreground">Create your account</h1>
             <p className="text-sm text-muted-foreground">Join thousands trading digital goods securely</p>
           </div>
+
+          {error && (
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+              <p className="text-xs text-muted-foreground">{error}</p>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg">
             <button
@@ -46,11 +80,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-4">
-            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted" onClick={() => {}}>
               <Github className="h-4 w-4" />
               Continue with GitHub
             </Button>
-            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted" onClick={() => {}}>
               <Mail className="h-4 w-4" />
               Continue with Google
             </Button>
@@ -65,7 +99,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input
@@ -75,6 +109,7 @@ export default function RegisterPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="bg-muted border-border"
+                required
               />
             </div>
             <div className="space-y-2">
@@ -86,6 +121,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-muted border-border"
+                required
               />
             </div>
             <div className="space-y-2">
@@ -98,6 +134,7 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-muted border-border pr-10"
+                  required
                 />
                 <button
                   type="button"
@@ -111,7 +148,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="flex items-start gap-2">
-              <input type="checkbox" id="terms" className="mt-1 h-3.5 w-3.5 rounded border-border bg-muted accent-primary" />
+              <input type="checkbox" id="terms" className="mt-1 h-3.5 w-3.5 rounded border-border bg-muted accent-primary" required />
               <label htmlFor="terms" className="text-xs text-muted-foreground">
                 I agree to the{" "}
                 <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>{" "}
@@ -120,8 +157,8 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-              Create Account
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={loading}>
+              {loading ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
 

@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { Shield, Eye, EyeOff, Github, Mail, Lock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEO } from "@/components/SEO";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { signIn } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [locked, setLocked] = useState(false);
   const [lockTimer, setLockTimer] = useState(0);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (lockTimer > 0) {
@@ -22,18 +27,25 @@ export default function LoginPage() {
     if (lockTimer === 0 && locked) setLocked(false);
   }, [lockTimer, locked]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (locked) return;
-    // Mock auth failure for rate limiting demo
-    setAttempts((a) => {
-      const next = a + 1;
-      if (next >= 5) {
-        setLocked(true);
-        setLockTimer(300);
-      }
-      return next;
-    });
+    setError("");
+
+    const { error: authError } = await signIn(email, password);
+    if (authError) {
+      setAttempts((a) => {
+        const next = a + 1;
+        if (next >= 5) {
+          setLocked(true);
+          setLockTimer(300);
+        }
+        return next;
+      });
+      setError(authError.message);
+    } else {
+      router.push("/marketplace");
+    }
   };
 
   return (
@@ -59,7 +71,14 @@ export default function LoginPage() {
             </div>
           )}
 
-          {attempts > 0 && !locked && (
+          {error && !locked && (
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+              <p className="text-xs text-muted-foreground">{error}</p>
+            </div>
+          )}
+
+          {attempts > 0 && !locked && !error && (
             <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
               <p className="text-xs text-muted-foreground">{5 - attempts} attempts remaining before temporary lock</p>
@@ -67,11 +86,11 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-4">
-            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted" onClick={() => {}}>
               <Github className="h-4 w-4" />
               Continue with GitHub
             </Button>
-            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted">
+            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted" onClick={() => {}}>
               <Mail className="h-4 w-4" />
               Continue with Google
             </Button>
@@ -97,6 +116,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-muted border-border"
                 disabled={locked}
+                required
               />
             </div>
             <div className="space-y-2">
@@ -115,6 +135,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-muted border-border pr-10"
                   disabled={locked}
+                  required
                 />
                 <button
                   type="button"

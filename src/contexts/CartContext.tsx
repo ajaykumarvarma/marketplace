@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CartItem {
   id: string;
@@ -25,24 +27,68 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
+  // Load cart: from Supabase if logged in, else localStorage
   useEffect(() => {
     setMounted(true);
-    try {
-      const saved = localStorage.getItem("tradevault-cart");
-      if (saved) setItems(JSON.parse(saved));
-    } catch {
-      // ignore
+    if (user) {
+      loadSupabaseCart();
+    } else {
+      try {
+        const saved = localStorage.getItem("tradevault-cart");
+        if (saved) setItems(JSON.parse(saved));
+      } catch {
+        // ignore
+      }
     }
-  }, []);
+  }, [user]);
 
+  // Save cart: to Supabase if logged in, else localStorage
   useEffect(() => {
-    if (mounted) {
+    if (!mounted) return;
+    if (user) {
+      syncSupabaseCart();
+    } else {
       localStorage.setItem("tradevault-cart", JSON.stringify(items));
     }
-  }, [items, mounted]);
+  }, [items, mounted, user]);
 
-  const addItem = (item: Omit<CartItem, "quantity">) => {
+  async function loadSupabaseCart() {
+    const { data, error } = await supabase
+      .from("cart_items")
+      .select("id, product_id, quantity, products:product_id(title, price, seller:seller_id(full_name))")
+      .eq("user_id", user!.id);
+
+    if (error || !data) return;
+
+    const cartItems: CartItem[] = data.map((row: any) => ({
+      id: row.product_id,
+      title: row.products?.title || "Unknown",
+      price: row.products?.price || 0,
+      seller: row.products?.seller?.full_name || "Unknown",
+      quantity: row.quantity,
+    }));
+
+    setItems(cartItems);
+  }
+
+  async function syncSupabaseCart() {
+    // Delete existing cart items and re-insert
+    await supabase.from("cart_items").delete().eq("user_id", user!.id);
+
+    if (items.length === 0) return;
+
+    const rows = items.map((item) => ({
+      user_id: user!.id,
+      product_id: item.id,
+      quantity: item.quantity,
+    }));
+
+    await supabase.from("cart_items").insert(rows);
+  }
+
+  const addItem = async (item: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
