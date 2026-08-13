@@ -51,7 +51,7 @@ vi.mock("@/contexts/AuthContext", () => ({
     isLoading: false,
     signIn: vi.fn(() => {
       signInCallCount++;
-      if (signInCallCount <= 5) {
+      if (signInCallCount < 5) {
         return Promise.resolve({ error: { message: "Invalid credentials" } });
       }
       return Promise.resolve({ error: { message: "Account temporarily locked. Please try again in 30 minutes." } });
