@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, Shield, Zap, Bitcoin, AlertTriangle, CheckCircle, Loader2, Lock } from "lucide-react";
+import { ArrowLeft, CreditCard, Shield, Bitcoin, AlertTriangle, CheckCircle, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,12 +17,13 @@ import { checkFraudRisk, logFraudEvent, getDeviceFingerprint, getClientIP } from
 export default function CheckoutPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const { toast } = useToast();
   const { items, totalPrice, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "crypto">("card");
   const [processing, setProcessing] = useState(false);
   const [fraudResult, setFraudResult] = useState<{ riskScore: number; flags: string[]; blocked: boolean } | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [orderId, setOrderId] = useState("");
+  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -59,7 +60,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (items.length === 0 && !done) {
+  if (items.length === 0 && !orderId) {
     return (
       <>
         <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
@@ -73,7 +74,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (done) {
+  if (orderId) {
     return (
       <>
         <SEO title="Order Confirmed — TradeVault" description="Your order has been placed with escrow protection." />
@@ -100,45 +101,6 @@ export default function CheckoutPage() {
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setProcessing(true);
-
-    // Create orders for each cart item
-    const orderIds: string[] = [];
-    for (const item of items) {
-      const { data: product } = await supabase
-        .from("products")
-        .select("seller_id, price")
-        .eq("id", item.id)
-        .maybeSingle();
-
-      const total = item.price * item.quantity * 1.02;
-      const { data: order, error } = await supabase
-        .from("orders")
-        .insert({
-          buyer_id: user.id,
-          seller_id: product?.seller_id || user.id,
-          product_id: item.id,
-          total_amount: total,
-          payment_method: paymentMethod,
-          status: "pending",
-        })
-        .select("id")
-        .single();
-
-      if (order) orderIds.push(order.id);
-      if (error) console.error(error);
-    }
-
-    if (orderIds.length > 0) {
-      setOrderId(orderIds[0].slice(0, 8).toUpperCase());
-      clearCart();
-      setDone(true);
-    }
-    setProcessing(false);
-  };
-
   async function handlePlaceOrder() {
     if (!user) {
       toast({ title: "Sign in required", description: "Please sign in to complete your purchase.", variant: "destructive" });
@@ -151,7 +113,6 @@ export default function CheckoutPage() {
 
     setProcessing(true);
 
-    // Run fraud detection
     const product = items[0];
     const [deviceFingerprint, ipAddress] = await Promise.all([
       getDeviceFingerprint(),
@@ -181,14 +142,22 @@ export default function CheckoutPage() {
       toast({ title: "Transaction on hold", description: "Your order is under review for security. You will be notified shortly.", variant: "default" });
     }
 
-    // Create order
+    const total = product.price * product.quantity * 1.02;
+    const { data: productData } = await supabase
+      .from("products")
+      .select("seller_id")
+      .eq("id", product.id)
+      .maybeSingle();
+
     const { data: orderData, error } = await supabase.from("orders").insert({
       buyer_id: user.id,
-      seller_id: product.seller || "unknown",
+      seller_id: productData?.seller_id || product.seller || "unknown",
       product_id: product.id,
       quantity: product.quantity,
-      total_amount: product.price * product.quantity,
+      total_amount: total,
       delivery_method: "digital",
+      payment_method: paymentMethod,
+      status: fraudCheck.riskScore >= 50 ? "processing" : "pending",
     }).select().single();
 
     setProcessing(false);
@@ -199,8 +168,8 @@ export default function CheckoutPage() {
     }
 
     clearCart();
+    setOrderId(orderData.id.slice(0, 8).toUpperCase());
     toast({ title: "Order placed!", description: "Your purchase is being processed." });
-    router.push(`/orders/${orderData.id}`);
   }
 
   return (
@@ -242,25 +211,25 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
               {paymentMethod === "card" && (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="cardName">Name on Card</Label>
-                    <Input id="cardName" placeholder="John Doe" className="bg-muted border-border" required />
+                    <Input id="cardName" placeholder="John Doe" className="bg-muted border-border" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="cardNumber">Card Number</Label>
-                    <Input id="cardNumber" placeholder="4242 4242 4242 4242" className="bg-muted border-border font-mono" required />
+                    <Input id="cardNumber" placeholder="4242 4242 4242 4242" className="bg-muted border-border font-mono" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="expiry">Expiry</Label>
-                      <Input id="expiry" placeholder="MM/YY" className="bg-muted border-border font-mono" required />
+                      <Input id="expiry" placeholder="MM/YY" className="bg-muted border-border font-mono" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cvc">CVC</Label>
-                      <Input id="cvc" placeholder="123" className="bg-muted border-border font-mono" required />
+                      <Input id="cvc" placeholder="123" className="bg-muted border-border font-mono" />
                     </div>
                   </div>
                 </div>
@@ -284,10 +253,17 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <Button type="submit" disabled={processing} className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
-                {processing ? "Processing..." : `Pay $${(totalPrice * 1.02).toFixed(2)}`}
+              <Button onClick={handlePlaceOrder} disabled={processing} className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
+                {processing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  `Pay $${(totalPrice * 1.02).toFixed(2)}`
+                )}
               </Button>
-            </form>
+            </div>
           </div>
 
           <div className="space-y-4">

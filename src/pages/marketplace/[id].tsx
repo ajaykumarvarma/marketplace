@@ -103,13 +103,31 @@ export default function ProductDetailPage() {
       toast({ title: "Review required", description: "Please write a review comment.", variant: "destructive" });
       return;
     }
+
+    // Check if user has purchased this product
+    const { data: orderData } = await supabase
+      .from("orders")
+      .select("id, seller_id")
+      .eq("buyer_id", user.id)
+      .eq("product_id", product.id)
+      .eq("status", "completed")
+      .maybeSingle();
+
+    if (!orderData) {
+      toast({ title: "Purchase required", description: "You must purchase and complete this product before leaving a review.", variant: "destructive" });
+      return;
+    }
+
     setSubmittingReview(true);
     const { error } = await supabase.from("reviews").insert({
+      order_id: orderData.id,
       product_id: product.id,
       reviewer_id: user.id,
+      seller_id: orderData.seller_id,
       rating: reviewRating,
       comment: reviewText.trim(),
-    });
+    } as any);
+
     setSubmittingReview(false);
     if (error) {
       toast({ title: "Error submitting review", description: error.message, variant: "destructive" });
@@ -117,7 +135,6 @@ export default function ProductDetailPage() {
       toast({ title: "Review submitted!", description: "Thank you for your feedback." });
       setReviewText("");
       setReviewRating(5);
-      // Refresh product to show new review
       const { data } = await supabase
         .from("products")
         .select("*, seller:seller_id(id, full_name, role), category:category_id(name), reviews(*)")
@@ -183,11 +200,7 @@ export default function ProductDetailPage() {
                     <h3 className="font-medium text-foreground">Write a Review</h3>
                     <div className="flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => setReviewRating(star)}
-                          className="p-0.5"
-                        >
+                        <button key={star} onClick={() => setReviewRating(star)} className="p-0.5">
                           <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-warning text-warning" : "text-muted"}`} />
                         </button>
                       ))}
@@ -207,6 +220,7 @@ export default function ProductDetailPage() {
                       <Send className="h-3.5 w-3.5" />
                       {submittingReview ? "Submitting..." : "Submit Review"}
                     </Button>
+                    <p className="text-xs text-muted-foreground">You can only review products you have purchased and received.</p>
                   </div>
                 )}
                 {product.reviews?.map((review, i) => (
