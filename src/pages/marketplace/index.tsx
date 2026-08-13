@@ -17,7 +17,7 @@ interface Product {
   category_id: string;
   image_url: string | null;
   delivery_time: string;
-  stock_quantity: number;
+  stock: number;
   status: string;
   created_at: string;
   seller: { full_name: string | null; role: string } | null;
@@ -149,7 +149,7 @@ export default function MarketplacePage() {
                       className="object-cover"
                       loading="lazy"
                     />
-                    {product.stock_quantity < 10 && (
+                    {product.stock < 10 && (
                       <Badge className="absolute top-3 left-3 bg-destructive/10 text-destructive border-destructive/20 text-xs z-10">
                         Low Stock
                       </Badge>

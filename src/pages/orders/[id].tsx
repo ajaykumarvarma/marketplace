@@ -11,12 +11,11 @@ import { useToast } from "@/hooks/use-toast";
 
 type Order = {
   id: string;
-  product_title: string;
-  seller_name: string;
-  total: number;
   status: string;
   created_at: string;
   delivery_method: string | null;
+  escrow_released: boolean;
+  product: { title: string } | null;
 };
 
 export default function OrderDetailPage() {
@@ -37,15 +36,15 @@ export default function OrderDetailPage() {
     setLoading(true);
     const { data, error } = await supabase
       .from("orders")
-      .select("id, product_title, seller_name, total, status, created_at, delivery_method")
-      .eq("id", id)
+      .select("id, status, created_at, delivery_method, escrow_released, product:product_id(title)")
+      .eq("id", id as string)
       .eq("buyer_id", user!.id)
       .single();
 
     if (error) {
       setOrder(null);
     } else {
-      setOrder(data);
+      setOrder(data as unknown as Order);
     }
     setLoading(false);
   }
@@ -124,12 +123,11 @@ export default function OrderDetailPage() {
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </Badge>
               </div>
-              <h1 className="font-display text-2xl font-bold text-foreground">{order.product_title}</h1>
-              <p className="text-muted-foreground">Sold by {order.seller_name}</p>
+              <h1 className="font-display text-2xl font-bold text-foreground">{order.product?.title || "Unknown Product"}</h1>
+              <p className="text-muted-foreground">Order #{order.id.slice(0, 8).toUpperCase()}</p>
             </div>
             <div className="text-right">
-              <p className="font-mono text-2xl font-bold text-foreground">${order.total.toFixed(2)}</p>
-              <p className="text-sm text-muted-foreground">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
+              <p className="font-mono text-2xl font-bold text-foreground">—</p>
             </div>
           </div>
 

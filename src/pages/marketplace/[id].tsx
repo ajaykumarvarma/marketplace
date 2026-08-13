@@ -18,7 +18,7 @@ interface ProductDetail {
   original_price: number | null;
   image_url: string | null;
   delivery_time: string;
-  stock_quantity: number;
+  stock: number;
   tags: string[];
   status: string;
   created_at: string;
@@ -243,7 +243,7 @@ export default function ProductDetailPage() {
               <div className="pt-4 border-t border-border space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Stock</span>
-                  <span className="font-mono text-foreground">{product.stock_quantity} left</span>
+                  <span className="font-mono text-foreground">{product.stock} left</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Delivery</span>

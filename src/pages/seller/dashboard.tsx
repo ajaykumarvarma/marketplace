@@ -8,7 +8,7 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-type Order = { id: string; product_title: string; total: number; status: string; created_at: string };
+type Order = { id: string; status: string; created_at: string; product: { title: string } | null };
 type Product = { id: string; title: string; price: number; stock: number; status: string };
 
 export default function SellerDashboardPage() {
@@ -32,14 +32,14 @@ export default function SellerDashboardPage() {
   async function fetchDashboard() {
     setLoading(true);
     const [ordersRes, productsRes] = await Promise.all([
-      supabase.from("orders").select("id, product_title, total, status, created_at").eq("seller_id", user!.id).order("created_at", { ascending: false }).limit(20),
+      supabase.from("orders").select("id, status, created_at, product:product_id(title)").eq("seller_id", user!.id).order("created_at", { ascending: false }).limit(20),
       supabase.from("products").select("id, title, price, stock, status").eq("seller_id", user!.id).order("created_at", { ascending: false }),
     ]);
 
-    if (ordersRes.data) setOrders(ordersRes.data);
+    if (ordersRes.data) setOrders(ordersRes.data as unknown as Order[]);
     if (productsRes.data) {
       setProducts(productsRes.data);
-      const revenue = ordersRes.data?.reduce((sum, o) => sum + (o.total || 0), 0) || 0;
+      const revenue = 0; // Will calculate from order items when schema is extended
       const activeOrders = ordersRes.data?.filter((o) => ["pending", "processing"].includes(o.status)).length || 0;
       setStats({
         revenue,
@@ -135,8 +135,8 @@ export default function SellerDashboardPage() {
                       {orders.map((order) => (
                         <tr key={order.id} className="border-b border-border hover:bg-muted/30 transition-colors">
                           <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
-                          <td className="px-4 py-3 text-foreground">{order.product_title}</td>
-                          <td className="px-4 py-3 font-mono text-foreground">${order.total.toFixed(2)}</td>
+                          <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
+                          <td className="px-4 py-3 font-mono text-foreground">—</td>
                           <td className="px-4 py-3">
                             <Badge variant="outline" className={`text-xs ${statusBadge(order.status)}`}>{order.status}</Badge>
                           </td>
