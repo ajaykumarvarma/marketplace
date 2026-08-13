@@ -17,9 +17,9 @@ vi.mock("next/router", () => ({
 
 // Mock next/link to render as simple anchor
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>{children}</a>
-  ),
+  default: function MockLink({ children, href, ...props }: any) {
+    return React.createElement("a", { href, ...props }, children);
+  },
 }));
 
 // Mock Supabase client module
@@ -53,7 +53,9 @@ vi.mock("@/contexts/AuthContext", () => ({
     isAdmin: false,
     isSeller: false,
   })),
-  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AuthProvider: function MockAuthProvider({ children }: any) {
+    return React.createElement(React.Fragment, null, children);
+  },
 }));
 
 // Mock CartContext
@@ -67,7 +69,9 @@ vi.mock("@/contexts/CartContext", () => ({
     updateQuantity: vi.fn(),
     clearCart: vi.fn(),
   })),
-  CartProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  CartProvider: function MockCartProvider({ children }: any) {
+    return React.createElement(React.Fragment, null, children);
+  },
 }));
 
 // Mock toast hook
