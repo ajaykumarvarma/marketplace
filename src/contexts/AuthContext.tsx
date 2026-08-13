@@ -4,11 +4,11 @@ import type { User, Session } from "@supabase/supabase-js";
 
 interface Profile {
   id: string;
-  email: string;
-  display_name: string | null;
+  full_name: string | null;
   role: "buyer" | "seller" | "admin";
   avatar_url: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 interface AuthContextType {
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       password,
       options: {
-        data: { role },
+        data: { role, full_name: email.split("@")[0] },
       },
     });
     return { error };
