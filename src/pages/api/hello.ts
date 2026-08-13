@@ -1,13 +1,21 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Data = {
-  name: string;
-};
+interface HealthResponse {
+  status: string;
+  service: string;
+  version: string;
+  timestamp: string;
+}
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<HealthResponse>,
 ) {
-  res.status(200).json({ name: "John Doe" });
+  res.status(200).json({
+    status: "ok",
+    service: "tradevault-api",
+    version: "1.0.0",
+    timestamp: new Date().toISOString(),
+  });
 }

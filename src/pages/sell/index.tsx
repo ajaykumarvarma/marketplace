@@ -63,10 +63,12 @@ export default function SellPage() {
               Join 1,200+ sellers earning on TradeVault. Low fees, instant payouts, and enterprise-grade security.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-                Become a Seller
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <Link href="/auth/register">
+                <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                  Become a Seller
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
               <Button size="lg" variant="outline" className="border-border hover:bg-muted">
                 View Seller Fees
               </Button>
@@ -103,10 +105,12 @@ export default function SellPage() {
                     </div>
                   ))}
                 </div>
-                <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Create Seller Account
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                <Link href="/auth/register">
+                  <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                    Create Seller Account
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
               <div className="bg-muted border border-border rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between">
@@ -142,10 +146,12 @@ export default function SellPage() {
             <p className="text-muted-foreground max-w-md mx-auto">
               Join the fastest growing marketplace for digital goods. No setup fees, no monthly charges.
             </p>
-            <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Store className="h-4 w-4" />
-              Become a Seller Today
-            </Button>
+            <Link href="/auth/register">
+              <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Store className="h-4 w-4" />
+                Become a Seller Today
+              </Button>
+            </Link>
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1"><CheckCircle className="h-3 w-3 text-success" /> 5% Fee Only</span>
               <span className="flex items-center gap-1"><CheckCircle className="h-3 w-3 text-success" /> Instant Payouts</span>
