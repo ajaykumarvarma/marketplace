@@ -149,7 +149,7 @@ export default function CheckoutPage() {
       .eq("id", product.id)
       .maybeSingle();
 
-    const { data: orderData, error } = await (supabase.from("orders").insert({
+    const { data: orderData, error } = await supabase.from("orders").insert({
       buyer_id: user.id,
       seller_id: productData?.seller_id || product.seller || "unknown",
       product_id: product.id,
@@ -158,7 +158,7 @@ export default function CheckoutPage() {
       delivery_method: "digital",
       payment_method: paymentMethod,
       status: fraudCheck.riskScore >= 50 ? "processing" : "pending",
-    }).select().single() as Promise<{ data: { id: string } | null; error: any }>);
+    } as any).select().single();
 
     setProcessing(false);
 
