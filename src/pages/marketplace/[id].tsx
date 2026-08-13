@@ -8,162 +8,48 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/integrations/supabase/client";
 
-const productData: Record<string, {
+interface ProductDetail {
+  id: string;
   title: string;
-  seller: string;
-  sellerRating: number;
-  sellerSales: number;
-  sellerSince: string;
-  verified: boolean;
-  price: number;
-  originalPrice: number | null;
-  category: string;
   description: string;
+  price: number;
+  original_price: number | null;
+  image_url: string | null;
+  delivery_time: string;
+  stock_quantity: number;
   tags: string[];
-  delivery: string;
-  stock: number;
-  reviews: { user: string; rating: number; date: string; comment: string }[];
-}> = {
-  "prod-1": {
-    title: "Steam Game Keys Bundle — 50+ Titles",
-    seller: "GameVault",
-    sellerRating: 4.9,
-    sellerSales: 2847,
-    sellerSince: "2023",
-    verified: true,
-    price: 12.99,
-    originalPrice: 49.99,
-    category: "Game Keys",
-    description: "Get instant access to over 50 premium Steam game keys. All keys are region-free and ready for immediate activation. Includes indie gems, AAA titles, and hidden treasures. Full replacement guarantee if any key is invalid.",
-    tags: ["Instant Delivery", "Global", "Replacement Guarantee"],
-    delivery: "1 min",
-    stock: 47,
-    reviews: [
-      { user: "AlexM", rating: 5, date: "2026-08-05", comment: "All keys worked perfectly. Great value for money!" },
-      { user: "SarahK", rating: 5, date: "2026-08-03", comment: "Instant delivery as promised. Will buy again." },
-      { user: "MikeR", rating: 4, date: "2026-07-28", comment: "One key had an issue but seller replaced it within 5 minutes." },
-    ],
-  },
-  "prod-2": {
-    title: "Spotify Premium 12-Month Subscription",
-    seller: "SubMaster",
-    sellerRating: 4.8,
-    sellerSales: 1523,
-    sellerSince: "2024",
-    verified: true,
-    price: 24.99,
-    originalPrice: 99.99,
-    category: "Subscriptions",
-    description: "Spotify Premium for 12 months at a fraction of the cost. Full warranty throughout the subscription period. Works globally with any Spotify account.",
-    tags: ["Instant", "Warranty", "Global"],
-    delivery: "Instant",
-    stock: 23,
-    reviews: [
-      { user: "JessicaT", rating: 5, date: "2026-08-08", comment: "Still working after 3 months. Excellent!" },
-      { user: "DavidL", rating: 5, date: "2026-08-01", comment: "Best price I could find. Highly recommended." },
-    ],
-  },
-  "prod-3": {
-    title: "Adobe Creative Cloud Full Suite",
-    seller: "LicenseHub",
-    sellerRating: 4.7,
-    sellerSales: 892,
-    sellerSince: "2023",
-    verified: true,
-    price: 89.99,
-    originalPrice: 599.99,
-    category: "Software",
-    description: "Full Adobe Creative Cloud suite access for 1 year. Includes Photoshop, Illustrator, Premiere Pro, After Effects, and all 20+ apps. Genuine license with official support access.",
-    tags: ["1-Year", "Global", "Official Support"],
-    delivery: "5 min",
-    stock: 15,
-    reviews: [
-      { user: "DesignerJoe", rating: 5, date: "2026-08-06", comment: "License activated without issues. All apps working." },
-      { user: "CreativeAnna", rating: 4, date: "2026-07-30", comment: "Great deal, took about 10 minutes to receive credentials." },
-    ],
-  },
-  "prod-4": {
-    title: "Discord Nitro 1-Year Gift",
-    seller: "GiftGenie",
-    sellerRating: 4.9,
-    sellerSales: 3421,
-    sellerSince: "2022",
-    verified: true,
-    price: 34.99,
-    originalPrice: 99.99,
-    category: "Gift Cards",
-    description: "Discord Nitro subscription for 12 months delivered as a gift link. Unlock custom emojis, HD video streaming, bigger uploads, and server boosts. Works globally.",
-    tags: ["Instant", "Global", "Gift Link"],
-    delivery: "Instant",
-    stock: 56,
-    reviews: [
-      { user: "GamerX", rating: 5, date: "2026-08-09", comment: "Got the gift link in seconds. Easy to redeem!" },
-      { user: "ModSarah", rating: 5, date: "2026-08-04", comment: "Third purchase from this seller. Always reliable." },
-    ],
-  },
-  "prod-5": {
-    title: "Fortnite OG Account — 200+ Skins",
-    seller: "EpicTrades",
-    sellerRating: 4.6,
-    sellerSales: 567,
-    sellerSince: "2024",
-    verified: false,
-    price: 149.99,
-    originalPrice: null,
-    category: "Accounts",
-    description: "Rare Fortnite account with 200+ skins including Renegade Raider, Ghoul Trooper, and Black Knight. Full email access provided. Season 1-4 battle passes completed. Email changeable.",
-    tags: ["Full Access", "Email Changeable", "Rare Skins"],
-    delivery: "15 min",
-    stock: 3,
-    reviews: [
-      { user: "FortFan", rating: 5, date: "2026-08-02", comment: "Account exactly as described. Email change went smooth." },
-      { user: "BRPlayer", rating: 3, date: "2026-07-25", comment: "Took 30 minutes to deliver but account is legit." },
-    ],
-  },
-  "prod-6": {
-    title: "Canva Pro Lifetime Access",
-    seller: "DesignDeals",
-    sellerRating: 4.8,
-    sellerSales: 1234,
-    sellerSince: "2023",
-    verified: true,
-    price: 19.99,
-    originalPrice: 119.99,
-    category: "Software",
-    description: "Lifetime access to Canva Pro features including premium templates, background remover, brand kit, and 1TB storage. Works with existing Canva accounts.",
-    tags: ["Lifetime", "Global", "Premium Templates"],
-    delivery: "2 min",
-    stock: 89,
-    reviews: [
-      { user: "MarketerPro", rating: 5, date: "2026-08-07", comment: "Best $20 I spent. Pro features unlocked instantly." },
-      { user: "SmallBiz", rating: 5, date: "2026-07-29", comment: "Using this for my business designs. Works perfectly." },
-    ],
-  },
-};
-
-const productImages: Record<string, string> = {
-  "prod-1": "/generated/game-keys-bundle.png",
-  "prod-2": "/generated/spotify-sub.png",
-  "prod-3": "/generated/adobe-suite.png",
-  "prod-4": "/generated/discord-nitro.png",
-  "prod-5": "/generated/fortnite-account.png",
-  "prod-6": "/generated/canva-pro.png",
-};
+  status: string;
+  created_at: string;
+  seller: { id: string; full_name: string | null; role: string } | null;
+  category: { name: string } | null;
+  reviews: { buyer_id: string; rating: number; comment: string; created_at: string }[] | null;
+}
 
 export default function ProductDetailPage() {
   const router = useRouter();
   const { id } = router.query;
   const { addItem } = useCart();
-  const [mounted, setMounted] = useState(false);
+  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!id) return;
+    async function load() {
+      setLoading(true);
+      const { data } = await supabase
+        .from("products")
+        .select("*, seller:seller_id(id, full_name, role), category:category_id(name), reviews(*)")
+        .eq("id", id as string)
+        .maybeSingle();
+      if (data) setProduct(data as ProductDetail);
+      setLoading(false);
+    }
+    load();
+  }, [id]);
 
-  const product = id ? productData[id as string] : undefined;
-
-  if (!mounted) {
+  if (loading) {
     return (
       <>
         <SEO title="Product — TradeVault" description="Browse digital goods on TradeVault." />
@@ -198,6 +84,10 @@ export default function ProductDetailPage() {
     );
   }
 
+  const avgRating = product.reviews?.length
+    ? (product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length).toFixed(1)
+    : "0.0";
+
   return (
     <>
       <SEO title={`${product.title} — TradeVault`} description={product.description.slice(0, 160)} />
@@ -211,7 +101,7 @@ export default function ProductDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             <div className="aspect-[16/9] bg-muted rounded-lg relative overflow-hidden">
               <Image
-                src={productImages[id as string] || ""}
+                src={product.image_url || "/generated/hero-product.png"}
                 alt={product.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 66vw"
@@ -222,8 +112,8 @@ export default function ProductDetailPage() {
 
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="border-border text-muted-foreground">{product.category}</Badge>
-                {product.verified && (
+                <Badge variant="outline" className="border-border text-muted-foreground">{product.category?.name || "Other"}</Badge>
+                {product.seller?.role !== "buyer" && (
                   <Badge className="bg-success/10 text-success border-success/20">
                     <Shield className="h-3 w-3 mr-1" /> Verified Seller
                   </Badge>
@@ -235,7 +125,7 @@ export default function ProductDetailPage() {
             <Tabs defaultValue="description" className="w-full">
               <TabsList className="bg-muted border border-border">
                 <TabsTrigger value="description" className="data-[state=active]:bg-card">Description</TabsTrigger>
-                <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({product.reviews.length})</TabsTrigger>
+                <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({product.reviews?.length || 0})</TabsTrigger>
                 <TabsTrigger value="delivery" className="data-[state=active]:bg-card">Delivery Info</TabsTrigger>
               </TabsList>
               <TabsContent value="description" className="mt-4 space-y-4">
@@ -249,14 +139,14 @@ export default function ProductDetailPage() {
                 </div>
               </TabsContent>
               <TabsContent value="reviews" className="mt-4 space-y-4">
-                {product.reviews.map((review, i) => (
+                {product.reviews?.map((review, i) => (
                   <div key={i} className="bg-card border border-border rounded-lg p-4 space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                          {review.user[0]}
+                          {review.buyer_id[0]?.toUpperCase() || "U"}
                         </div>
-                        <span className="font-medium text-foreground">{review.user}</span>
+                        <span className="font-medium text-foreground">Buyer</span>
                       </div>
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, j) => (
@@ -265,9 +155,12 @@ export default function ProductDetailPage() {
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground">{review.comment}</p>
-                    <span className="text-xs text-muted-foreground">{review.date}</span>
+                    <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
                   </div>
                 ))}
+                {(!product.reviews || product.reviews.length === 0) && (
+                  <p className="text-muted-foreground text-sm">No reviews yet. Be the first to review!</p>
+                )}
               </TabsContent>
               <TabsContent value="delivery" className="mt-4 space-y-4">
                 <div className="bg-card border border-border rounded-lg p-4 space-y-3">
@@ -275,7 +168,7 @@ export default function ProductDetailPage() {
                     <Clock className="h-5 w-5 text-primary" />
                     <div>
                       <p className="font-medium text-foreground">Estimated Delivery</p>
-                      <p className="text-sm text-muted-foreground">{product.delivery}</p>
+                      <p className="text-sm text-muted-foreground">{product.delivery_time}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -298,17 +191,17 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-card border border-border rounded-lg p-6 space-y-6 sticky top-24">
+            <div className="bg-card border border-border rounded-lg p-6 space-y-6 sm:sticky sm:top-24">
               <div>
                 <div className="flex items-baseline gap-3">
                   <span className="font-mono text-3xl font-bold text-foreground">${product.price.toFixed(2)}</span>
-                  {product.originalPrice && (
-                    <span className="text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+                  {product.original_price && (
+                    <span className="text-lg text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                   )}
                 </div>
-                {product.originalPrice && (
+                {product.original_price && (
                   <Badge className="mt-2 bg-success/10 text-success border-success/20">
-                    Save {Math.round((1 - product.price / product.originalPrice) * 100)}%
+                    Save {Math.round((1 - product.price / product.original_price) * 100)}%
                   </Badge>
                 )}
               </div>
@@ -316,7 +209,7 @@ export default function ProductDetailPage() {
               <div className="space-y-3">
                 <Button
                   className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground h-12"
-                  onClick={() => addItem({ id: id as string, title: product.title, price: product.price, seller: product.seller })}
+                  onClick={() => addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" })}
                 >
                   <ShoppingCart className="h-4 w-4" />
                   Add to Cart
@@ -330,20 +223,18 @@ export default function ProductDetailPage() {
               <div className="pt-4 border-t border-border space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                    {product.seller[0]}
+                    {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-medium text-foreground">{product.seller}</span>
-                      {product.verified && <Shield className="h-3.5 w-3.5 text-success" />}
+                      <span className="font-medium text-foreground">{product.seller?.full_name || "Unknown"}</span>
+                      {product.seller?.role !== "buyer" && <Shield className="h-3.5 w-3.5 text-success" />}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <div className="flex items-center gap-0.5">
                         <Star className="h-3 w-3 fill-warning text-warning" />
-                        <span>{product.sellerRating}</span>
+                        <span>{avgRating}</span>
                       </div>
-                      <span>· {product.sellerSales.toLocaleString()} sales</span>
-                      <span>· Since {product.sellerSince}</span>
                     </div>
                   </div>
                 </div>
@@ -352,11 +243,11 @@ export default function ProductDetailPage() {
               <div className="pt-4 border-t border-border space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Stock</span>
-                  <span className="font-mono text-foreground">{product.stock} left</span>
+                  <span className="font-mono text-foreground">{product.stock_quantity} left</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Delivery</span>
-                  <span className="text-foreground">{product.delivery}</span>
+                  <span className="text-foreground">{product.delivery_time}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Protection</span>

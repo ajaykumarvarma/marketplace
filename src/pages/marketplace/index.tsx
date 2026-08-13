@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, SlidersHorizontal, Star, Shield, ArrowRight, TrendingUp, Clock, ArrowUpDown, ShoppingCart } from "lucide-react";
@@ -7,115 +7,22 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/integrations/supabase/client";
 
-const categories = [
-  "All",
-  "Game Keys",
-  "Accounts",
-  "Software",
-  "Digital Art",
-  "Services",
-  "Gift Cards",
-  "Subscriptions",
-];
-
-const products = [
-  {
-    id: "prod-1",
-    title: "Steam Game Keys Bundle — 50+ Titles",
-    seller: "GameVault",
-    sellerRating: 4.9,
-    sellerSales: 2847,
-    verified: true,
-    price: 12.99,
-    originalPrice: 49.99,
-    category: "Game Keys",
-    image: "/generated/game-keys-bundle.png",
-    tags: ["Instant Delivery", "Global"],
-    delivery: "1 min",
-    badge: "Best Seller",
-    createdAt: "2026-07-01",
-  },
-  {
-    id: "prod-2",
-    title: "Spotify Premium 12-Month Subscription",
-    seller: "SubMaster",
-    sellerRating: 4.8,
-    sellerSales: 1523,
-    verified: true,
-    price: 24.99,
-    originalPrice: 99.99,
-    category: "Subscriptions",
-    image: "/generated/spotify-sub.png",
-    tags: ["Instant", "Warranty"],
-    delivery: "Instant",
-    badge: "Hot",
-    createdAt: "2026-07-15",
-  },
-  {
-    id: "prod-3",
-    title: "Adobe Creative Cloud Full Suite",
-    seller: "LicenseHub",
-    sellerRating: 4.7,
-    sellerSales: 892,
-    verified: true,
-    price: 89.99,
-    originalPrice: 599.99,
-    category: "Software",
-    image: "/generated/adobe-suite.png",
-    tags: ["1-Year", "Global"],
-    delivery: "5 min",
-    createdAt: "2026-06-20",
-  },
-  {
-    id: "prod-4",
-    title: "Discord Nitro 1-Year Gift",
-    seller: "GiftGenie",
-    sellerRating: 4.9,
-    sellerSales: 3421,
-    verified: true,
-    price: 34.99,
-    originalPrice: 99.99,
-    category: "Gift Cards",
-    image: "/generated/discord-nitro.png",
-    tags: ["Instant", "Global"],
-    delivery: "Instant",
-    badge: "Top Rated",
-    createdAt: "2026-05-10",
-  },
-  {
-    id: "prod-5",
-    title: "Fortnite OG Account — 200+ Skins",
-    seller: "EpicTrades",
-    sellerRating: 4.6,
-    sellerSales: 567,
-    verified: false,
-    price: 149.99,
-    originalPrice: null,
-    category: "Accounts",
-    image: "/generated/fortnite-account.png",
-    tags: ["Full Access", "Email Changeable"],
-    delivery: "15 min",
-    createdAt: "2026-08-01",
-  },
-  {
-    id: "prod-6",
-    title: "Canva Pro Lifetime Access",
-    seller: "DesignDeals",
-    sellerRating: 4.8,
-    sellerSales: 1234,
-    verified: true,
-    price: 19.99,
-    originalPrice: 119.99,
-    category: "Software",
-    image: "/generated/canva-pro.png",
-    tags: ["Lifetime", "Global"],
-    delivery: "2 min",
-    createdAt: "2026-07-20",
-  },
-];
-
-type SortOption = "featured" | "price_low" | "price_high" | "rating" | "newest";
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  original_price: number | null;
+  category_id: string;
+  image_url: string | null;
+  delivery_time: string;
+  stock_quantity: number;
+  status: string;
+  created_at: string;
+  seller: { full_name: string | null; role: string } | null;
+  category: { name: string; slug: string } | null;
+}
 
 function ProductCardSkeleton() {
   return (
@@ -132,31 +39,43 @@ function ProductCardSkeleton() {
 }
 
 export default function MarketplacePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("featured");
-  const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<"featured" | "price_low" | "price_high" | "newest">("featured");
+  const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
 
-  // Simulate loading state for demo
-  const handleCategoryChange = (cat: string) => {
-    setLoading(true);
-    setActiveCategory(cat);
-    setTimeout(() => setLoading(false), 300);
-  };
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      const [{ data: cats }, { data: prods }] = await Promise.all([
+        supabase.from("categories").select("id, name").order("name"),
+        supabase
+          .from("products")
+          .select("*, seller:seller_id(full_name, role), category:category_id(name, slug)")
+          .eq("status", "active")
+          .order("created_at", { ascending: false }),
+      ]);
+      if (cats) setCategories([{ id: "all", name: "All" }, ...cats]);
+      if (prods) setProducts(prods as Product[]);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
 
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory = activeCategory === "All" || p.category === activeCategory;
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.seller.toLowerCase().includes(searchQuery.toLowerCase());
+  const filtered = products.filter((p) => {
+    const matchesCategory = activeCategory === "All" || p.category?.name === activeCategory;
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.seller?.full_name?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sorted = [...filtered].sort((a, b) => {
     switch (sortBy) {
       case "price_low": return a.price - b.price;
       case "price_high": return b.price - a.price;
-      case "rating": return b.sellerRating - a.sellerRating;
-      case "newest": return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      case "newest": return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       default: return 0;
     }
   });
@@ -183,13 +102,12 @@ export default function MarketplacePage() {
           <div className="flex gap-2">
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
               className="px-3 py-2 rounded-md bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="featured">Featured</option>
               <option value="price_low">Price: Low to High</option>
               <option value="price_high">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
               <option value="newest">Newest</option>
             </select>
             <Button variant="outline" className="gap-2 border-border hover:bg-muted">
@@ -202,11 +120,11 @@ export default function MarketplacePage() {
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => handleCategoryChange(cat)}
-              className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeCategory === cat ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.name)}
+              className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeCategory === cat.name ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
             >
-              {cat}
+              {cat.name}
             </button>
           ))}
         </div>
@@ -219,26 +137,26 @@ export default function MarketplacePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedProducts.map((product) => (
+            {sorted.map((product) => (
               <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
                 <Link href={`/marketplace/${product.id}`}>
                   <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                     <Image
-                      src={product.image}
+                      src={product.image_url || "/generated/hero-product.png"}
                       alt={product.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover"
                       loading="lazy"
                     />
-                    {product.badge && (
-                      <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs z-10">
-                        {product.badge}
+                    {product.stock_quantity < 10 && (
+                      <Badge className="absolute top-3 left-3 bg-destructive/10 text-destructive border-destructive/20 text-xs z-10">
+                        Low Stock
                       </Badge>
                     )}
                     <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-foreground z-10">
                       <Clock className="h-3 w-3" />
-                      {product.delivery}
+                      {product.delivery_time}
                     </div>
                   </div>
                 </Link>
@@ -247,33 +165,25 @@ export default function MarketplacePage() {
                     <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.title}</h3>
                   </Link>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">{product.seller}</span>
-                    {product.verified && <Shield className="h-3 w-3 text-success" />}
-                    <div className="flex items-center gap-0.5">
-                      <Star className="h-3 w-3 fill-warning text-warning" />
-                      <span className="text-xs text-muted-foreground">{product.sellerRating}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">({product.sellerSales.toLocaleString()})</span>
+                    <span className="text-sm text-muted-foreground">{product.seller?.full_name || "Unknown"}</span>
+                    {product.seller?.role !== "buyer" && <Shield className="h-3 w-3 text-success" />}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+                    {product.original_price && (
+                      <span className="text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {product.tags.map((tag) => (
-                      <span key={tag} className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">
-                        {tag}
-                      </span>
-                    ))}
+                    <span className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">{product.category?.name || "Other"}</span>
+                    <span className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">{product.delivery_time}</span>
                   </div>
                   <Button
                     size="sm"
                     className="w-full gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
                     onClick={(e) => {
                       e.preventDefault();
-                      addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller });
+                      addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" });
                     }}
                   >
                     <ShoppingCart className="h-3.5 w-3.5" />
@@ -285,7 +195,7 @@ export default function MarketplacePage() {
           </div>
         )}
 
-        {!loading && sortedProducts.length === 0 && (
+        {!loading && sorted.length === 0 && (
           <div className="text-center py-16 space-y-4">
             <Search className="h-12 w-12 text-muted-foreground mx-auto" />
             <h3 className="font-display text-lg font-medium text-foreground">No products found</h3>
