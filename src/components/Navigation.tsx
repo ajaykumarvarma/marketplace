@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useState } from "react";
-import { Shield, Menu, X, ShoppingCart, User, Store, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
+import { Shield, Menu, X, ShoppingCart, Store, LayoutDashboard, ChevronDown, LogOut, User, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeSwitch } from "./ThemeSwitch";
+import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { NotificationBell } from "@/components/NotificationBell";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -52,16 +53,25 @@ export function Navigation() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground relative">
-              <ShoppingCart className="h-5 w-5" />
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
-                  {totalItems}
-                </span>
-              )}
-            </Button>
-          </Link>
+          <div className="flex items-center gap-3">
+            {user ? (
+              <>
+                <Link href="/cart" className="relative">
+                  <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+                  {totalItems > 0 && (
+                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary text-primary-foreground">
+                      {totalItems}
+                    </Badge>
+                  )}
+                </Link>
+                <NotificationBell />
+              </>
+            ) : (
+              <Link href="/cart" className="relative">
+                <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+              </Link>
+            )}
+          </div>
           <ThemeSwitch />
 
           {user ? (

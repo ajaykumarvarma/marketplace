@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import { WishlistButton } from "@/components/WishlistButton";
 
 interface ProductDetail {
   id: string;
@@ -214,10 +215,13 @@ export default function ProductDetailPage() {
                   <ShoppingCart className="h-4 w-4" />
                   Add to Cart
                 </Button>
-                <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted h-12">
-                  <MessageSquare className="h-4 w-4" />
-                  Contact Seller
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1 gap-2 border-border hover:bg-muted h-12">
+                    <MessageSquare className="h-4 w-4" />
+                    Contact Seller
+                  </Button>
+                  <WishlistButton productId={product.id} />
+                </div>
               </div>
 
               <div className="pt-4 border-t border-border space-y-3">
