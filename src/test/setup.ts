@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
+import React from "react";
 
 // Mock Supabase environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = "https://mock-project.supabase.co";
