@@ -23,12 +23,23 @@ export function CategoriesSection() {
   }, []);
 
   async function fetchCounts() {
-    const { data } = await supabase.from("products").select("category, id");
-    if (data) {
+    const [productsRes, categoriesRes] = await Promise.all([
+      supabase.from("products").select("category_id, id"),
+      supabase.from("categories").select("id, slug"),
+    ]);
+
+    if (productsRes.data && categoriesRes.data) {
+      const slugMap: Record<string, string> = {};
+      categoriesRes.data.forEach((c) => {
+        if (c.id && c.slug) slugMap[c.id] = c.slug;
+      });
+
       const map: Record<string, number> = {};
-      data.forEach((p) => {
-        const cat = (p.category || "other").toLowerCase().replace(/\s+/g, "-");
-        map[cat] = (map[cat] || 0) + 1;
+      productsRes.data.forEach((p) => {
+        const catId = p.category_id;
+        if (!catId) return;
+        const slug = slugMap[catId] || "other";
+        map[slug] = (map[slug] || 0) + 1;
       });
       setCounts(map);
     }
