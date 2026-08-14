@@ -23,7 +23,6 @@ export default function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [fraudResult, setFraudResult] = useState<{ riskScore: number; flags: string[]; blocked: boolean } | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -60,7 +59,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (items.length === 0 && !orderId) {
+  if (items.length === 0) {
     return (
       <>
         <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
@@ -69,33 +68,6 @@ export default function CheckoutPage() {
           <Link href="/marketplace">
             <Button variant="outline" className="mt-4">Browse Marketplace</Button>
           </Link>
-        </div>
-      </>
-    );
-  }
-
-  if (orderId) {
-    return (
-      <>
-        <SEO title="Order Confirmed — TradeVault" description="Your order has been placed with escrow protection." />
-        <div className="container py-16 md:py-24 text-center space-y-6">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-success/10 mx-auto">
-            <CheckCircle className="h-8 w-8 text-success" />
-          </div>
-          <h1 className="font-display text-3xl font-bold text-foreground">Order Confirmed</h1>
-          <p className="font-mono text-sm text-muted-foreground">Order ID: {orderId}</p>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Your payment is held in escrow. The seller will be notified to deliver your digital goods.
-            You can track your order in your dashboard.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/marketplace">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">Continue Shopping</Button>
-            </Link>
-            <Link href="/orders">
-              <Button variant="outline" className="border-border hover:bg-muted">View Orders</Button>
-            </Link>
-          </div>
         </div>
       </>
     );

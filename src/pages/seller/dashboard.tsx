@@ -8,7 +8,7 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-type Order = { id: string; status: string; created_at: string; product: { title: string } | null };
+type Order = { id: string; status: string; created_at: string; total_amount: number | null; product: { title: string } | null };
 type Product = { id: string; title: string; price: number; stock: number; status: string };
 
 export default function SellerDashboardPage() {
@@ -32,7 +32,7 @@ export default function SellerDashboardPage() {
   async function fetchDashboard() {
     setLoading(true);
     const [ordersRes, productsRes, revenueRes] = await Promise.all([
-      supabase.from("orders").select("id, status, created_at, product:product_id(title)").eq("seller_id", user!.id).order("created_at", { ascending: false }).limit(20),
+      supabase.from("orders").select("id, status, created_at, total_amount, product:product_id(title)").eq("seller_id", user!.id).order("created_at", { ascending: false }).limit(20),
       supabase.from("products").select("id, title, price, stock, status").eq("seller_id", user!.id).order("created_at", { ascending: false }),
       supabase.from("orders").select("total_amount").eq("seller_id", user!.id).eq("status", "completed"),
     ]);
@@ -137,7 +137,7 @@ export default function SellerDashboardPage() {
                         <tr key={order.id} className="border-b border-border hover:bg-muted/30 transition-colors">
                           <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
                           <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
-                          <td className="px-4 py-3 font-mono text-foreground">—</td>
+                          <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
                           <td className="px-4 py-3">
                             <Badge variant="outline" className={`text-xs ${statusBadge(order.status)}`}>{order.status}</Badge>
                           </td>
