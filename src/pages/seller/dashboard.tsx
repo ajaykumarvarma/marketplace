@@ -31,15 +31,16 @@ export default function SellerDashboardPage() {
 
   async function fetchDashboard() {
     setLoading(true);
-    const [ordersRes, productsRes] = await Promise.all([
+    const [ordersRes, productsRes, revenueRes] = await Promise.all([
       supabase.from("orders").select("id, status, created_at, product:product_id(title)").eq("seller_id", user!.id).order("created_at", { ascending: false }).limit(20),
       supabase.from("products").select("id, title, price, stock, status").eq("seller_id", user!.id).order("created_at", { ascending: false }),
+      supabase.from("orders").select("total_amount").eq("seller_id", user!.id).eq("status", "completed"),
     ]);
 
     if (ordersRes.data) setOrders(ordersRes.data as unknown as Order[]);
     if (productsRes.data) {
       setProducts(productsRes.data);
-      const revenue = 0; // Will calculate from order items when schema is extended
+      const revenue = revenueRes.data?.reduce((sum, o) => sum + (o.total_amount || 0), 0) || 0;
       const activeOrders = ordersRes.data?.filter((o) => ["pending", "processing"].includes(o.status)).length || 0;
       setStats({
         revenue,

@@ -1,22 +1,54 @@
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Star, TrendingUp, Shield, ArrowRight } from "lucide-react";
+import { Star, TrendingUp, Shield, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
-const sellers = [
-  { name: "NexusKeys", badge: "Verified", rating: 4.98, sales: 3420, avatar: "N", color: "bg-primary/20 text-primary" },
-  { name: "PixelForge", badge: "Verified", rating: 4.95, sales: 2187, avatar: "P", color: "bg-accent/20 text-accent" },
-  { name: "CodeVault", badge: "Trusted", rating: 4.92, sales: 1563, avatar: "C", color: "bg-success/20 text-success" },
-  { name: "GameHub Pro", badge: "Verified", rating: 4.89, sales: 4231, avatar: "G", color: "bg-warning/20 text-warning" },
-];
+interface TopSeller {
+  id: string;
+  full_name: string | null;
+  verification_tier: string | null;
+  role: string;
+}
 
-const featuredProducts = [
-  { title: "Steam Game Key Bundle", price: 12.99, originalPrice: 49.99, seller: "NexusKeys", category: "Game Keys", sales: 124 },
-  { title: "Adobe Creative Suite License", price: 89.00, originalPrice: 299.00, seller: "PixelForge", category: "Software", sales: 67 },
-  { title: "Netflix Premium 1-Year", price: 24.99, originalPrice: 198.00, seller: "CodeVault", category: "Accounts", sales: 342 },
-  { title: "Spotify Family 6-Month", price: 8.99, originalPrice: 54.00, seller: "GameHub Pro", category: "Accounts", sales: 891 },
-];
+interface FeaturedProduct {
+  id: string;
+  title: string;
+  price: number;
+  original_price: number | null;
+  category: string | null;
+  seller: { full_name: string | null; verification_tier: string | null } | null;
+}
 
 export function TopSellersSection() {
+  const [sellers, setSellers] = useState<TopSeller[]>([]);
+  const [products, setProducts] = useState<FeaturedProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    const [sellersRes, productsRes] = await Promise.all([
+      supabase.from("profiles").select("id, full_name, verification_tier, role").eq("role", "seller").order("created_at", { ascending: false }).limit(4),
+      supabase.from("products").select("id, title, price, original_price, category, seller:seller_id(full_name, verification_tier)").eq("status", "active").order("created_at", { ascending: false }).limit(4),
+    ]);
+
+    if (sellersRes.data) setSellers(sellersRes.data as unknown as TopSeller[]);
+    if (productsRes.data) setProducts(productsRes.data as unknown as FeaturedProduct[]);
+    setLoading(false);
+  }
+
+  const tierBadge = (tier: string | null) => {
+    switch (tier) {
+      case "gold": return "bg-warning/10 text-warning border-warning/20";
+      case "silver": return "bg-muted text-muted-foreground";
+      case "bronze": return "bg-destructive/10 text-destructive border-destructive/20";
+      default: return "bg-success/10 text-success border-success/20";
+    }
+  };
+
   return (
     <section className="py-16 md:py-24 border-y border-border bg-card/30">
       <div className="container">
@@ -29,28 +61,34 @@ export function TopSellersSection() {
               Verified sellers with proven track records. Every badge earned through real transactions and verified identity.
             </p>
 
-            <div className="space-y-4">
-              {sellers.map((seller) => (
-                <div key={seller.name} className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold ${seller.color}`}>
-                    {seller.avatar}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-foreground text-sm truncate">{seller.name}</span>
-                      <Shield className="h-3 w-3 text-success" />
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-6 w-6 text-primary animate-spin" />
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {sellers.map((seller) => (
+                  <Link key={seller.id} href={`/sellers/${seller.id}`}>
+                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 transition-all">
+                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">
+                        {(seller.full_name || "S")[0].toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-foreground text-sm truncate">{seller.full_name || "Unnamed Seller"}</span>
+                          <Shield className="h-3 w-3 text-success" />
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                          <span className={`px-1.5 py-0.5 rounded text-[10px] border ${tierBadge(seller.verification_tier)}`}>
+                            {(seller.verification_tier || "verified").toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
-                      <span className="flex items-center gap-1">
-                        <Star className="h-3 w-3 text-warning fill-warning" />
-                        {seller.rating}
-                      </span>
-                      <span className="font-mono">{seller.sales.toLocaleString()} sales</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  </Link>
+                ))}
+              </div>
+            )}
 
             <Button variant="outline" className="w-full mt-6 gap-2 border-border" size="sm">
               View All Sellers
@@ -66,37 +104,43 @@ export function TopSellersSection() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {featuredProducts.map((product) => (
-                <div key={product.title} className="group p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-all duration-300">
-                  <div className="flex items-start justify-between mb-3">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                      {product.category}
-                    </span>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <TrendingUp className="h-3 w-3" />
-                      <span className="font-mono">{product.sales}</span>
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-6 w-6 text-primary animate-spin" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {products.map((product) => (
+                  <Link key={product.id} href={`/marketplace/${product.id}`}>
+                    <div className="group p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-all duration-300">
+                      <div className="flex items-start justify-between mb-3">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                          {product.category || "Digital"}
+                        </span>
+                      </div>
+
+                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
+                        {product.title}
+                      </h4>
+
+                      <div className="flex items-end gap-2 mb-3">
+                        <span className="font-mono text-lg font-semibold text-accent">${product.price.toFixed(2)}</span>
+                        {product.original_price && (
+                          <span className="font-mono text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between pt-3 border-t border-border">
+                        <span className="text-xs text-muted-foreground">by {product.seller?.full_name || "Unknown"}</span>
+                        <Button size="sm" className="h-7 text-xs bg-primary hover:bg-primary/90 text-primary-foreground">
+                          View
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-
-                  <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {product.title}
-                  </h4>
-
-                  <div className="flex items-end gap-2 mb-3">
-                    <span className="font-mono text-lg font-semibold text-accent">${product.price.toFixed(2)}</span>
-                    <span className="font-mono text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-3 border-t border-border">
-                    <span className="text-xs text-muted-foreground">by {product.seller}</span>
-                    <Button size="sm" className="h-7 text-xs bg-primary hover:bg-primary/90 text-primary-foreground">
-                      View
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

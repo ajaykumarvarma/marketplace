@@ -168,8 +168,8 @@ export default function CheckoutPage() {
     }
 
     clearCart();
-    setOrderId(orderData.id.slice(0, 8).toUpperCase());
     toast({ title: "Order placed!", description: "Your purchase is being processed." });
+    router.push(`/orders/${orderData.id}`);
   }
 
   return (
