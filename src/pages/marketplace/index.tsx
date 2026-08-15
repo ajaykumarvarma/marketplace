@@ -122,7 +122,7 @@ export default function MarketplacePage() {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.name)}
-              className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeCategory === cat.name ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+              className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap ${activeCategory === cat.name ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
             >
               {cat.name}
             </button>
@@ -138,7 +138,7 @@ export default function MarketplacePage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sorted.map((product) => (
-              <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
+              <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden">
                 <Link href={`/marketplace/${product.id}`}>
                   <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                     <Image
@@ -154,15 +154,15 @@ export default function MarketplacePage() {
                         Low Stock
                       </Badge>
                     )}
-                    <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-foreground z-10">
+                    <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/90 px-2 py-1 rounded text-xs font-mono text-foreground z-10">
                       <Clock className="h-3 w-3" />
                       {product.delivery_time}
                     </div>
                   </div>
                 </Link>
-                <div className="p-4 space-y-3">
+                <div className="p-4 space-y-2">
                   <Link href={`/marketplace/${product.id}`}>
-                    <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">{product.title}</h3>
+                    <h3 className="font-medium text-foreground hover:text-primary line-clamp-1">{product.title}</h3>
                   </Link>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-foreground">
@@ -194,7 +194,7 @@ export default function MarketplacePage() {
                       addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" });
                     }}
                   >
-                    <ShoppingCart className="h-3.5 w-3.5" />
+                    <ShoppingCart className="h-4 w-4" />
                     Add to Cart
                   </Button>
                 </div>

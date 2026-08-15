@@ -26,9 +26,9 @@ export function Navigation() {
   const isAdmin = profile?.role === "admin";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center gap-2.5">
           <div className="relative flex h-8 w-8 items-center justify-center rounded bg-primary/10 border border-primary/20">
             <Shield className="h-[18px] w-[18px] text-primary" />
             <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent animate-pulse-glow" />
@@ -39,16 +39,16 @@ export function Navigation() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          <Link href="/marketplace" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/marketplace" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
             Marketplace
           </Link>
-          <Link href="/categories" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/categories" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
             Categories
           </Link>
-          <Link href="/sellers" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/sellers" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
             Top Sellers
           </Link>
-          <Link href="/sell" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/sell" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
             Start Selling
           </Link>
         </nav>
@@ -58,7 +58,7 @@ export function Navigation() {
             {user ? (
               <>
                 <Link href="/cart" className="relative">
-                  <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+                  <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground" />
                   {totalItems > 0 && (
                     <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary text-primary-foreground">
                       {totalItems}
@@ -69,7 +69,7 @@ export function Navigation() {
               </>
             ) : (
               <Link href="/cart" className="relative">
-                <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+                <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground" />
               </Link>
             )}
           </div>

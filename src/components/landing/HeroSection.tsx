@@ -43,7 +43,7 @@ export function HeroSection() {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="flex-1 space-y-8 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
-              <Shield className="h-3.5 w-3.5" />
+              <Shield className="h-4 w-4" />
               <span>Escrow-Protected Transactions</span>
             </div>
 
@@ -86,8 +86,8 @@ export function HeroSection() {
 
           <div className="flex-1 w-full max-w-lg lg:max-w-none">
             <div className="relative">
-              <div className="absolute -inset-4 bg-primary/5 rounded-xl blur-2xl" />
-              <div className="relative bg-card border border-border rounded-lg p-6 space-y-5">
+              <div className="absolute -inset-4 bg-primary/5 rounded-lg blur-2xl" />
+              <div className="relative bg-card border border-border rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Live Platform Stats</span>
                   <div className="flex items-center gap-1.5">
@@ -114,7 +114,7 @@ export function HeroSection() {
                     <span className="font-mono text-accent">TV-2847-XF</span>
                   </div>
                   <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                    <div className="h-full w-3/4 bg-gradient-to-r from-primary to-accent rounded-full" />
+                    <div className="h-full w-3/4 bg-primary rounded-full" />
                   </div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>Processing...</span>
