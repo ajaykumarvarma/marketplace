@@ -114,7 +114,7 @@ export function TopSellersSection() {
                   <Link key={product.id} href={`/marketplace/${product.id}`}>
                     <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/30">
                       <div className="flex items-start justify-between mb-3">
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                        <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded">
                           {product.category || "Digital"}
                         </span>
                       </div>
