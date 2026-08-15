@@ -70,7 +70,7 @@ export default function DisputePage() {
       <SEO title="File a Dispute — TradeVault" description="Open a dispute for an order on TradeVault." />
       <div className="container py-8 md:py-12">
         <div className="max-w-2xl mx-auto space-y-8">
-          <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
             Back to Orders
           </Link>

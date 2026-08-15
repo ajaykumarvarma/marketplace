@@ -31,7 +31,7 @@ export function Navigation() {
         <Link href="/" className="flex items-center gap-2.5">
           <div className="relative flex h-8 w-8 items-center justify-center rounded bg-primary/10 border border-primary/20">
             <Shield className="h-[18px] w-[18px] text-primary" />
-            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent animate-pulse-glow" />
+            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent" />
           </div>
           <span className="font-display text-lg font-semibold tracking-tight text-foreground">
             Trade<span className="text-primary">Vault</span>

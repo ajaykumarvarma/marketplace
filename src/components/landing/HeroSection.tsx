@@ -36,9 +36,6 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary)/0.08)_0%,_transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(var(--accent)/0.05)_0%,_transparent_40%)]" />
-
       <div className="container relative pt-20 pb-16 md:pt-28 md:pb-24">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="flex-1 space-y-8 max-w-2xl">
@@ -91,7 +88,7 @@ export function HeroSection() {
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Live Platform Stats</span>
                   <div className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 rounded-full bg-success animate-pulse-glow" />
+                    <div className="h-2 w-2 rounded-full bg-success" />
                     <span className="text-xs text-success font-mono">ONLINE</span>
                   </div>
                 </div>

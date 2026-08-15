@@ -154,7 +154,7 @@ export default function MarketplacePage() {
                         Low Stock
                       </Badge>
                     )}
-                    <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background/90 px-2 py-1 rounded text-xs font-mono text-foreground z-10">
+                    <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background px-2 py-1 rounded text-xs font-mono text-foreground z-10">
                       <Clock className="h-3 w-3" />
                       {product.delivery_time}
                     </div>

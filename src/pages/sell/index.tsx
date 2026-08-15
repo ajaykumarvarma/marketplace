@@ -112,10 +112,10 @@ export default function SellPage() {
                   </Button>
                 </Link>
               </div>
-              <div className="bg-muted border border-border rounded-lg p-6 space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="bg-muted border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-medium text-foreground">Seller Dashboard Preview</span>
-                  <Badge className="bg-success/10 text-success border-success/20 text-xs">Live</Badge>
+                  <Badge className="bg-muted text-muted-foreground border-border text-xs">Demo</Badge>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between py-2 border-b border-border">
