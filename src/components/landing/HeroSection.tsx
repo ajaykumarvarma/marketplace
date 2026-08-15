@@ -38,7 +38,7 @@ export function HeroSection() {
     <section className="relative overflow-hidden border-b border-border">
       <div className="container relative pt-20 pb-16 md:pt-28 md:pb-24">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <div className="flex-1 space-y-8 max-w-2xl">
+          <div className="flex-1 flex flex-col gap-8 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               <Shield className="h-4 w-4" />
               <span>Escrow-Protected Transactions</span>
@@ -72,7 +72,7 @@ export function HeroSection() {
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <div className="flex">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className={`h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium text-foreground ${i > 1 ? "-ml-2" : ""}`}>
+                  <div key={i} className={`h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs font-medium text-foreground ${i > 1 ? "-ml-2" : ""}`}>
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}

@@ -60,7 +60,7 @@ export function Navigation() {
                 <Link href="/cart" className="relative">
                   <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground" />
                   {totalItems > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-primary text-primary-foreground">
+                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-xs bg-primary text-primary-foreground">
                       {totalItems}
                     </Badge>
                   )}
@@ -148,32 +148,32 @@ export function Navigation() {
 
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-background">
-          <div className="container py-4 space-y-3">
-            <Link href="/marketplace" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <div className="container py-4">
+            <Link href="/marketplace" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
               Marketplace
             </Link>
-            <Link href="/categories" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/categories" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
               Categories
             </Link>
-            <Link href="/sellers" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/sellers" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
               Top Sellers
             </Link>
-            <Link href="/sell" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/sell" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
               Start Selling
             </Link>
 
             {user && (
               <>
-                <Link href="/orders" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                <Link href="/orders" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
                   My Orders
                 </Link>
                 {isSeller && (
-                  <Link href="/seller/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                  <Link href="/seller/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
                     Seller Dashboard
                   </Link>
                 )}
                 {isAdmin && (
-                  <Link href="/admin/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                  <Link href="/admin/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
                     Admin Panel
                   </Link>
                 )}

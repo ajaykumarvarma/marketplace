@@ -32,7 +32,7 @@ export function HowItWorksSection() {
               <span className="text-xs font-mono uppercase tracking-wider text-primary">For Buyers</span>
               <div className="h-px flex-1 bg-border" />
             </div>
-            <div className="space-y-6">
+            <div className="flex flex-col gap-6">
               {buyerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
@@ -43,7 +43,7 @@ export function HowItWorksSection() {
                   </div>
                   <div className="pb-6">
                     <h3 className="font-display font-semibold text-foreground mb-1">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                    <p className="text-sm text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
               ))}
@@ -56,7 +56,7 @@ export function HowItWorksSection() {
               <span className="text-xs font-mono uppercase tracking-wider text-accent">For Sellers</span>
               <div className="h-px flex-1 bg-border" />
             </div>
-            <div className="space-y-6">
+            <div className="flex flex-col gap-6">
               {sellerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
@@ -67,7 +67,7 @@ export function HowItWorksSection() {
                   </div>
                   <div className="pb-6">
                     <h3 className="font-display font-semibold text-foreground mb-1">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                    <p className="text-sm text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
               ))}

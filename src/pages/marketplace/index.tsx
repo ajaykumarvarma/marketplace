@@ -83,9 +83,9 @@ export default function MarketplacePage() {
   return (
     <>
       <SEO title="Marketplace — TradeVault" description="Browse thousands of digital goods. Game keys, accounts, software, and more with escrow protection." />
-      <div className="container py-8 md:py-12 space-y-8">
-        <div className="space-y-2">
-          <h1 className="font-display text-3xl font-bold text-foreground">Marketplace</h1>
+      <div className="container py-8 md:py-12 flex flex-col gap-8">
+        <div className="mb-2">
+          <h1 className="font-display text-3xl font-bold text-foreground mb-2">Marketplace</h1>
           <p className="text-muted-foreground">Browse verified digital goods from trusted sellers</p>
         </div>
 
@@ -165,12 +165,12 @@ export default function MarketplacePage() {
                     <h3 className="font-medium text-foreground hover:text-primary line-clamp-1 mb-2">{product.title}</h3>
                   </Link>
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-foreground">
+                    <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-foreground">
                       {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
                     </div>
                     <span className="text-xs text-muted-foreground truncate">{product.seller?.full_name || "Unknown Seller"}</span>
                     {product.seller?.role === "seller" && (
-                      <Badge variant="outline" className="text-[10px] h-4 px-1 bg-success/10 text-success border-success/20">
+                      <Badge variant="outline" className="text-xs h-4 px-1 bg-success/10 text-success border-success/20">
                         <Shield className="h-2.5 w-2.5 mr-0.5" />
                         Verified
                       </Badge>
@@ -183,8 +183,8 @@ export default function MarketplacePage() {
                     )}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mb-3">
-                    <span className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">{product.category?.name || "Other"}</span>
-                    <span className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">{product.delivery_time}</span>
+                    <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.category?.name || "Other"}</span>
+                    <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.delivery_time}</span>
                   </div>
                   <Button
                     size="sm"
@@ -204,7 +204,7 @@ export default function MarketplacePage() {
         )}
 
         {!loading && sorted.length === 0 && (
-          <div className="text-center py-16 space-y-4">
+          <div className="text-center py-16 flex flex-col items-center gap-4">
             <Search className="h-12 w-12 text-muted-foreground mx-auto" />
             <h3 className="font-display text-lg font-medium text-foreground">No products found</h3>
             <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>

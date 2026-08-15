@@ -48,18 +48,18 @@ export default function SellPage() {
   return (
     <>
       <SEO title="Start Selling — TradeVault" description="Sell your digital goods on TradeVault. Low fees, instant setup, and fraud protection." />
-      <div className="space-y-0">
+      <div>
         <section className="border-b border-border">
-          <div className="container py-16 md:py-24 text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
+          <div className="container py-16 md:py-24 text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-6">
               <Store className="h-4 w-4" />
               <span>Seller Program</span>
             </div>
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground max-w-2xl mx-auto">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground max-w-2xl mx-auto mb-6">
               Turn Your Digital Goods Into{" "}
               <span className="text-accent">Revenue</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto">
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-6">
               Join 1,200+ sellers earning on TradeVault. Low fees, instant payouts, and enterprise-grade security.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -93,9 +93,9 @@ export default function SellPage() {
         <section className="border-t border-border bg-card">
           <div className="container py-16 md:py-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
+              <div className="flex flex-col gap-6">
                 <h2 className="font-display text-3xl font-bold text-foreground">Start Selling in Four Steps</h2>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   {steps.map((step, i) => (
                     <div key={step} className="flex items-center gap-4">
                       <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-mono font-medium text-primary">
@@ -117,7 +117,7 @@ export default function SellPage() {
                   <span className="text-sm font-medium text-foreground">Seller Dashboard Preview</span>
                   <Badge className="bg-muted text-muted-foreground border-border text-xs">Demo</Badge>
                 </div>
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between py-2 border-b border-border">
                     <span className="text-sm text-muted-foreground">Total Revenue</span>
                     <span className="font-mono text-foreground">$12,847.50</span>
@@ -141,21 +141,21 @@ export default function SellPage() {
         </section>
 
         <section className="border-t border-border">
-          <div className="container py-16 md:py-20 text-center space-y-6">
-            <h2 className="font-display text-3xl font-bold text-foreground">Ready to Start Selling?</h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
+          <div className="container py-16 md:py-20 text-center">
+            <h2 className="font-display text-3xl font-bold text-foreground mb-6">Ready to Start Selling?</h2>
+            <p className="text-muted-foreground max-w-md mx-auto mb-6">
               Join the fastest growing marketplace for digital goods. No setup fees, no monthly charges.
             </p>
             <Link href="/auth/register">
-              <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground mb-6">
                 <Store className="h-4 w-4" />
                 Become a Seller Today
               </Button>
             </Link>
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1"><CheckCircle className="h-3 w-3 text-success" /> 5% Fee Only</span>
-              <span className="flex items-center gap-1"><CheckCircle className="h-3 w-3 text-success" /> Instant Payouts</span>
-              <span className="flex items-center gap-1"><CheckCircle className="h-3 w-3 text-success" /> 24/7 Support</span>
+              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-success" /> 5% Fee Only</span>
+              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-success" /> Instant Payouts</span>
+              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-success" /> 24/7 Support</span>
             </div>
           </div>
         </section>
