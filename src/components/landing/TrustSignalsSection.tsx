@@ -9,7 +9,7 @@ const trustItems = [
   {
     icon: Lock,
     title: "Fraud Detection",
-    description: "AI-powered risk scoring monitors every transaction in real-time to flag suspicious activity.",
+    description: "Velocity checks, IP reputation, and device fingerprinting flag suspicious transactions before they complete.",
   },
   {
     icon: Eye,
@@ -48,14 +48,13 @@ export function TrustSignalsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trustItems.map((item, i) => (
+          {trustItems.map((item) => (
             <div
               key={item.title}
-              className="group p-6 bg-card border border-border rounded-lg hover:border-primary/30 transition-all duration-300"
-              style={{ animationDelay: `${i * 100}ms` }}
+              className="p-6 bg-card border border-border rounded-lg"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 border border-primary/20 shrink-0 group-hover:bg-primary/15 transition-colors">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 border border-primary/20 shrink-0">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div className="space-y-1.5">

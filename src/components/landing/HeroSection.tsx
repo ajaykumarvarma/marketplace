@@ -49,7 +49,7 @@ export function HeroSection() {
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight">
               The Secure Marketplace for{" "}
-              <span className="text-gradient">Digital Goods</span>
+              <span className="text-accent">Digital Goods</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
