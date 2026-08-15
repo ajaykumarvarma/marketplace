@@ -9,7 +9,7 @@ import "@/styles/globals.css";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <CartProvider>
           <Layout>
             <Component {...pageProps} />
