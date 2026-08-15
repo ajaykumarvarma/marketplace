@@ -18,7 +18,7 @@ export default function SecurityPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {[
             { icon: Lock, title: "256-bit TLS Encryption", desc: "All data in transit encrypted with AES-256-GCM. Certificates pinned and rotated automatically." },
             { icon: Eye, title: "Real-Time Fraud Detection", desc: "Velocity checks, device fingerprinting, IP reputation scoring, and behavioral analysis on every order." },
