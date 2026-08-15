@@ -53,7 +53,7 @@ export default function ContactPage() {
               <MessageSquare className="h-6 w-6 text-primary" />
             </div>
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">Contact Support</h1>
-            <p className="text-muted-foreground max-w-lg mx-auto">Need help with an order, account, or listing? Our team is here to assist you within 24 hours.</p>
+            <p className="text-foreground/70 max-w-lg mx-auto">Need help with an order, account, or listing? Our team is here to assist you within 24 hours.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -107,17 +107,17 @@ export default function ContactPage() {
               <div className="bg-card border border-border rounded-lg p-6 mb-4">
                 <h3 className="font-display font-semibold text-foreground mb-3">Quick Links</h3>
                 <div>
-                  <Link href="/help" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground mb-3">
+                  <Link href="/help" className="flex items-center gap-3 text-sm text-foreground/70 hover:text-foreground mb-3">
                     <MessageSquare className="h-4 w-4 text-primary" />
                     Help Center
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
-                  <Link href="/dispute" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground mb-3">
+                  <Link href="/dispute" className="flex items-center gap-3 text-sm text-foreground/70 hover:text-foreground mb-3">
                     <Shield className="h-4 w-4 text-primary" />
                     Dispute Resolution
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
-                  <Link href="/security" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground">
+                  <Link href="/security" className="flex items-center gap-3 text-sm text-foreground/70 hover:text-foreground">
                     <Shield className="h-4 w-4 text-primary" />
                     Security Center
                     <ArrowRight className="h-3 w-3 ml-auto" />
@@ -128,15 +128,15 @@ export default function ContactPage() {
               <div className="bg-card border border-border rounded-lg p-6">
                 <h3 className="font-display font-semibold text-foreground mb-3">Contact Info</h3>
                 <div className="text-sm">
-                  <div className="flex items-center gap-3 text-muted-foreground mb-3">
+                  <div className="flex items-center gap-3 text-foreground/70 mb-3">
                     <Mail className="h-4 w-4 text-primary" />
                     support@tradevault.io
                   </div>
-                  <div className="flex items-center gap-3 text-muted-foreground mb-3">
+                  <div className="flex items-center gap-3 text-foreground/70 mb-3">
                     <Clock className="h-4 w-4 text-primary" />
                     Response time: ~24 hours
                   </div>
-                  <div className="flex items-center gap-3 text-muted-foreground">
+                  <div className="flex items-center gap-3 text-foreground/70">
                     <Globe className="h-4 w-4 text-primary" />
                     Global support, English
                   </div>
