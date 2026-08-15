@@ -79,12 +79,12 @@ export default function SellPage() {
         <section className="container py-16 md:py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
-              <div key={feature.title} className="bg-card border border-border rounded-lg p-6 space-y-3 hover:border-primary/20 transition-colors">
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div key={feature.title} className="bg-card border border-border rounded-lg p-6">
+                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
                   <feature.icon className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                <h3 className="font-display font-semibold text-foreground mb-1">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
               </div>
             ))}
           </div>

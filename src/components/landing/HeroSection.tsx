@@ -52,7 +52,7 @@ export function HeroSection() {
               <span className="text-accent">Digital Goods</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
               Buy and sell game keys, accounts, software licenses, and digital services with 
               built-in fraud protection, instant delivery, and escrow-backed trust.
             </p>
@@ -73,9 +73,9 @@ export function HeroSection() {
             </div>
 
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex -space-x-2">
+              <div className="flex">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium text-foreground">
+                  <div key={i} className={`h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-[10px] font-medium text-foreground ${i > 1 ? "-ml-2" : ""}`}>
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}
@@ -86,9 +86,9 @@ export function HeroSection() {
 
           <div className="flex-1 w-full max-w-lg lg:max-w-none">
             <div className="relative">
-              <div className="absolute -inset-4 bg-primary/5 rounded-lg blur-2xl" />
-              <div className="relative bg-card border border-border rounded-lg p-6 space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="absolute -inset-4 bg-primary/5 rounded-lg" />
+              <div className="relative bg-card border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Live Platform Stats</span>
                   <div className="flex items-center gap-1.5">
                     <div className="h-2 w-2 rounded-full bg-success animate-pulse-glow" />
@@ -96,7 +96,7 @@ export function HeroSection() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 mb-4">
                   {stats.map((stat) => (
                     <div key={stat.label} className="bg-muted/50 rounded-md p-4 border border-border/50">
                       <stat.icon className="h-4 w-4 text-primary mb-2" />
@@ -108,12 +108,12 @@ export function HeroSection() {
                   ))}
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
+                <div>
+                  <div className="flex items-center justify-between text-xs mb-2">
                     <span className="text-muted-foreground">Recent Transaction</span>
                     <span className="font-mono text-accent">TV-2847-XF</span>
                   </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mb-2">
                     <div className="h-full w-3/4 bg-primary rounded-full" />
                   </div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">

@@ -5,17 +5,17 @@ export default function HelpPage() {
   return (
     <>
       <SEO title="Help Center — TradeVault" description="Get help with buying, selling, and using TradeVault." />
-      <div className="container py-12 md:py-20 max-w-3xl mx-auto space-y-10">
-        <div className="space-y-4 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
-            <HelpCircle className="h-3.5 w-3.5" />
+      <div className="container py-12 md:py-20 max-w-3xl mx-auto">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
+            <HelpCircle className="h-4 w-4" />
             Support
           </div>
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">Help Center</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">Help Center</h1>
           <p className="text-muted-foreground">Find answers to common questions about TradeVault</p>
         </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-6 mb-8">
           {[
             {
               icon: Shield,
@@ -38,19 +38,19 @@ export default function HelpPage() {
               answer: "Register an account and complete the seller verification process. You'll need to provide identity verification and link a payout method. Approval typically takes 1-2 business days.",
             },
           ].map((item) => (
-            <div key={item.title} className="bg-card border border-border rounded-lg p-6 space-y-3">
-              <div className="flex items-center gap-3">
+            <div key={item.title} className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-2">
                 <item.icon className="h-5 w-5 text-primary" />
                 <h3 className="font-display text-lg font-semibold text-foreground">{item.title}</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed">{item.answer}</p>
+              <p className="text-muted-foreground">{item.answer}</p>
             </div>
           ))}
         </div>
 
-        <div className="bg-muted border border-border rounded-lg p-8 text-center space-y-4">
-          <h3 className="font-display text-lg font-semibold text-foreground">Still need help?</h3>
-          <p className="text-muted-foreground">Our support team is available 24/7</p>
+        <div className="bg-muted border border-border rounded-lg p-8 text-center">
+          <h3 className="font-display text-lg font-semibold text-foreground mb-2">Still need help?</h3>
+          <p className="text-muted-foreground mb-2">Our support team is available 24/7</p>
           <p className="font-mono text-primary">support@tradevault.io</p>
         </div>
       </div>

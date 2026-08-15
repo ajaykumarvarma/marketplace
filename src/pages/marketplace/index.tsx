@@ -28,10 +28,10 @@ function ProductCardSkeleton() {
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden animate-pulse">
       <div className="aspect-[4/3] bg-muted" />
-      <div className="p-4 space-y-3">
-        <div className="h-4 bg-muted rounded w-3/4" />
-        <div className="h-3 bg-muted rounded w-1/2" />
-        <div className="h-5 bg-muted rounded w-1/3" />
+      <div className="p-4">
+        <div className="h-4 bg-muted rounded w-3/4 mb-3" />
+        <div className="h-3 bg-muted rounded w-1/2 mb-3" />
+        <div className="h-5 bg-muted rounded w-1/3 mb-3" />
         <div className="h-8 bg-muted rounded w-full" />
       </div>
     </div>
@@ -160,11 +160,11 @@ export default function MarketplacePage() {
                     </div>
                   </div>
                 </Link>
-                <div className="p-4 space-y-2">
+                <div className="p-4">
                   <Link href={`/marketplace/${product.id}`}>
-                    <h3 className="font-medium text-foreground hover:text-primary line-clamp-1">{product.title}</h3>
+                    <h3 className="font-medium text-foreground hover:text-primary line-clamp-1 mb-2">{product.title}</h3>
                   </Link>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-2 mb-2">
                     <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-foreground">
                       {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
                     </div>
@@ -176,13 +176,13 @@ export default function MarketplacePage() {
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 mb-2">
                     <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
                     {product.original_price && (
                       <span className="text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
                     <span className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">{product.category?.name || "Other"}</span>
                     <span className="px-2 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">{product.delivery_time}</span>
                   </div>
