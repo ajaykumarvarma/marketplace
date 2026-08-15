@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Navigation } from "./Navigation";
 import { Footer } from "./Footer";
-import { ThemeSwitch } from "./ThemeSwitch";
 import { useKeyboardShortcuts, type Shortcut } from "@/hooks/useKeyboardShortcuts";
 import { useRouter } from "next/router";
 import {
@@ -10,19 +9,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Keyboard, X, Command } from "lucide-react";
+import { Keyboard } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const shortcuts: Shortcut[] = [
-  { key: "k", ctrlKey: true, description: "Focus search" },
-  { key: "h", ctrlKey: true, description: "Go to Home" },
-  { key: "m", ctrlKey: true, description: "Go to Marketplace" },
-  { key: "c", ctrlKey: true, description: "Go to Cart" },
-  { key: "o", ctrlKey: true, description: "Go to Orders" },
-  { key: "?", description: "Show keyboard shortcuts" },
+  { key: "k", ctrlKey: true, handler: () => {}, description: "Focus search" },
+  { key: "h", ctrlKey: true, handler: () => {}, description: "Go to Home" },
+  { key: "m", ctrlKey: true, handler: () => {}, description: "Go to Marketplace" },
+  { key: "c", ctrlKey: true, handler: () => {}, description: "Go to Cart" },
+  { key: "o", ctrlKey: true, handler: () => {}, description: "Go to Orders" },
+  { key: "?", handler: () => {}, description: "Show keyboard shortcuts" },
 ];
 
 function formatShortcut(shortcut: Shortcut): string {
@@ -43,34 +42,40 @@ export function Layout({ children }: LayoutProps) {
     {
       key: "k",
       ctrlKey: true,
-      action: () => {
+      handler: () => {
         const searchInput = document.querySelector('[data-search="true"]') as HTMLElement;
         searchInput?.focus();
       },
+      description: "Focus search",
     },
     {
       key: "h",
       ctrlKey: true,
-      action: () => router.push("/"),
+      handler: () => router.push("/"),
+      description: "Go to Home",
     },
     {
       key: "m",
       ctrlKey: true,
-      action: () => router.push("/marketplace"),
+      handler: () => router.push("/marketplace"),
+      description: "Go to Marketplace",
     },
     {
       key: "c",
       ctrlKey: true,
-      action: () => router.push("/cart"),
+      handler: () => router.push("/cart"),
+      description: "Go to Cart",
     },
     {
       key: "o",
       ctrlKey: true,
-      action: () => router.push("/orders"),
+      handler: () => router.push("/orders"),
+      description: "Go to Orders",
     },
     {
       key: "?",
-      action: () => setHelpOpen(true),
+      handler: () => setHelpOpen(true),
+      description: "Show keyboard shortcuts",
     },
   ]);
 
