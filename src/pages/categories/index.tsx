@@ -150,7 +150,7 @@ export default function CategoriesPage() {
 
               <div className="flex flex-wrap gap-1.5">
                 {cat.featured.map((f) => (
-                  <Badge key={f} variant="outline" className="border-border text-[10px] text-muted-foreground">
+                  <Badge key={f} variant="outline" className="border-border text-xs text-muted-foreground">
                     {f}
                   </Badge>
                 ))}
@@ -166,7 +166,7 @@ export default function CategoriesPage() {
             Our marketplace grows daily. Request a category or browse the full marketplace for uncategorized listings.
           </p>
           <Link href="/marketplace">
-            <span className="inline-flex items-center gap-2 text-sm text-primary hover:underline">
+            <span className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80">
               Browse All Listings <ArrowRight className="h-4 w-4" />
             </span>
           </Link>

@@ -127,21 +127,21 @@ export default function SellersPage() {
                     <Star className="h-3 w-3 fill-warning text-warning" />
                     <span className="font-mono text-sm font-semibold text-foreground">{seller.rating}</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Rating</p>
+                  <p className="text-xs text-muted-foreground">Rating</p>
                 </div>
                 <div className="bg-muted rounded p-2">
                   <span className="font-mono text-sm font-semibold text-foreground">{seller.sales.toLocaleString()}</span>
-                  <p className="text-[10px] text-muted-foreground">Sales</p>
+                  <p className="text-xs text-muted-foreground">Sales</p>
                 </div>
                 <div className="bg-muted rounded p-2">
                   <span className="font-mono text-sm font-semibold text-foreground">{seller.products}</span>
-                  <p className="text-[10px] text-muted-foreground">Products</p>
+                  <p className="text-xs text-muted-foreground">Products</p>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {seller.categories.map((c) => (
-                  <Badge key={c} variant="outline" className="border-border text-[10px] text-muted-foreground">
+                  <Badge key={c} variant="outline" className="border-border text-xs text-muted-foreground">
                     {c}
                   </Badge>
                 ))}
@@ -156,7 +156,7 @@ export default function SellersPage() {
               </div>
 
               <Link href={`/marketplace?seller=${seller.id}`}>
-                <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20">
+                <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary/10 text-primary text-sm font-medium border border-transparent hover:border-primary/30">
                   <Store className="h-4 w-4" />
                   View Store
                 </span>
@@ -172,7 +172,7 @@ export default function SellersPage() {
             Join thousands of verified sellers. Get access to fraud-protected transactions and instant payouts.
           </p>
           <Link href="/sell">
-            <span className="inline-flex items-center gap-2 text-sm text-primary hover:underline">
+            <span className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80">
               Start Selling <ArrowRight className="h-4 w-4" />
             </span>
           </Link>
