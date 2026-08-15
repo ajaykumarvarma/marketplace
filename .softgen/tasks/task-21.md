@@ -1,6 +1,6 @@
 ---
 title: axe-core Accessibility Tests
-status: in_progress
+status: done
 priority: high
 type: feature
 tags: [accessibility, testing, axe-core]
@@ -13,11 +13,11 @@ position: 21
 Add automated axe-core accessibility tests to the existing vitest test suite. Tests should cover key pages (landing, marketplace, auth, cart, checkout, seller dashboard, admin dashboard) and run on CI for continuous monitoring.
 
 ## Checklist
-- [ ] Install axe-core and vitest-axe dependencies
-- [ ] Create src/test/accessibility.test.tsx with page-level axe scans
-- [ ] Add accessibility tests for landing page, marketplace, auth forms, cart, checkout
-- [ ] Add CI-friendly reporter configuration
-- [ ] Verify all tests pass with zero violations
+- [x] Install axe-core and vitest-axe dependencies
+- [x] Create src/test/accessibility.test.tsx with page-level axe scans
+- [x] Add accessibility tests for landing page, marketplace, auth forms, cart, checkout
+- [x] Add CI-friendly reporter configuration
+- [x] Verify all tests pass with zero violations
 
 ## Acceptance
 - `npm test` includes accessibility checks for at least 6 key pages

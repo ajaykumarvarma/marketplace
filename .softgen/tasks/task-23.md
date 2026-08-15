@@ -1,6 +1,6 @@
 ---
 title: Internationalization (i18n)
-status: in_progress
+status: done
 priority: high
 type: feature
 tags: [i18n, localization, next-intl, multi-language]
@@ -13,16 +13,16 @@ position: 23
 Add internationalization support using next-intl for Next.js page router. Start with English as default, Spanish as second language. All user-facing text should be translatable via JSON message files.
 
 ## Checklist
-- [ ] Install next-intl package
-- [ ] Create src/i18n/config.ts with locale configuration
-- [ ] Create messages/en.json with all UI strings
-- [ ] Create messages/es.json with Spanish translations
-- [ ] Wrap _app.tsx with NextIntlClientProvider
-- [ ] Create LocaleSwitcher component
-- [ ] Update Navigation to include locale switcher
-- [ ] Extract hardcoded strings from landing page components
-- [ ] Extract hardcoded strings from auth pages
-- [ ] Add locale-aware routing (prefix-based)
+- [x] Install next-intl package
+- [x] Create src/i18n/config.ts with locale configuration
+- [x] Create messages/en.json with all UI strings
+- [x] Create messages/es.json with Spanish translations
+- [x] Wrap _app.tsx with NextIntlClientProvider
+- [x] Create LocaleSwitcher component
+- [x] Update Navigation to include locale switcher
+- [x] Extract hardcoded strings from landing page components
+- [x] Extract hardcoded strings from auth pages
+- [x] Add locale-aware routing (prefix-based)
 
 ## Acceptance
 - User can switch between English and Spanish
