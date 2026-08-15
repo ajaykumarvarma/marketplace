@@ -110,9 +110,9 @@ export default function CategoriesPage() {
   return (
     <>
       <SEO title="Browse Categories — TradeVault" description="Explore all digital goods categories on TradeVault. Game keys, accounts, software, subscriptions, and more." />
-      <div className="container py-8 md:py-12 space-y-8">
-        <div className="space-y-2">
-          <h1 className="font-display text-3xl font-bold text-foreground">Categories</h1>
+      <div className="container py-8 md:py-12">
+        <div className="mb-6">
+          <h1 className="font-display text-3xl font-bold text-foreground mb-2">Categories</h1>
           <p className="text-muted-foreground">Browse digital goods by category — 6,130+ active listings</p>
         </div>
 
@@ -121,24 +121,24 @@ export default function CategoriesPage() {
             <Link
               key={cat.id}
               href={`/marketplace?category=${cat.id}`}
-              className="bg-card border border-border rounded-lg p-6 hover:border-primary/30 hover:-translate-y-0.5 transition-all group space-y-4"
+              className="bg-card border border-border rounded-lg p-6 block"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <cat.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</h3>
+                    <h3 className="font-display font-semibold text-foreground">{cat.name}</h3>
                     <p className="text-xs text-muted-foreground">{cat.listings.toLocaleString()} listings</p>
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ArrowRight className="h-4 w-4 text-muted-foreground" />
               </div>
 
-              <p className="text-sm text-muted-foreground">{cat.description}</p>
+              <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
 
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                 <Shield className="h-3 w-3 text-success" />
                 <span>Top seller: {cat.topSeller}</span>
                 <span>·</span>
@@ -159,10 +159,10 @@ export default function CategoriesPage() {
           ))}
         </div>
 
-        <div className="bg-card border border-border rounded-lg p-8 text-center space-y-4">
-          <TrendingUp className="h-8 w-8 text-primary mx-auto" />
-          <h3 className="font-display font-semibold text-foreground">Can't find what you're looking for?</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+        <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
+          <TrendingUp className="h-8 w-8 text-primary mx-auto mb-4" />
+          <h3 className="font-display font-semibold text-foreground mb-2">Can't find what you're looking for?</h3>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
             Our marketplace grows daily. Request a category or browse the full marketplace for uncategorized listings.
           </p>
           <Link href="/marketplace">

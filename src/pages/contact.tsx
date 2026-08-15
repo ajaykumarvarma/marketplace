@@ -107,17 +107,17 @@ export default function ContactPage() {
               <div className="bg-card border border-border rounded-lg p-6 space-y-4">
                 <h3 className="font-display font-semibold text-foreground">Quick Links</h3>
                 <div className="space-y-3">
-                  <Link href="/help" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/help" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground">
                     <MessageSquare className="h-4 w-4 text-primary" />
                     Help Center
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
-                  <Link href="/dispute" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/dispute" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground">
                     <Shield className="h-4 w-4 text-primary" />
                     Dispute Resolution
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
-                  <Link href="/security" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/security" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground">
                     <Shield className="h-4 w-4 text-primary" />
                     Security Center
                     <ArrowRight className="h-3 w-3 ml-auto" />

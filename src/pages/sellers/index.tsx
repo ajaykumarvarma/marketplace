@@ -88,9 +88,9 @@ export default function SellersPage() {
   return (
     <>
       <SEO title="Top Sellers — TradeVault" description="Discover trusted sellers on TradeVault. Verified merchants with escrow protection and buyer guarantees." />
-      <div className="container py-8 md:py-12 space-y-8">
-        <div className="space-y-2">
-          <h1 className="font-display text-3xl font-bold text-foreground">Top Sellers</h1>
+      <div className="container py-8 md:py-12">
+        <div className="mb-6">
+          <h1 className="font-display text-3xl font-bold text-foreground mb-2">Top Sellers</h1>
           <p className="text-muted-foreground">Verified merchants with proven track records</p>
         </div>
 
@@ -98,9 +98,9 @@ export default function SellersPage() {
           {sellers.map((seller) => (
             <div
               key={seller.id}
-              className="bg-card border border-border rounded-lg p-6 hover:border-primary/30 transition-all space-y-4"
+              className="bg-card border border-border rounded-lg p-6"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center font-display text-lg font-semibold text-foreground">
                     {seller.name[0]}
@@ -121,7 +121,7 @@ export default function SellersPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="grid grid-cols-3 gap-3 text-center mb-4">
                 <div className="bg-muted rounded p-2">
                   <div className="flex items-center justify-center gap-1">
                     <Star className="h-3 w-3 fill-warning text-warning" />
@@ -139,7 +139,7 @@ export default function SellersPage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 mb-4">
                 {seller.categories.map((c) => (
                   <Badge key={c} variant="outline" className="border-border text-[10px] text-muted-foreground">
                     {c}
@@ -147,7 +147,7 @@ export default function SellersPage() {
                 ))}
               </div>
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border">
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border mb-4">
                 <span>Since {seller.since}</span>
                 <span className="flex items-center gap-1">
                   <TrendingUp className="h-3 w-3 text-success" />
@@ -156,7 +156,7 @@ export default function SellersPage() {
               </div>
 
               <Link href={`/marketplace?seller=${seller.id}`}>
-                <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors">
+                <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20">
                   <Store className="h-4 w-4" />
                   View Store
                 </span>
@@ -165,10 +165,10 @@ export default function SellersPage() {
           ))}
         </div>
 
-        <div className="bg-card border border-border rounded-lg p-8 text-center space-y-4">
-          <Shield className="h-8 w-8 text-primary mx-auto" />
-          <h3 className="font-display font-semibold text-foreground">Want to become a seller?</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+        <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
+          <Shield className="h-8 w-8 text-primary mx-auto mb-4" />
+          <h3 className="font-display font-semibold text-foreground mb-2">Want to become a seller?</h3>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
             Join thousands of verified sellers. Get access to fraud-protected transactions and instant payouts.
           </p>
           <Link href="/sell">
