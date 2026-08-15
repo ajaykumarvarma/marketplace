@@ -113,7 +113,7 @@ export default function CategoriesPage() {
       <div className="container py-8 md:py-12">
         <div className="mb-6">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Categories</h1>
-          <p className="text-muted-foreground">Browse digital goods by category — 6,130+ active listings</p>
+          <p className="text-foreground/70">Browse digital goods by category — 6,130+ active listings</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -130,15 +130,15 @@ export default function CategoriesPage() {
                   </div>
                   <div>
                     <h3 className="font-display font-semibold text-foreground">{cat.name}</h3>
-                    <p className="text-xs text-muted-foreground">{cat.listings.toLocaleString()} listings</p>
+                    <p className="text-xs text-foreground/70">{cat.listings.toLocaleString()} listings</p>
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                <ArrowRight className="h-4 w-4 text-foreground/70" />
               </div>
 
-              <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
+              <p className="text-sm text-foreground mb-4">{cat.description}</p>
 
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <div className="flex items-center gap-2 text-xs text-foreground mb-3">
                 <Shield className="h-3 w-3 text-success" />
                 <span>Top seller: {cat.topSeller}</span>
                 <span>·</span>
@@ -150,7 +150,7 @@ export default function CategoriesPage() {
 
               <div className="flex flex-wrap gap-1.5">
                 {cat.featured.map((f) => (
-                  <Badge key={f} variant="outline" className="border-border text-xs text-muted-foreground">
+                  <Badge key={f} variant="outline" className="border-border text-xs text-foreground/70">
                     {f}
                   </Badge>
                 ))}
@@ -162,7 +162,7 @@ export default function CategoriesPage() {
         <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
           <TrendingUp className="h-8 w-8 text-primary mx-auto mb-4" />
           <h3 className="font-display font-semibold text-foreground mb-2">Can't find what you're looking for?</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
+          <p className="text-sm text-foreground/70 max-w-md mx-auto mb-4">
             Our marketplace grows daily. Request a category or browse the full marketplace for uncategorized listings.
           </p>
           <Link href="/marketplace">

@@ -91,7 +91,7 @@ export default function SellersPage() {
       <div className="container py-8 md:py-12">
         <div className="mb-6">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Top Sellers</h1>
-          <p className="text-muted-foreground">Verified merchants with proven track records</p>
+          <p className="text-foreground/70">Verified merchants with proven track records</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -110,7 +110,7 @@ export default function SellersPage() {
                       <h3 className="font-display font-semibold text-foreground">{seller.name}</h3>
                       {seller.verified && <BadgeCheck className="h-4 w-4 text-success" />}
                     </div>
-                    <p className="text-xs text-muted-foreground">{seller.tagline}</p>
+                    <p className="text-xs text-foreground">{seller.tagline}</p>
                   </div>
                 </div>
                 {seller.badge && (
@@ -127,27 +127,27 @@ export default function SellersPage() {
                     <Star className="h-3 w-3 fill-warning text-warning" />
                     <span className="font-mono text-sm font-semibold text-foreground">{seller.rating}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">Rating</p>
+                  <p className="text-xs text-foreground">Rating</p>
                 </div>
                 <div className="bg-muted rounded p-2">
                   <span className="font-mono text-sm font-semibold text-foreground">{seller.sales.toLocaleString()}</span>
-                  <p className="text-xs text-muted-foreground">Sales</p>
+                  <p className="text-xs text-foreground">Sales</p>
                 </div>
                 <div className="bg-muted rounded p-2">
                   <span className="font-mono text-sm font-semibold text-foreground">{seller.products}</span>
-                  <p className="text-xs text-muted-foreground">Products</p>
+                  <p className="text-xs text-foreground">Products</p>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {seller.categories.map((c) => (
-                  <Badge key={c} variant="outline" className="border-border text-xs text-muted-foreground">
+                  <Badge key={c} variant="outline" className="border-border text-xs text-foreground">
                     {c}
                   </Badge>
                 ))}
               </div>
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border mb-4">
+              <div className="flex items-center justify-between text-xs text-foreground pt-2 border-t border-border mb-4">
                 <span>Since {seller.since}</span>
                 <span className="flex items-center gap-1">
                   <TrendingUp className="h-3 w-3 text-success" />
@@ -168,7 +168,7 @@ export default function SellersPage() {
         <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
           <Shield className="h-8 w-8 text-primary mx-auto mb-4" />
           <h3 className="font-display font-semibold text-foreground mb-2">Want to become a seller?</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
+          <p className="text-sm text-foreground/70 max-w-md mx-auto mb-4">
             Join thousands of verified sellers. Get access to fraud-protected transactions and instant payouts.
           </p>
           <Link href="/sell">
