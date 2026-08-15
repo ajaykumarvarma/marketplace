@@ -63,16 +63,16 @@ export default function ProductDetailPage() {
       <>
         <SEO title="Product — TradeVault" description="Browse digital goods on TradeVault." />
         <div className="container py-12">
-          <div className="animate-pulse max-w-6xl mx-auto space-y-6">
-            <div className="h-8 bg-muted rounded w-1/4" />
+          <div className="animate-pulse max-w-6xl mx-auto">
+            <div className="h-8 bg-muted rounded w-1/4 mb-6" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-4">
-                <div className="aspect-[16/9] bg-muted rounded-lg" />
-                <div className="h-6 bg-muted rounded w-3/4" />
-                <div className="h-4 bg-muted rounded w-1/2" />
+              <div className="lg:col-span-2">
+                <div className="aspect-[16/9] bg-muted rounded-lg mb-4" />
+                <div className="h-6 bg-muted rounded w-3/4 mb-3" />
+                <div className="h-4 bg-muted rounded w-1/2 mb-3" />
                 <div className="h-32 bg-muted rounded-lg" />
               </div>
-              <div className="space-y-4">
+              <div>
                 <div className="bg-muted rounded-lg h-64" />
               </div>
             </div>
@@ -104,7 +104,6 @@ export default function ProductDetailPage() {
       return;
     }
 
-    // Check if user has purchased this product
     const { data: orderData } = await supabase
       .from("orders")
       .select("id, seller_id")
@@ -147,15 +146,15 @@ export default function ProductDetailPage() {
   return (
     <>
       <SEO title={`${product.title} — TradeVault`} description={product.description.slice(0, 160)} />
-      <div className="container py-8 md:py-12 space-y-8">
-        <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+      <div className="container py-8 md:py-12">
+        <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
           <ArrowLeft className="h-4 w-4" />
           Back to Marketplace
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="aspect-[16/9] bg-muted rounded-lg relative overflow-hidden">
+          <div className="lg:col-span-2">
+            <div className="aspect-[16/9] bg-muted rounded-lg relative overflow-hidden mb-6">
               <Image
                 src={product.image_url || "/generated/hero-product.png"}
                 alt={product.title}
@@ -166,7 +165,7 @@ export default function ProductDetailPage() {
               />
             </div>
 
-            <div>
+            <div className="mb-6">
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="border-border text-muted-foreground">{product.category?.name || "Other"}</Badge>
                 {product.seller?.role !== "buyer" && (
@@ -184,8 +183,8 @@ export default function ProductDetailPage() {
                 <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({product.reviews?.length || 0})</TabsTrigger>
                 <TabsTrigger value="delivery" className="data-[state=active]:bg-card">Delivery Info</TabsTrigger>
               </TabsList>
-              <TabsContent value="description" className="mt-4 space-y-4">
-                <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+              <TabsContent value="description" className="mt-4">
+                <p className="text-muted-foreground mb-4">{product.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {product.tags.map((tag) => (
                     <span key={tag} className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground">
@@ -194,11 +193,11 @@ export default function ProductDetailPage() {
                   ))}
                 </div>
               </TabsContent>
-              <TabsContent value="reviews" className="mt-4 space-y-4">
+              <TabsContent value="reviews" className="mt-4">
                 {user && (
-                  <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-                    <h3 className="font-medium text-foreground">Write a Review</h3>
-                    <div className="flex items-center gap-1">
+                  <div className="bg-card border border-border rounded-lg p-4 mb-4">
+                    <h3 className="font-medium text-foreground mb-3">Write a Review</h3>
+                    <div className="flex items-center gap-1 mb-3">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button key={star} onClick={() => setReviewRating(star)} className="p-0.5">
                           <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-warning text-warning" : "text-muted"}`} />
@@ -209,23 +208,23 @@ export default function ProductDetailPage() {
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                       placeholder="Share your experience with this product..."
-                      className="bg-muted border-border min-h-[80px]"
+                      className="bg-muted border-border min-h-[80px] mb-3"
                     />
                     <Button
                       onClick={submitReview}
                       disabled={submittingReview}
                       size="sm"
-                      className="gap-2 bg-primary hover:bg-primary/90"
+                      className="gap-2 bg-primary hover:bg-primary/90 mb-2"
                     >
-                      <Send className="h-3.5 w-3.5" />
+                      <Send className="h-4 w-4" />
                       {submittingReview ? "Submitting..." : "Submit Review"}
                     </Button>
                     <p className="text-xs text-muted-foreground">You can only review products you have purchased and received.</p>
                   </div>
                 )}
                 {product.reviews?.map((review, i) => (
-                  <div key={i} className="bg-card border border-border rounded-lg p-4 space-y-2">
-                    <div className="flex items-center justify-between">
+                  <div key={i} className="bg-card border border-border rounded-lg p-4 mb-4">
+                    <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
                           {review.reviewer_id[0]?.toUpperCase() || "U"}
@@ -234,11 +233,11 @@ export default function ProductDetailPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, j) => (
-                          <Star key={j} className={`h-3.5 w-3.5 ${j < review.rating ? "fill-warning text-warning" : "text-muted"}`} />
+                          <Star key={j} className={`h-4 w-4 ${j < review.rating ? "fill-warning text-warning" : "text-muted"}`} />
                         ))}
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">{review.comment}</p>
+                    <p className="text-sm text-muted-foreground mb-2">{review.comment}</p>
                     <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
                   </div>
                 ))}
@@ -246,16 +245,16 @@ export default function ProductDetailPage() {
                   <p className="text-muted-foreground text-sm">No reviews yet. Be the first to review!</p>
                 )}
               </TabsContent>
-              <TabsContent value="delivery" className="mt-4 space-y-4">
-                <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-                  <div className="flex items-center gap-3">
+              <TabsContent value="delivery" className="mt-4">
+                <div className="bg-card border border-border rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
                     <Clock className="h-5 w-5 text-primary" />
                     <div>
                       <p className="font-medium text-foreground">Estimated Delivery</p>
                       <p className="text-sm text-muted-foreground">{product.delivery_time}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 mb-3">
                     <Shield className="h-5 w-5 text-success" />
                     <div>
                       <p className="font-medium text-foreground">Escrow Protection</p>
@@ -274,9 +273,9 @@ export default function ProductDetailPage() {
             </Tabs>
           </div>
 
-          <div className="space-y-4">
-            <div className="bg-card border border-border rounded-lg p-6 space-y-6 sm:sticky sm:top-24">
-              <div>
+          <div>
+            <div className="bg-card border border-border rounded-lg p-6 sm:sticky sm:top-24">
+              <div className="mb-6">
                 <div className="flex items-baseline gap-3">
                   <span className="font-mono text-3xl font-bold text-foreground">${product.price.toFixed(2)}</span>
                   {product.original_price && (
@@ -290,16 +289,16 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
-              <div className="space-y-3">
+              <div className="mb-6">
                 <Button
-                  className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground h-12"
+                  className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground h-12 mb-3"
                   onClick={() => addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" })}
                 >
                   <ShoppingCart className="h-4 w-4" />
                   Add to Cart
                 </Button>
                 <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 gap-2 border-border hover:bg-muted h-12">
+                  <Button variant="outline" className="flex-1 gap-2 border-border h-12">
                     <MessageSquare className="h-4 w-4" />
                     Contact Seller
                   </Button>
@@ -307,7 +306,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-border space-y-3">
+              <div className="pt-4 border-t border-border mb-4">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
                     {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
@@ -315,7 +314,7 @@ export default function ProductDetailPage() {
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-medium text-foreground">{product.seller?.full_name || "Unknown"}</span>
-                      {product.seller?.role !== "buyer" && <Shield className="h-3.5 w-3.5 text-success" />}
+                      {product.seller?.role !== "buyer" && <Shield className="h-4 w-4 text-success" />}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <div className="flex items-center gap-0.5">
@@ -327,12 +326,12 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-border space-y-2 text-sm">
-                <div className="flex items-center justify-between">
+              <div className="pt-4 border-t border-border text-sm">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Stock</span>
                   <span className="font-mono text-foreground">{product.stock} left</span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Delivery</span>
                   <span className="text-foreground">{product.delivery_time}</span>
                 </div>
@@ -344,7 +343,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground mt-4">
                 <Flag className="h-3 w-3" />
                 Report this listing
               </button>

@@ -52,7 +52,6 @@ export default function AdminDashboardPage() {
     if (!isAdmin) return;
     loadDashboard();
     
-    // Real-time subscription for orders
     const channel = supabase
       .channel("admin-orders")
       .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => {
@@ -110,8 +109,8 @@ export default function AdminDashboardPage() {
   return (
     <>
       <SEO title="Admin Dashboard — TradeVault" description="Platform administration, fraud detection, and moderation." />
-      <div className="container py-8 md:py-12 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="container py-8 md:py-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Shield className="h-5 w-5 text-primary" />
@@ -127,15 +126,15 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
             { label: "Total Users", value: users.length.toLocaleString(), icon: Users },
             { label: "Active Orders", value: stats.active_orders.toLocaleString(), icon: ShoppingCart },
             { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign },
             { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, good: true },
           ].map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-lg p-5 space-y-3">
-              <div className="flex items-center justify-between">
+            <div key={stat.label} className="bg-card border border-border rounded-lg p-5">
+              <div className="flex items-center justify-between mb-3">
                 <stat.icon className="h-5 w-5 text-primary" />
                 {stat.good && <span className="text-xs font-medium text-success">Resolved</span>}
               </div>
@@ -155,26 +154,26 @@ export default function AdminDashboardPage() {
             <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({stats.total_orders})</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-4 space-y-6">
+          <TabsContent value="overview" className="mt-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="bg-card border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="font-display font-semibold text-foreground">Live Activity</h3>
                   <div className="flex items-center gap-1.5">
-                    <Activity className="h-3.5 w-3.5 text-success animate-pulse" />
+                    <Activity className="h-4 w-4 text-success" />
                     <span className="text-xs text-muted-foreground font-mono">{liveOrders} orders</span>
                   </div>
                 </div>
                 {loading ? (
-                  <div className="space-y-3">
+                  <div>
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="h-12 bg-muted rounded animate-pulse" />
+                      <div key={i} className="h-12 bg-muted rounded mb-3 animate-pulse" />
                     ))}
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div>
                     {fraudLogs.slice(0, 5).map((log) => (
-                      <div key={log.id} className="flex items-start gap-3 text-sm">
+                      <div key={log.id} className="flex items-start gap-3 text-sm mb-3">
                         <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.risk_score >= 70 ? "bg-destructive" : log.risk_score >= 40 ? "bg-warning" : "bg-success"}`} />
                         <div className="flex-1">
                           <p className="text-foreground">{log.event_type.toUpperCase()} — Risk: {log.risk_score}</p>
@@ -188,21 +187,21 @@ export default function AdminDashboardPage() {
                 )}
               </div>
 
-              <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-                <h3 className="font-display font-semibold text-foreground">Risk Distribution</h3>
+              <div className="bg-card border border-border rounded-lg p-6">
+                <h3 className="font-display font-semibold text-foreground mb-4">Risk Distribution</h3>
                 {(() => {
                   const high = fraudLogs.filter((f) => f.risk_score >= 70).length;
                   const med = fraudLogs.filter((f) => f.risk_score >= 40 && f.risk_score < 70).length;
                   const low = fraudLogs.filter((f) => f.risk_score < 40).length;
                   const total = fraudLogs.length || 1;
                   return (
-                    <div className="space-y-4">
+                    <div>
                       {[
                         { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-success" },
                         { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-warning" },
                         { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-destructive" },
                       ].map((r) => (
-                        <div key={r.label}>
+                        <div key={r.label} className="mb-4">
                           <div className="flex items-center justify-between text-sm mb-1">
                             <span className="text-muted-foreground">{r.label} ({r.count})</span>
                             <span className="font-mono text-foreground">{r.pct}%</span>
@@ -234,7 +233,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody>
                     {fraudLogs.map((log) => (
-                      <tr key={log.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                      <tr key={log.id} className="border-b border-border hover:bg-muted/30">
                         <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
                         <td className="px-4 py-3">
                           <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
@@ -250,11 +249,11 @@ export default function AdminDashboardPage() {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
                             {!log.reviewed_at && (
-                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-success transition-colors" title="Resolve" aria-label="Resolve alert">
+                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-success" title="Resolve" aria-label="Resolve alert">
                                 <CheckCircle className="h-4 w-4" />
                               </button>
                             )}
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors" title="Block User" aria-label="Block user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" title="Block User" aria-label="Block user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>
@@ -287,7 +286,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody>
                     {users.map((user) => (
-                      <tr key={user.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                      <tr key={user.id} className="border-b border-border hover:bg-muted/30">
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-foreground">{user.full_name || "Anonymous"}</p>
@@ -307,10 +306,10 @@ export default function AdminDashboardPage() {
                         <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" title="View" aria-label="View user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive transition-colors" title="Ban" aria-label="Ban user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" title="Ban" aria-label="Ban user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>

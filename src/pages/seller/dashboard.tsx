@@ -70,8 +70,8 @@ export default function SellerDashboardPage() {
   return (
     <>
       <SEO title="Seller Dashboard — TradeVault" description="Manage your products, orders, and analytics on TradeVault." />
-      <div className="container py-8 md:py-12 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="container py-8 md:py-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-3xl font-bold text-foreground">Seller Dashboard</h1>
             <p className="text-muted-foreground">Manage your shop, track orders, and grow your business</p>
@@ -84,15 +84,15 @@ export default function SellerDashboardPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
             { label: "Total Revenue", value: `$${stats.revenue.toFixed(2)}`, change: "+12.5%", up: true, icon: DollarSign },
             { label: "Active Orders", value: stats.activeOrders.toString(), change: "+3", up: true, icon: ShoppingCart },
             { label: "Products", value: stats.productCount.toString(), change: "+2", up: true, icon: Package },
             { label: "Rating", value: stats.rating.toString(), change: "+0.1", up: true, icon: Star },
           ].map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-lg p-5 space-y-3">
-              <div className="flex items-center justify-between">
+            <div key={stat.label} className="bg-card border border-border rounded-lg p-5">
+              <div className="flex items-center justify-between mb-3">
                 <stat.icon className="h-5 w-5 text-primary" />
                 <span className={`text-xs font-medium flex items-center gap-0.5 ${stat.up ? "text-success" : "text-destructive"}`}>
                   {stat.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
@@ -134,7 +134,7 @@ export default function SellerDashboardPage() {
                     </thead>
                     <tbody>
                       {orders.map((order) => (
-                        <tr key={order.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                        <tr key={order.id} className="border-b border-border hover:bg-muted/30">
                           <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
                           <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
                           <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
@@ -165,7 +165,7 @@ export default function SellerDashboardPage() {
                     </thead>
                     <tbody>
                       {products.map((product) => (
-                        <tr key={product.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                        <tr key={product.id} className="border-b border-border hover:bg-muted/30">
                           <td className="px-4 py-3 text-foreground">{product.title}</td>
                           <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
                           <td className="px-4 py-3 font-mono text-foreground">{product.stock}</td>
@@ -174,10 +174,10 @@ export default function SellerDashboardPage() {
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" aria-label="View product">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" aria-label="View product">
                                 <Eye className="h-4 w-4" />
                               </button>
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-primary transition-colors" aria-label="Analytics">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-primary" aria-label="Analytics">
                                 <BarChart3 className="h-4 w-4" />
                               </button>
                             </div>
@@ -192,17 +192,17 @@ export default function SellerDashboardPage() {
 
             <TabsContent value="analytics" className="mt-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-                  <h3 className="font-display font-semibold text-foreground">Revenue Overview</h3>
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-display font-semibold text-foreground mb-4">Revenue Overview</h3>
                   <div className="flex items-center justify-center h-48 text-muted-foreground text-sm">
                     Revenue analytics will appear as orders come in.
                   </div>
                 </div>
-                <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-                  <h3 className="font-display font-semibold text-foreground">Top Performing Products</h3>
-                  <div className="space-y-3">
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-display font-semibold text-foreground mb-4">Top Performing Products</h3>
+                  <div>
                     {products.slice(0, 5).map((p, i) => (
-                      <div key={p.id} className="flex items-center gap-3">
+                      <div key={p.id} className="flex items-center gap-3 mb-3">
                         <span className="font-mono text-xs text-muted-foreground w-4">{i + 1}</span>
                         <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-primary rounded-full" style={{ width: `${Math.min((p.stock / 100) * 100, 100)}%` }} />

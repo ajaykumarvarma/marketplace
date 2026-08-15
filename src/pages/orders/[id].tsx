@@ -112,13 +112,13 @@ export default function OrderDetailPage() {
     <>
       <SEO title={`Order ${order.id.slice(0, 8)} — TradeVault`} description={`Track your order on TradeVault.`} />
       <div className="container py-8 md:py-12">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <div className="max-w-3xl mx-auto">
+          <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
             <ArrowLeft className="h-4 w-4" />
             Back to Orders
           </Link>
 
-          <div className="flex items-start justify-between flex-wrap gap-4">
+          <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-mono text-sm text-muted-foreground">TV-ORD-{order.id.slice(0, 8).toUpperCase()}</span>
@@ -135,13 +135,13 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          <div className="bg-card border border-border rounded-lg p-6 space-y-6">
-            <h2 className="font-display font-semibold text-foreground">Order Timeline</h2>
-            <div className="space-y-4">
+          <div className="bg-card border border-border rounded-lg p-6 mb-8">
+            <h2 className="font-display font-semibold text-foreground mb-6">Order Timeline</h2>
+            <div>
               {steps.map((step, i) => (
-                <div key={i} className="flex items-start gap-4">
+                <div key={i} className="flex items-start gap-4 mb-4">
                   <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${i <= currentStep ? "bg-success/20" : "bg-muted"}`}>
-                    {i <= currentStep ? <CheckCircle className="h-3.5 w-3.5 text-success" /> : <Clock className="h-3.5 w-3.5 text-muted-foreground" />}
+                    {i <= currentStep ? <CheckCircle className="h-4 w-4 text-success" /> : <Clock className="h-4 w-4 text-muted-foreground" />}
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">{step}</p>
@@ -152,12 +152,12 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-            <div className="flex items-center gap-2">
+          <div className="bg-card border border-border rounded-lg p-6 mb-8">
+            <div className="flex items-center gap-2 mb-4">
               <Shield className="h-5 w-5 text-success" />
               <h2 className="font-display font-semibold text-foreground">Escrow Protection</h2>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mb-4">
               {order.status === "completed"
                 ? "Your payment has been released to the seller. The transaction is complete."
                 : "Your payment is held securely in escrow. Confirm delivery to release funds to the seller."}
@@ -169,7 +169,7 @@ export default function OrderDetailPage() {
                   Confirm Delivery
                 </Button>
                 <Link href="/dispute">
-                  <Button variant="outline" className="gap-2 border-border hover:bg-muted">
+                  <Button variant="outline" className="gap-2 border-border">
                     <AlertTriangle className="h-4 w-4" />
                     Open Dispute
                   </Button>
@@ -179,20 +179,20 @@ export default function OrderDetailPage() {
           </div>
 
           {(order.status === "delivered" || order.status === "completed") && (
-            <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-              <div className="flex items-center gap-2">
+            <div className="bg-card border border-border rounded-lg p-6 mb-8">
+              <div className="flex items-center gap-2 mb-4">
                 <Package className="h-5 w-5 text-primary" />
                 <h2 className="font-display font-semibold text-foreground">Delivery Details</h2>
               </div>
-              <div className="bg-muted rounded-lg p-4 space-y-2">
-                <p className="text-sm text-muted-foreground">Method: {order.delivery_method || "Digital delivery"}</p>
-                <div className="flex gap-3 pt-2">
-                  <Button size="sm" variant="outline" className="gap-2 border-border hover:bg-muted">
-                    <Download className="h-3.5 w-3.5" />
+              <div className="bg-muted rounded-lg p-4 mb-4">
+                <p className="text-sm text-muted-foreground mb-3">Method: {order.delivery_method || "Digital delivery"}</p>
+                <div className="flex gap-3">
+                  <Button size="sm" variant="outline" className="gap-2 border-border">
+                    <Download className="h-4 w-4" />
                     Download
                   </Button>
-                  <Button size="sm" variant="outline" className="gap-2 border-border hover:bg-muted">
-                    <MessageSquare className="h-3.5 w-3.5" />
+                  <Button size="sm" variant="outline" className="gap-2 border-border">
+                    <MessageSquare className="h-4 w-4" />
                     Contact Seller
                   </Button>
                 </div>
@@ -201,12 +201,12 @@ export default function OrderDetailPage() {
           )}
 
           {order.status === "completed" && (
-            <div className="bg-success/5 border border-success/20 rounded-lg p-4 space-y-3">
-              <h3 className="font-medium text-foreground flex items-center gap-2">
+            <div className="bg-success/5 border border-success/20 rounded-lg p-4 mb-8">
+              <h3 className="font-medium text-foreground flex items-center gap-2 mb-3">
                 <Download className="h-4 w-4 text-success" />
                 Your Digital Goods
               </h3>
-              <div className="bg-background rounded-lg p-3 font-mono text-sm text-foreground break-all">
+              <div className="bg-background rounded-lg p-3 font-mono text-sm text-foreground break-all mb-2">
                 {order.product?.delivery_content || "Your order has been delivered. Contact the seller for access details."}
               </div>
               <p className="text-xs text-muted-foreground">Save this information securely. It will not be shown again.</p>
@@ -215,10 +215,10 @@ export default function OrderDetailPage() {
 
           <div className="flex gap-3">
             <Link href="/marketplace">
-              <Button variant="outline" className="border-border hover:bg-muted">Continue Shopping</Button>
+              <Button variant="outline" className="border-border">Continue Shopping</Button>
             </Link>
             <Link href="/contact">
-              <Button variant="outline" className="gap-2 border-border hover:bg-muted">
+              <Button variant="outline" className="gap-2 border-border">
                 <MessageSquare className="h-4 w-4" />
                 Contact Support
               </Button>

@@ -82,7 +82,7 @@ export default function NewProductPage() {
     <>
       <SEO title="List New Product — TradeVault" description="Create a new digital product listing on TradeVault." />
       <div className="container py-8 md:py-12">
-        <Link href="/seller/dashboard" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
+        <Link href="/seller/dashboard" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
         </Link>
@@ -93,9 +93,9 @@ export default function NewProductPage() {
             <p className="text-muted-foreground">Create a new digital product listing for buyers</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-3">
-              <Label className="flex items-center gap-2">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-8">
+              <Label className="flex items-center gap-2 mb-3">
                 <Upload className="h-4 w-4 text-primary" />
                 Product Images
               </Label>
@@ -114,7 +114,7 @@ export default function NewProductPage() {
                 <button
                   type="button"
                   onClick={() => setImages([...images, `/generated/hero-product.png`])}
-                  className="aspect-square bg-muted border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary/50 transition-colors"
+                  className="aspect-square bg-muted border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary/50"
                 >
                   <Upload className="h-6 w-6 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">Add Image</span>
@@ -122,46 +122,46 @@ export default function NewProductPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <div className="mb-8">
+              <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <FileText className="h-4 w-4 text-primary" />
                 Basic Information
               </h3>
-              <div className="space-y-2">
-                <Label htmlFor="title">Product Title</Label>
+              <div className="mb-4">
+                <Label htmlFor="title" className="mb-2 block">Product Title</Label>
                 <Input id="title" required value={formData.title} onChange={(e) => handleChange("title", e.target.value)} placeholder="e.g., Steam Game Keys Bundle — 50+ Titles" className="bg-muted border-border" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+              <div className="mb-4">
+                <Label htmlFor="description" className="mb-2 block">Description</Label>
                 <Textarea id="description" required value={formData.description} onChange={(e) => handleChange("description", e.target.value)} placeholder="Describe what buyers will receive, delivery method, and any guarantees..." className="bg-muted border-border min-h-[120px]" />
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <div className="mb-8">
+              <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <DollarSign className="h-4 w-4 text-primary" />
                 Pricing
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="price">Price (USD)</Label>
+                <div className="mb-4">
+                  <Label htmlFor="price" className="mb-2 block">Price (USD)</Label>
                   <Input id="price" type="number" step="0.01" min="0.01" required value={formData.price} onChange={(e) => handleChange("price", e.target.value)} placeholder="19.99" className="bg-muted border-border font-mono" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="originalPrice">Original Price (Optional)</Label>
+                <div>
+                  <Label htmlFor="originalPrice" className="mb-2 block">Original Price (Optional)</Label>
                   <Input id="originalPrice" type="number" step="0.01" min="0" value={formData.originalPrice} onChange={(e) => handleChange("originalPrice", e.target.value)} placeholder="99.99" className="bg-muted border-border font-mono" />
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <div className="mb-8">
+              <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <Layers className="h-4 w-4 text-primary" />
                 Category & Inventory
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                <div className="mb-4">
+                  <Label htmlFor="category" className="mb-2 block">Category</Label>
                   <select id="category" required value={formData.category} onChange={(e) => handleChange("category", e.target.value)} className="w-full px-3 py-2 rounded-md bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="">Select a category</option>
                     <option value="Game Keys">Game Keys</option>
@@ -173,24 +173,24 @@ export default function NewProductPage() {
                     <option value="Subscriptions">Subscriptions</option>
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="stock">Stock Quantity</Label>
+                <div>
+                  <Label htmlFor="stock" className="mb-2 block">Stock Quantity</Label>
                   <Input id="stock" type="number" min="1" required value={formData.stock} onChange={(e) => handleChange("stock", e.target.value)} placeholder="50" className="bg-muted border-border font-mono" />
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <div className="mb-8">
+              <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <Package className="h-4 w-4 text-primary" />
                 Delivery & Auto-Delivery
               </h3>
-              <div className="space-y-2">
-                <Label htmlFor="deliveryTime">Estimated Delivery Time</Label>
+              <div className="mb-4">
+                <Label htmlFor="deliveryTime" className="mb-2 block">Estimated Delivery Time</Label>
                 <Input id="deliveryTime" required value={formData.deliveryTime} onChange={(e) => handleChange("deliveryTime", e.target.value)} placeholder="e.g., Instant, 5 minutes, 1 hour" className="bg-muted border-border" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="deliveryContent">Auto-Delivery Content (Optional)</Label>
+              <div className="mb-4">
+                <Label htmlFor="deliveryContent" className="mb-2 block">Auto-Delivery Content (Optional)</Label>
                 <Textarea
                   id="deliveryContent"
                   value={formData.deliveryContent || ""}
@@ -198,18 +198,18 @@ export default function NewProductPage() {
                   placeholder="Enter digital content that will be automatically delivered to buyers (license keys, download links, account credentials, etc.)..."
                   className="bg-muted border-border min-h-[100px]"
                 />
-                <p className="text-xs text-muted-foreground">This content will be shown to buyers immediately after purchase confirmation.</p>
+                <p className="text-xs text-muted-foreground mt-2">This content will be shown to buyers immediately after purchase confirmation.</p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <div className="mb-8">
+              <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <Tag className="h-4 w-4 text-primary" />
                 Tags
               </h3>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-4">
                 <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} placeholder="Add a tag and press Enter" className="bg-muted border-border" />
-                <Button type="button" variant="outline" onClick={addTag} className="border-border hover:bg-muted">Add</Button>
+                <Button type="button" variant="outline" onClick={addTag} className="border-border">Add</Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
@@ -226,7 +226,7 @@ export default function NewProductPage() {
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                 {loading ? "Publishing..." : "Publish Listing"}
               </Button>
-              <Button type="button" variant="outline" className="border-border hover:bg-muted">Save as Draft</Button>
+              <Button type="button" variant="outline" className="border-border">Save as Draft</Button>
             </div>
           </form>
         </div>
