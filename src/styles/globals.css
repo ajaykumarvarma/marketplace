@@ -18,8 +18,8 @@
     --secondary: 213 24% 14%;
     --secondary-foreground: 210 15% 93%;
     --muted: 213 24% 14%;
-    --muted-foreground: 213 15% 55%;
-    --accent: 177 60% 54%;
+    --muted-foreground: 213 15% 68%;
+    --accent: 38 85% 58%;
     --accent-foreground: 210 25% 5%;
     --destructive: 0 65% 62%;
     --destructive-foreground: 210 15% 97%;
@@ -27,7 +27,7 @@
     --input: 213 24% 18%;
     --ring: 213 50% 57%;
     --chart-1: 213 50% 57%;
-    --chart-2: 177 60% 54%;
+    --chart-2: 38 85% 58%;
     --chart-3: 142 69% 62%;
     --chart-4: 45 97% 56%;
     --chart-5: 0 65% 62%;
@@ -64,10 +64,6 @@
 @layer components {
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8 max-w-7xl w-full;
-  }
-
-  .text-accent-solid {
-    color: hsl(var(--accent));
   }
 }
 

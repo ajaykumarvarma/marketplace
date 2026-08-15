@@ -57,7 +57,7 @@ export function TrustSignalsSection() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 border border-primary/20 shrink-0">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
-                <div className="shrink-0">
+                <div>
                   <h3 className="font-display font-semibold text-foreground mb-1.5">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
                 </div>

@@ -62,7 +62,7 @@ export function HeroSection() {
                 </Button>
               </Link>
               <Link href="/sell">
-                <Button size="lg" variant="outline" className="gap-2 border-border hover:bg-muted font-medium">
+                <Button size="lg" variant="outline" className="gap-2 border-border font-medium">
                   Start Selling
                   <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -82,43 +82,50 @@ export function HeroSection() {
           </div>
 
           <div className="flex-1 w-full max-w-lg lg:max-w-none">
-            <div className="relative">
-              <div className="absolute -inset-4 bg-primary/5 rounded-lg" />
-              <div className="relative bg-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Live Platform Stats</span>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 rounded-full bg-success" />
-                    <span className="text-xs text-success font-mono">ONLINE</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  {stats.map((stat) => (
-                    <div key={stat.label} className="bg-muted/50 rounded-md p-4 border border-border/50">
-                      <stat.icon className="h-4 w-4 text-primary mb-2" />
-                      <div className="font-mono text-xl font-semibold text-foreground">
-                        <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span className="text-muted-foreground">Recent Transaction</span>
-                    <span className="font-mono text-accent">TV-2847-XF</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mb-2">
-                    <div className="h-full w-3/4 bg-primary rounded-full" />
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Processing...</span>
-                    <span className="font-mono">74%</span>
-                  </div>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Live Transaction</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2 w-2 rounded-full bg-success" />
+                  <span className="text-xs text-success font-mono">ONLINE</span>
                 </div>
               </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs mb-2">
+                  <span className="text-muted-foreground">Order ID</span>
+                  <span className="font-mono text-accent">TV-2847-XF</span>
+                </div>
+                <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mb-2">
+                  <div className="h-full w-3/4 bg-primary rounded-full" />
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Processing escrow...</span>
+                  <span className="font-mono">74%</span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-border">
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                  <span>Amount</span>
+                  <span className="font-mono text-foreground">$47.99</span>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Method</span>
+                  <span className="font-mono text-foreground">Escrow</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4 mt-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="font-mono text-lg font-semibold text-foreground">
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

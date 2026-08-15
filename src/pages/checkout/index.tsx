@@ -148,10 +148,12 @@ export default function CheckoutPage() {
     <>
       <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection for digital goods." />
       <div className="container py-8 md:py-12">
-        <Link href="/cart" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
+        <Link href="/cart" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
           <ArrowLeft className="h-4 w-4" />
           Back to Cart
         </Link>
+
+        <h1 className="font-display text-2xl font-bold text-foreground mb-6">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">

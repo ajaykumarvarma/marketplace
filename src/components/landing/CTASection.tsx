@@ -7,8 +7,6 @@ export function CTASection() {
     <section className="py-16 md:py-24 border-t border-border">
       <div className="container">
         <div className="relative overflow-hidden rounded-lg bg-card border border-border p-8 md:p-12 lg:p-16">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsl(var(--primary)/0.1)_0%,_transparent_50%)]" />
-
           <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto gap-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
               <Shield className="h-4 w-4" />
@@ -19,7 +17,7 @@ export function CTASection() {
               Ready to Trade with Confidence?
             </h2>
 
-            <p className="text-muted-foreground text-lg max-w-lg">
+            <p className="text-foreground/80 text-lg max-w-lg">
               Join thousands of buyers and sellers who trust TradeVault for secure, 
               escrow-protected digital goods transactions.
             </p>
