@@ -62,12 +62,12 @@ export function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-md hover:bg-muted transition-colors"
+        className="relative p-2 rounded-md hover:bg-muted"
         aria-label="Notifications"
       >
         <Bell className="h-5 w-5 text-muted-foreground" />
         {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+          <span className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center">
             {unread > 9 ? "9+" : unread}
           </span>
         )}
@@ -76,7 +76,7 @@ export function NotificationBell() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-lg z-50 overflow-hidden">
             <div className="px-4 py-3 border-b border-border">
               <h3 className="font-medium text-sm text-foreground">Notifications</h3>
             </div>
@@ -88,11 +88,11 @@ export function NotificationBell() {
                   <div
                     key={n.id}
                     onClick={() => markRead(n.id)}
-                    className={`px-4 py-3 border-b border-border hover:bg-muted/50 cursor-pointer transition-colors ${!n.read ? "bg-primary/5" : ""}`}
+                    className={`px-4 py-3 border-b border-border hover:bg-muted/50 cursor-pointer ${!n.read ? "bg-primary/5" : ""}`}
                   >
                     <p className="text-sm font-medium text-foreground">{n.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{n.message}</p>
-                    <p className="text-[10px] text-muted-foreground mt-1">{new Date(n.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{new Date(n.created_at).toLocaleString()}</p>
                   </div>
                 ))
               )}

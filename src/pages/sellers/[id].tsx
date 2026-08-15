@@ -106,9 +106,9 @@ export default function SellerProfilePage() {
     <>
       <SEO title={`${seller.full_name || "Seller"} — TradeVault`} description={`Browse products from ${seller.full_name || "this seller"} on TradeVault.`} />
       <div className="container py-8 md:py-12">
-        <div className="max-w-5xl mx-auto space-y-8">
+        <div className="max-w-5xl mx-auto">
           {/* Seller Header */}
-          <div className="bg-card border border-border rounded-lg p-6 md:p-8">
+          <div className="bg-card border border-border rounded-lg p-6 md:p-8 mb-8">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center text-2xl font-bold text-foreground">
                 {seller.full_name?.[0]?.toUpperCase() || "S"}
@@ -191,7 +191,7 @@ export default function SellerProfilePage() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {products.map((product) => (
-                    <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden group hover:border-primary/30 transition-all">
+                    <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30">
                       <div className="aspect-[4/3] bg-muted relative">
                         {product.image_url ? (
                           <Image
@@ -207,8 +207,8 @@ export default function SellerProfilePage() {
                           </div>
                         )}
                       </div>
-                      <div className="p-4 space-y-2">
-                        <h3 className="font-medium text-foreground line-clamp-2">{product.title}</h3>
+                      <div className="p-4">
+                        <h3 className="font-medium text-foreground line-clamp-2 mb-2">{product.title}</h3>
                         <div className="flex items-center justify-between">
                           <div>
                             <span className="font-mono font-bold text-foreground">${product.price.toFixed(2)}</span>
@@ -232,11 +232,11 @@ export default function SellerProfilePage() {
             </TabsContent>
 
             <TabsContent value="about" className="mt-6">
-              <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-                <h3 className="font-display font-semibold text-foreground">About this Seller</h3>
-                <p className="text-sm text-muted-foreground">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
+              <div className="bg-card border border-border rounded-lg p-6">
+                <h3 className="font-display font-semibold text-foreground mb-3">About this Seller</h3>
+                <p className="text-sm text-muted-foreground mb-4">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
+                <div>
+                  <div className="flex items-center gap-2 text-sm mb-2">
                     <Shield className="h-4 w-4 text-success" />
                     <span className="text-foreground">Identity verified</span>
                   </div>

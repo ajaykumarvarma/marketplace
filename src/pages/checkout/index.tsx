@@ -148,20 +148,20 @@ export default function CheckoutPage() {
     <>
       <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection for digital goods." />
       <div className="container py-8 md:py-12">
-        <Link href="/cart" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
+        <Link href="/cart" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
           <ArrowLeft className="h-4 w-4" />
           Back to Cart
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <div>
+          <div className="lg:col-span-2">
+            <div className="mb-8">
               <h2 className="font-display text-xl font-semibold text-foreground mb-4">Payment Method</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border transition-all ${paymentMethod === "card" ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
+                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "card" ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
                 >
                   <CreditCard className="h-5 w-5 text-primary" />
                   <div className="text-left">
@@ -172,7 +172,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("crypto")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border transition-all ${paymentMethod === "crypto" ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
+                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "crypto" ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
                 >
                   <Bitcoin className="h-5 w-5 text-warning" />
                   <div className="text-left">
@@ -183,24 +183,24 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="mb-4">
               {paymentMethod === "card" && (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cardName">Name on Card</Label>
+                <div>
+                  <div className="mb-4">
+                    <Label htmlFor="cardName" className="mb-2 block">Name on Card</Label>
                     <Input id="cardName" placeholder="John Doe" className="bg-muted border-border" />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cardNumber">Card Number</Label>
+                  <div className="mb-4">
+                    <Label htmlFor="cardNumber" className="mb-2 block">Card Number</Label>
                     <Input id="cardNumber" placeholder="4242 4242 4242 4242" className="bg-muted border-border font-mono" />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="expiry">Expiry</Label>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <Label htmlFor="expiry" className="mb-2 block">Expiry</Label>
                       <Input id="expiry" placeholder="MM/YY" className="bg-muted border-border font-mono" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="cvc">CVC</Label>
+                    <div>
+                      <Label htmlFor="cvc" className="mb-2 block">CVC</Label>
                       <Input id="cvc" placeholder="123" className="bg-muted border-border font-mono" />
                     </div>
                   </div>
@@ -208,8 +208,8 @@ export default function CheckoutPage() {
               )}
 
               {paymentMethod === "crypto" && (
-                <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-                  <p className="text-sm text-muted-foreground">Send the exact amount to the address shown after confirmation. Your order will be processed once the transaction is verified.</p>
+                <div className="bg-card border border-border rounded-lg p-4 mb-4">
+                  <p className="text-sm text-muted-foreground mb-3">Send the exact amount to the address shown after confirmation. Your order will be processed once the transaction is verified.</p>
                   <div className="flex items-center gap-2 text-sm text-warning">
                     <Lock className="h-4 w-4" />
                     <span>Network: Ethereum (ERC-20)</span>
@@ -217,10 +217,10 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className="flex items-start gap-3 pt-4">
+              <div className="flex items-start gap-3 pt-4 mb-4">
                 <Shield className="h-5 w-5 text-success shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-foreground">Escrow Protected</p>
+                  <p className="text-sm font-medium text-foreground mb-1">Escrow Protected</p>
                   <p className="text-xs text-muted-foreground">Your payment is held securely until you confirm delivery. If the seller fails to deliver, you get a full refund.</p>
                 </div>
               </div>
@@ -238,19 +238,19 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="bg-card border border-border rounded-lg p-4 md:p-6 space-y-4 sm:sticky sm:top-24">
-              <h2 className="font-display font-semibold text-foreground">Order Summary</h2>
+          <div>
+            <div className="bg-card border border-border rounded-lg p-4 md:p-6 sm:sticky sm:top-24">
+              <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
               
               {fraudResult && fraudResult.riskScore >= 50 && (
-                <div className={`p-3 rounded-lg space-y-2 ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
+                <div className={`p-3 rounded-lg ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
                   <div className="flex items-center gap-2">
                     <AlertTriangle className={`h-4 w-4 ${fraudResult.blocked ? "text-destructive" : "text-warning"}`} />
                     <span className={`text-sm font-medium ${fraudResult.blocked ? "text-destructive" : "text-warning"}`}>
                       {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
                     </span>
                   </div>
-                  <div className="space-y-1">
+                  <div>
                     {fraudResult.flags.map((flag, i) => (
                       <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
                     ))}
@@ -259,20 +259,20 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className="space-y-3">
+              <div className="mb-3">
                 {items.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between text-sm">
+                  <div key={item.id} className="flex items-center justify-between text-sm mb-2">
                     <span className="text-muted-foreground truncate max-w-[200px]">{item.title} x{item.quantity}</span>
                     <span className="font-mono text-foreground">${(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
-              <div className="border-t border-border pt-3 space-y-2 text-sm">
-                <div className="flex items-center justify-between">
+              <div className="border-t border-border pt-3 text-sm">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Subtotal</span>
                   <span className="font-mono text-foreground">${totalPrice.toFixed(2)}</span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Platform Fee</span>
                   <span className="font-mono text-foreground">${(totalPrice * 0.02).toFixed(2)}</span>
                 </div>

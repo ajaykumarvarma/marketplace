@@ -73,7 +73,7 @@ export function CategoriesSection() {
               <Link
                 key={cat.label}
                 href={`/marketplace?category=${cat.slug}`}
-                className="group p-5 bg-card border border-border rounded-lg hover:border-primary/30 hover:bg-muted/30 transition-all duration-300"
+                className="p-5 bg-card border border-border rounded-lg hover:border-primary/30 hover:bg-muted/30"
               >
                 <cat.icon className={`h-6 w-6 ${cat.color} mb-3`} />
                 <h3 className="font-display font-semibold text-foreground mb-1">{cat.label}</h3>
@@ -84,7 +84,7 @@ export function CategoriesSection() {
         )}
 
         <div className="mt-6 text-center md:hidden">
-          <Link href="/categories" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+          <Link href="/categories" className="text-sm font-medium text-primary hover:text-primary/80">
             View All Categories →
           </Link>
         </div>

@@ -66,10 +66,10 @@ export function TopSellersSection() {
                 <Loader2 className="h-6 w-6 text-primary animate-spin" />
               </div>
             ) : (
-              <div className="space-y-4">
+              <div>
                 {sellers.map((seller) => (
                   <Link key={seller.id} href={`/sellers/${seller.id}`}>
-                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 transition-all">
+                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 mb-3">
                       <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">
                         {(seller.full_name || "S")[0].toUpperCase()}
                       </div>
@@ -78,7 +78,7 @@ export function TopSellersSection() {
                           <span className="font-medium text-foreground text-sm truncate">{seller.full_name || "Unnamed Seller"}</span>
                           <Shield className="h-3 w-3 text-success" />
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                           <span className={`px-1.5 py-0.5 rounded text-[10px] border ${tierBadge(seller.verification_tier)}`}>
                             {(seller.verification_tier || "verified").toUpperCase()}
                           </span>
@@ -92,14 +92,14 @@ export function TopSellersSection() {
 
             <Button variant="outline" className="w-full mt-6 gap-2 border-border" size="sm">
               View All Sellers
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
 
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-display text-xl font-semibold text-foreground">Featured Products</h3>
-              <Link href="/marketplace" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+              <Link href="/marketplace" className="text-sm font-medium text-primary hover:text-primary/80">
                 Browse All →
               </Link>
             </div>
@@ -112,14 +112,14 @@ export function TopSellersSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {products.map((product) => (
                   <Link key={product.id} href={`/marketplace/${product.id}`}>
-                    <div className="group p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-all duration-300">
+                    <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/30">
                       <div className="flex items-start justify-between mb-3">
                         <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded">
                           {product.category || "Digital"}
                         </span>
                       </div>
 
-                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
+                      <h4 className="font-display font-medium text-foreground mb-2 hover:text-primary">
                         {product.title}
                       </h4>
 
