@@ -79,7 +79,7 @@ export function TopSellersSection() {
                           <Shield className="h-3 w-3 text-success" />
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] border ${tierBadge(seller.verification_tier)}`}>
+                          <span className={`px-1.5 py-0.5 rounded text-xs border ${tierBadge(seller.verification_tier)}`}>
                             {(seller.verification_tier || "verified").toUpperCase()}
                           </span>
                         </div>

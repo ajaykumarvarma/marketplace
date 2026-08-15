@@ -140,11 +140,11 @@ export default function SellerProfilePage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" className="gap-2 border-border hover:bg-muted">
+                <Button variant="outline" className="gap-2 border-border">
                   <MessageSquare className="h-4 w-4" />
                   Contact
                 </Button>
-                <Button variant="outline" className="gap-2 border-border hover:bg-muted">
+                <Button variant="outline" className="gap-2 border-border">
                   <Flag className="h-4 w-4" />
                   Report
                 </Button>

@@ -58,7 +58,7 @@ export function CategoriesSection() {
               Find exactly what you need across our curated digital goods catalog.
             </p>
           </div>
-          <Link href="/categories" className="hidden md:inline-flex text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+          <Link href="/categories" className="hidden md:inline-flex text-sm font-medium text-primary hover:text-primary/80">
             View All →
           </Link>
         </div>
