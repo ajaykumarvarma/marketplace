@@ -52,12 +52,12 @@ export default function SellPage() {
         <section className="border-b border-border">
           <div className="container py-16 md:py-24 text-center space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
-              <Store className="h-3.5 w-3.5" />
+              <Store className="h-4 w-4" />
               <span>Seller Program</span>
             </div>
             <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground max-w-2xl mx-auto">
               Turn Your Digital Goods Into{" "}
-              <span className="text-gradient">Revenue</span>
+              <span className="text-accent">Revenue</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto">
               Join 1,200+ sellers earning on TradeVault. Low fees, instant payouts, and enterprise-grade security.
@@ -94,7 +94,7 @@ export default function SellPage() {
           <div className="container py-16 md:py-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
-                <h2 className="font-display text-3xl font-bold text-foreground">Start Selling in 4 Simple Steps</h2>
+                <h2 className="font-display text-3xl font-bold text-foreground">Start Selling in Four Steps</h2>
                 <div className="space-y-4">
                   {steps.map((step, i) => (
                     <div key={step} className="flex items-center gap-4">

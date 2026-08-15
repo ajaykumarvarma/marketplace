@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -34,7 +33,6 @@ export default function DisputePage() {
 
     setSubmitting(true);
 
-    // Verify order exists and belongs to user
     const { data: orderData } = await supabase
       .from("orders")
       .select("id, seller_id")
@@ -87,9 +85,9 @@ export default function DisputePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { icon: MessageSquare, title: "Step 1", desc: "Contact seller first to resolve" },
-              { icon: FileText, title: "Step 2", desc: "File dispute with details" },
-              { icon: Shield, title: "Step 3", desc: "Our team mediates" },
+              { icon: MessageSquare, title: "Contact Seller", desc: "Reach out to the seller first to resolve the issue directly" },
+              { icon: FileText, title: "Submit Details", desc: "File a dispute with your order ID and a clear description" },
+              { icon: Shield, title: "Team Review", desc: "Our support team reviews the case and mediates a fair outcome" },
             ].map((step, i) => (
               <div key={i} className="bg-card border border-border rounded-lg p-4 text-center space-y-2">
                 <step.icon className="h-5 w-5 text-primary mx-auto" />

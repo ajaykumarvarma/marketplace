@@ -20,7 +20,7 @@ export default function HelpPage() {
             {
               icon: Shield,
               title: "Is TradeVault safe?",
-              answer: "Yes. All transactions are protected by our escrow system. Funds are held securely until the buyer confirms delivery. We also employ AI-powered fraud detection and verify sellers before they can list products.",
+              answer: "Yes. All transactions are protected by our escrow system. Funds are held securely until the buyer confirms delivery. We also run velocity checks, IP reputation screening, and device fingerprinting to flag suspicious transactions before they complete.",
             },
             {
               icon: Zap,
