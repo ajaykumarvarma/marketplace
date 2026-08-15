@@ -7,6 +7,8 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { NotificationBell } from "@/components/NotificationBell";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
+import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -72,8 +74,10 @@ export function Navigation() {
                 <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground" />
               </Link>
             )}
+            <KeyboardShortcutsHelp />
+            <LocaleSwitcher />
+            <ThemeSwitch />
           </div>
-          <ThemeSwitch />
 
           {user ? (
             <DropdownMenu>

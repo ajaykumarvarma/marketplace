@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "title": "TradeVault — Mercado Seguro de Bienes Digitales",
+    "description": "Compra y vende bienes digitales con protección de depósito en garantía, detección de fraude y entrega instantánea."
+  },
+  "navigation": {
+    "marketplace": "Mercado",
+    "categories": "Categorías",
+    "topSellers": "Mejores Vendedores",
+    "startSelling": "Empieza a Vender",
+    "myOrders": "Mis Pedidos",
+    "sellerDashboard": "Panel de Vendedor",
+    "adminPanel": "Panel de Admin",
+    "signIn": "Iniciar Sesión",
+    "getStarted": "Empezar",
+    "signOut": "Cerrar Sesión",
+    "cart": "Carrito",
+    "searchPlaceholder": "Buscar bienes digitales..."
+  },
+  "hero": {
+    "badge": "Transacciones con Depósito en Garantía",
+    "title": "El Mercado Seguro para Bienes Digitales",
+    "subtitle": "Compra y vende con confianza. Cada transacción está protegida por nuestro sistema de depósito en garantía, respaldado por detección de fraude en tiempo real y entrega instantánea.",
+    "browseMarketplace": "Explorar Mercado",
+    "startSelling": "Empieza a Vender",
+    "stats": {
+      "activeListings": "Anuncios Activos",
+      "verifiedSellers": "Vendedores Verificados",
+      "transactions": "Transacciones",
+      "avgRating": "Calif. Promedio"
+    }
+  },
+  "trustSignals": {
+    "title": "¿Por qué TradeVault?",
+    "escrow": {
+      "title": "Protección de Depósito",
+      "description": "Fondos retenidos de forma segura hasta que se confirme la entrega. Sin liberación sin aprobación del comprador."
+    },
+    "fraudDetection": {
+      "title": "Detección de Fraude",
+      "description": "La puntuación de riesgo impulsada por IA marca transacciones sospechosas antes de que se completen."
+    },
+    "instantDelivery": {
+      "title": "Entrega Instantánea",
+      "description": "Bienes digitales entregados automáticamente tras la confirmación del pago."
+    },
+    "verifiedSellers": {
+      "title": "Vendedores Verificados",
+      "description": "Cada vendedor está verificado con insignias de confianza por niveles."
+    }
+  },
+  "categories": {
+    "title": "Explorar por Categoría",
+    "subtitle": "6,130+ anuncios activos en {count} categorías",
+    "listings": "{count} anuncios",
+    "browseAll": "Explorar Todos los Anuncios"
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "buyerTitle": "Para Compradores",
+    "sellerTitle": "Para Vendedores",
+    "buyerSteps": {
+      "browse": "Explora el mercado de bienes digitales",
+      "purchase": "Compra con pago protegido por depósito",
+      "receive": "Recibe entrega instantánea tras confirmación",
+      "review": "Deja una reseña para generar confianza"
+    },
+    "sellerSteps": {
+      "list": "Publica tus productos digitales en minutos",
+      "sell": "Vende a compradores verificados worldwide",
+      "deliver": "Entrega automática o manual",
+      "withdraw": "Retira ganancias al instante"
+    }
+  },
+  "cta": {
+    "badge": "Tolerancia Cero al Fraude",
+    "title": "¿Listo para Comerciar con Confianza?",
+    "subtitle": "Únete a miles de compradores y vendedores que confían en TradeVault para transacciones seguras de bienes digitales con protección de depósito.",
+    "getStarted": "Empezar Gratis",
+    "learnMore": "Conocer las Tarifas"
+  },
+  "footer": {
+    "description": "El mercado seguro para bienes digitales. Transacciones protegidas por depósito, detección de fraude y entrega instantánea.",
+    "buyers": "Compradores",
+    "sellers": "Vendedores",
+    "company": "Empresa",
+    "copyright": "© {year} TradeVault. Todos los derechos reservados."
+  },
+  "auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "signIn": "Iniciar Sesión",
+    "createAccount": "Crear Cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "termsAgreement": "Acepto los Términos de Servicio y la Política de Privacidad",
+    "secure": "Cifrado SSL de 256 bits"
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "empty": "Tu carrito está vacío",
+    "emptyDescription": "Explora el mercado para encontrar bienes digitales",
+    "continueShopping": "Seguir Comprando",
+    "checkout": "Proceder al Pago",
+    "items": "Artículos",
+    "protectionFee": "Tarifa de Protección",
+    "escrow": "Depósito",
+    "total": "Total",
+    "escrowProtected": "Pago protegido por depósito"
+  },
+  "checkout": {
+    "title": "Pago",
+    "backToCart": "Volver al Carrito",
+    "orderSummary": "Resumen del Pedido",
+    "paymentMethod": "Método de Pago",
+    "crypto": "Criptomoneda",
+    "card": "Tarjeta de Crédito",
+    "pay": "Pagar",
+    "secureNotice": "Tu pago está asegurado por depósito. Los fondos se retienen hasta que se confirme la entrega."
+  },
+  "orders": {
+    "title": "Mis Pedidos",
+    "empty": "Aún no hay pedidos",
+    "emptyDescription": "Tu historial de compras aparecerá aquí",
+    "browseMarketplace": "Explorar Mercado",
+    "orderId": "Pedido",
+    "product": "Producto",
+    "total": "Total",
+    "status": "Estado",
+    "date": "Fecha",
+    "actions": "Acciones",
+    "escrowNotice": "Tu pago está retenido de forma segura. Confirma la entrega una vez recibas tus bienes digitales para liberar los fondos al vendedor.",
+    "escrowActive": "Protección de Depósito Activa"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Reintentar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar"
+  }
+}

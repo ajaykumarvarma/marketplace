@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "title": "TradeVault — Secure Digital Goods Marketplace",
+    "description": "Buy and sell digital goods with escrow protection, fraud detection, and instant delivery."
+  },
+  "navigation": {
+    "marketplace": "Marketplace",
+    "categories": "Categories",
+    "topSellers": "Top Sellers",
+    "startSelling": "Start Selling",
+    "myOrders": "My Orders",
+    "sellerDashboard": "Seller Dashboard",
+    "adminPanel": "Admin Panel",
+    "signIn": "Sign In",
+    "getStarted": "Get Started",
+    "signOut": "Sign Out",
+    "cart": "Cart",
+    "searchPlaceholder": "Search digital goods..."
+  },
+  "hero": {
+    "badge": "Escrow-Protected Transactions",
+    "title": "The Secure Marketplace for Digital Goods",
+    "subtitle": "Buy and sell with confidence. Every transaction is protected by our escrow system, backed by real-time fraud detection and instant delivery.",
+    "browseMarketplace": "Browse Marketplace",
+    "startSelling": "Start Selling",
+    "stats": {
+      "activeListings": "Active Listings",
+      "verifiedSellers": "Verified Sellers",
+      "transactions": "Transactions",
+      "avgRating": "Avg. Rating"
+    }
+  },
+  "trustSignals": {
+    "title": "Why TradeVault?",
+    "escrow": {
+      "title": "Escrow Protection",
+      "description": "Funds held securely until delivery is confirmed. No release without buyer approval."
+    },
+    "fraudDetection": {
+      "title": "Fraud Detection",
+      "description": "AI-powered risk scoring flags suspicious transactions before they complete."
+    },
+    "instantDelivery": {
+      "title": "Instant Delivery",
+      "description": "Digital goods delivered automatically upon payment confirmation."
+    },
+    "verifiedSellers": {
+      "title": "Verified Sellers",
+      "description": "Every seller is identity-verified with tiered trust badges."
+    }
+  },
+  "categories": {
+    "title": "Browse by Category",
+    "subtitle": "6,130+ active listings across {count} categories",
+    "listings": "{count} listings",
+    "browseAll": "Browse All Listings"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "buyerTitle": "For Buyers",
+    "sellerTitle": "For Sellers",
+    "buyerSteps": {
+      "browse": "Browse the marketplace for digital goods",
+      "purchase": "Purchase with escrow-protected checkout",
+      "receive": "Receive instant delivery upon confirmation",
+      "review": "Leave a review to build trust"
+    },
+    "sellerSteps": {
+      "list": "List your digital products in minutes",
+      "sell": "Sell to verified buyers worldwide",
+      "deliver": "Deliver automatically or manually",
+      "withdraw": "Withdraw earnings instantly"
+    }
+  },
+  "cta": {
+    "badge": "Zero Fraud Tolerance",
+    "title": "Ready to Trade with Confidence?",
+    "subtitle": "Join thousands of buyers and sellers who trust TradeVault for secure, escrow-protected digital goods transactions.",
+    "getStarted": "Get Started Free",
+    "learnMore": "Learn About Fees"
+  },
+  "footer": {
+    "description": "The secure marketplace for digital goods. Escrow-protected transactions, fraud detection, and instant delivery.",
+    "buyers": "Buyers",
+    "sellers": "Sellers",
+    "company": "Company",
+    "copyright": "© {year} TradeVault. All rights reserved."
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "termsAgreement": "I agree to the Terms of Service and Privacy Policy",
+    "secure": "256-bit SSL encrypted"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "Browse the marketplace to find digital goods",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Proceed to Checkout",
+    "items": "Items",
+    "protectionFee": "Protection Fee",
+    "escrow": "Escrow",
+    "total": "Total",
+    "escrowProtected": "Escrow protected checkout"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "backToCart": "Back to Cart",
+    "orderSummary": "Order Summary",
+    "paymentMethod": "Payment Method",
+    "crypto": "Cryptocurrency",
+    "card": "Credit Card",
+    "pay": "Pay",
+    "secureNotice": "Your payment is secured by escrow. Funds are held until delivery is confirmed."
+  },
+  "orders": {
+    "title": "My Orders",
+    "empty": "No orders yet",
+    "emptyDescription": "Your purchase history will appear here",
+    "browseMarketplace": "Browse Marketplace",
+    "orderId": "Order",
+    "product": "Product",
+    "total": "Total",
+    "status": "Status",
+    "date": "Date",
+    "actions": "Actions",
+    "escrowNotice": "Your payment is held securely. Confirm delivery once you receive your digital goods to release funds to the seller.",
+    "escrowActive": "Escrow Protection Active"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort"
+  }
+}
