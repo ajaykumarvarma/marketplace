@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "vitest-axe";
 import * as React from "react";
@@ -108,6 +108,7 @@ vi.mock("lucide-react", async () => {
     Scale: () => <span data-testid="scale-icon" />,
     Gavel: () => <span data-testid="gavel-icon" />,
     Server: () => <span data-testid="server-icon" />,
+    Keyboard: () => <span data-testid="keyboard-icon" />,
   };
 });
 
@@ -139,6 +140,14 @@ vi.mock("@/components/ui/dialog", () => ({
   DialogContent: ({ children }: any) => <div role="dialog">{children}</div>,
   DialogHeader: ({ children }: any) => <div>{children}</div>,
   DialogTitle: ({ children }: any) => <h2>{children}</h2>,
+}));
+
+vi.mock("@/components/ui/dropdown-menu", () => ({
+  DropdownMenu: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ children }: any) => <>{children}</>,
+  DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuItem: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
+  DropdownMenuSeparator: () => <hr />,
 }));
 
 import { HeroSection } from "@/components/landing/HeroSection";
