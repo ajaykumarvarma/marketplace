@@ -1,5 +1,5 @@
 import "vitest";
-import { AxeResults } from "axe-core";
+import type { AxeResults } from "axe-core";
 
 declare module "vitest" {
   interface Assertion<T = unknown> {
@@ -11,8 +11,7 @@ declare module "vitest" {
 }
 
 declare module "vitest-axe" {
-  export const toHaveNoViolations: {
-    (results: AxeResults): { pass: boolean; message: () => string };
-  };
+  type MatcherFn = (this: unknown, received: AxeResults, expected?: unknown) => { message: () => string; pass: boolean };
+  export const toHaveNoViolations: Record<string, MatcherFn>;
   export const axe: typeof import("axe-core").default;
 }

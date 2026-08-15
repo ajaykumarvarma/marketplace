@@ -17,11 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
 
 export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems } = useCart();
   const { user, profile, signOut } = useAuth();
+  const t = useTranslations("navigation");
 
   const userInitial = profile?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U";
   const isSeller = profile?.role === "seller" || profile?.role === "admin";
@@ -42,16 +44,16 @@ export function Navigation() {
 
         <nav className="hidden md:flex items-center gap-1">
           <Link href="/marketplace" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-            Marketplace
+            {t("marketplace")}
           </Link>
           <Link href="/categories" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-            Categories
+            {t("categories")}
           </Link>
           <Link href="/sellers" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-            Top Sellers
+            {t("topSellers")}
           </Link>
           <Link href="/sell" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-            Start Selling
+            {t("startSelling")}
           </Link>
         </nav>
 
@@ -98,14 +100,14 @@ export function Navigation() {
                 <DropdownMenuItem asChild>
                   <Link href="/orders" className="flex items-center gap-2 cursor-pointer">
                     <LayoutDashboard className="h-4 w-4" />
-                    My Orders
+                    {t("myOrders")}
                   </Link>
                 </DropdownMenuItem>
                 {isSeller && (
                   <DropdownMenuItem asChild>
                     <Link href="/seller/dashboard" className="flex items-center gap-2 cursor-pointer">
                       <Store className="h-4 w-4" />
-                      Seller Dashboard
+                      {t("sellerDashboard")}
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -113,14 +115,14 @@ export function Navigation() {
                   <DropdownMenuItem asChild>
                     <Link href="/admin/dashboard" className="flex items-center gap-2 cursor-pointer">
                       <Shield className="h-4 w-4" />
-                      Admin Panel
+                      {t("adminPanel")}
                     </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive cursor-pointer">
                   <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
+                  {t("signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -129,13 +131,13 @@ export function Navigation() {
               <Link href="/auth/login">
                 <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
                   <User className="h-4 w-4" />
-                  <span className="text-sm">Sign In</span>
+                  <span className="text-sm">{t("signIn")}</span>
                 </Button>
               </Link>
               <Link href="/auth/register">
                 <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
                   <Store className="h-4 w-4" />
-                  <span>Get Started</span>
+                  <span>{t("getStarted")}</span>
                 </Button>
               </Link>
             </>
@@ -154,31 +156,31 @@ export function Navigation() {
         <div className="md:hidden border-t border-border bg-background">
           <div className="container py-4">
             <Link href="/marketplace" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-              Marketplace
+              {t("marketplace")}
             </Link>
             <Link href="/categories" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-              Categories
+              {t("categories")}
             </Link>
             <Link href="/sellers" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-              Top Sellers
+              {t("topSellers")}
             </Link>
             <Link href="/sell" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-              Start Selling
+              {t("startSelling")}
             </Link>
 
             {user && (
               <>
                 <Link href="/orders" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-                  My Orders
+                  {t("myOrders")}
                 </Link>
                 {isSeller && (
                   <Link href="/seller/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-                    Seller Dashboard
+                    {t("sellerDashboard")}
                   </Link>
                 )}
                 {isAdmin && (
                   <Link href="/admin/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
-                    Admin Panel
+                    {t("adminPanel")}
                   </Link>
                 )}
               </>
@@ -188,20 +190,20 @@ export function Navigation() {
               {user ? (
                 <Button variant="outline" className="w-full justify-start gap-2 text-destructive" onClick={signOut}>
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {t("signOut")}
                 </Button>
               ) : (
                 <>
                   <Link href="/auth/login">
                     <Button variant="outline" className="w-full justify-start gap-2">
                       <User className="h-4 w-4" />
-                      Sign In
+                      {t("signIn")}
                     </Button>
                   </Link>
                   <Link href="/auth/register">
                     <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90">
                       <Store className="h-4 w-4" />
-                      Get Started
+                      {t("getStarted")}
                     </Button>
                   </Link>
                 </>
