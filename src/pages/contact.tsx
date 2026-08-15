@@ -71,7 +71,7 @@ export default function ContactPage() {
                       <p className="font-mono text-sm text-primary">{ticketId}</p>
                     </div>
                   )}
-                  <Button onClick={() => setSubmitted(false)} variant="outline" className="border-border hover:bg-muted">
+                  <Button onClick={() => setSubmitted(false)} variant="outline" className="border-border">
                     Submit Another Ticket
                   </Button>
                 </div>

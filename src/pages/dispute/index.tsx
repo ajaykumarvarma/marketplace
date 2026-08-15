@@ -69,37 +69,37 @@ export default function DisputePage() {
     <>
       <SEO title="File a Dispute — TradeVault" description="Open a dispute for an order on TradeVault." />
       <div className="container py-8 md:py-12">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+        <div className="max-w-2xl mx-auto">
+          <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <ArrowLeft className="h-4 w-4" />
             Back to Orders
           </Link>
 
-          <div className="text-center space-y-3">
-            <div className="h-12 w-12 bg-warning/10 rounded-full flex items-center justify-center mx-auto">
+          <div className="text-center mb-6">
+            <div className="h-12 w-12 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <AlertTriangle className="h-6 w-6 text-warning" />
             </div>
-            <h1 className="font-display text-3xl font-bold text-foreground">File a Dispute</h1>
+            <h1 className="font-display text-3xl font-bold text-foreground mb-2">File a Dispute</h1>
             <p className="text-muted-foreground max-w-md mx-auto">We're here to help resolve issues between buyers and sellers fairly and quickly.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {[
               { icon: MessageSquare, title: "Contact Seller", desc: "Reach out to the seller first to resolve the issue directly" },
               { icon: FileText, title: "Submit Details", desc: "File a dispute with your order ID and a clear description" },
               { icon: Shield, title: "Team Review", desc: "Our support team reviews the case and mediates a fair outcome" },
             ].map((step, i) => (
-              <div key={i} className="bg-card border border-border rounded-lg p-4 text-center space-y-2">
-                <step.icon className="h-5 w-5 text-primary mx-auto" />
-                <h3 className="font-medium text-sm text-foreground">{step.title}</h3>
+              <div key={i} className="bg-card border border-border rounded-lg p-4 text-center">
+                <step.icon className="h-5 w-5 text-primary mx-auto mb-2" />
+                <h3 className="font-medium text-sm text-foreground mb-1">{step.title}</h3>
                 <p className="text-xs text-muted-foreground">{step.desc}</p>
               </div>
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="orderId">Order ID</Label>
+          <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6">
+            <div className="mb-6">
+              <Label htmlFor="orderId" className="mb-2 block">Order ID</Label>
               <Input
                 id="orderId"
                 value={orderId}
@@ -108,11 +108,11 @@ export default function DisputePage() {
                 className="bg-muted border-border font-mono"
                 required
               />
-              <p className="text-xs text-muted-foreground">You can find this in your order history</p>
+              <p className="text-xs text-muted-foreground mt-1">You can find this in your order history</p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="reason">Reason for Dispute</Label>
+            <div className="mb-6">
+              <Label htmlFor="reason" className="mb-2 block">Reason for Dispute</Label>
               <select
                 id="reason"
                 value={reason}
@@ -129,8 +129,8 @@ export default function DisputePage() {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+            <div className="mb-6">
+              <Label htmlFor="description" className="mb-2 block">Description</Label>
               <Textarea
                 id="description"
                 value={description}
@@ -140,7 +140,7 @@ export default function DisputePage() {
               />
             </div>
 
-            <div className="bg-warning/5 border border-warning/20 rounded-lg p-4">
+            <div className="bg-warning/5 border border-warning/20 rounded-lg p-4 mb-6">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
                 <div>

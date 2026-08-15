@@ -46,29 +46,29 @@ export default function OrdersPage() {
   return (
     <>
       <SEO title="My Orders — TradeVault" description="Track your orders and delivery status." />
-      <div className="container py-8 md:py-12 space-y-8">
-        <div>
+      <div className="container py-8 md:py-12">
+        <div className="mb-8">
           <h1 className="font-display text-3xl font-bold text-foreground">My Orders</h1>
           <p className="text-muted-foreground">Track deliveries and manage your purchases</p>
         </div>
 
         {loading ? (
-          <div className="space-y-4">
+          <div>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-card border border-border rounded-lg p-5 animate-pulse space-y-3">
-                <div className="h-4 bg-muted rounded w-1/4" />
+              <div key={i} className="bg-card border border-border rounded-lg p-5 animate-pulse mb-4">
+                <div className="h-4 bg-muted rounded w-1/4 mb-3" />
                 <div className="h-3 bg-muted rounded w-1/2" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
             {orders.map((order) => {
               const config = statusConfig[order.status] || statusConfig.pending;
               const Icon = config.icon;
               return (
-                <div key={order.id} className="bg-card border border-border rounded-lg p-5 space-y-4">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div key={order.id} className="bg-card border border-border rounded-lg p-5 mb-4">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
                       <div className="h-12 w-12 bg-muted rounded-md flex items-center justify-center shrink-0">
                         <Package className="h-6 w-6 text-muted-foreground" />
@@ -88,7 +88,7 @@ export default function OrdersPage() {
                     <div className="flex items-center gap-3">
                       <span className="font-mono font-semibold text-foreground">${order.total_amount.toFixed(2)}</span>
                       <Link href={`/orders/${order.id}`}>
-                        <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary/80">
+                        <Button variant="ghost" size="sm" className="gap-1 text-primary">
                           Details
                           <ArrowRight className="h-3 w-3" />
                         </Button>
@@ -112,11 +112,11 @@ export default function OrdersPage() {
         )}
 
         {!loading && orders.length === 0 && (
-          <div className="text-center py-16 space-y-4">
-            <Package className="h-12 w-12 text-muted-foreground mx-auto" />
-            <h3 className="font-display text-lg font-medium text-foreground">No orders yet</h3>
+          <div className="text-center py-16">
+            <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="font-display text-lg font-medium text-foreground mb-4">No orders yet</h3>
             <Link href="/marketplace">
-              <Button className="mt-4 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
                 Browse Marketplace
                 <ArrowRight className="h-4 w-4" />
               </Button>
