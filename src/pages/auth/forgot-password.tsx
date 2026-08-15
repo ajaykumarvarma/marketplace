@@ -14,28 +14,28 @@ export default function ForgotPasswordPage() {
     <>
       <SEO title="Reset Password — TradeVault" description="Reset your TradeVault account password." />
       <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center space-y-3">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto mb-3">
               <Shield className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="font-display text-2xl font-bold text-foreground">Reset password</h1>
+            <h1 className="font-display text-2xl font-bold text-foreground mb-2">Reset password</h1>
             <p className="text-sm text-muted-foreground">Enter your email and we'll send you a reset link</p>
           </div>
 
           {sent ? (
-            <div className="bg-success/10 border border-success/20 rounded-lg p-6 text-center space-y-3">
-              <CheckCircle className="h-8 w-8 text-success mx-auto" />
-              <h3 className="font-medium text-foreground">Check your email</h3>
-              <p className="text-sm text-muted-foreground">If an account exists for {email}, you'll receive a password reset link shortly.</p>
-              <Button variant="outline" className="border-border hover:bg-muted" onClick={() => setSent(false)}>
+            <div className="bg-success/10 border border-success/20 rounded-lg p-6 text-center mb-4">
+              <CheckCircle className="h-8 w-8 text-success mx-auto mb-3" />
+              <h3 className="font-medium text-foreground mb-2">Check your email</h3>
+              <p className="text-sm text-muted-foreground mb-4">If an account exists for {email}, you'll receive a password reset link shortly.</p>
+              <Button variant="outline" className="border-border" onClick={() => setSent(false)}>
                 Send again
               </Button>
             </div>
           ) : (
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+            <form className="mb-4" onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
+              <div className="mb-4">
+                <Label htmlFor="email" className="mb-2 block">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
             </form>
           )}
 
-          <Link href="/auth/login" className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/auth/login" className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
             Back to sign in
           </Link>

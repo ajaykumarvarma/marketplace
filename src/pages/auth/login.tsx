@@ -52,17 +52,17 @@ export default function LoginPage() {
     <>
       <SEO title="Sign In — TradeVault" description="Sign in to your TradeVault account to buy and sell digital goods securely." />
       <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center space-y-3">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto mb-3">
               <Shield className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="font-display text-2xl font-bold text-foreground">Welcome back</h1>
+            <h1 className="font-display text-2xl font-bold text-foreground mb-2">Welcome back</h1>
             <p className="text-sm text-muted-foreground">Sign in to your TradeVault account</p>
           </div>
 
           {locked && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 flex items-start gap-3">
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 flex items-start gap-3 mb-4">
               <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-destructive">Account temporarily locked</p>
@@ -72,30 +72,30 @@ export default function LoginPage() {
           )}
 
           {error && !locked && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2">
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2 mb-4">
               <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
               <p className="text-xs text-muted-foreground">{error}</p>
             </div>
           )}
 
           {attempts > 0 && !locked && !error && (
-            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-center gap-2">
+            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-center gap-2 mb-4">
               <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
               <p className="text-xs text-muted-foreground">{5 - attempts} attempts remaining before temporary lock</p>
             </div>
           )}
 
-          <div className="space-y-4">
-            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted" onClick={() => {}}>
+          <div className="mb-4">
+            <Button variant="outline" className="w-full gap-2 border-border mb-2" onClick={() => {}}>
               <Github className="h-4 w-4" />
               Continue with GitHub
             </Button>
-            <Button variant="outline" className="w-full gap-2 border-border hover:bg-muted" onClick={() => {}}>
+            <Button variant="outline" className="w-full gap-2 border-border" onClick={() => {}}>
               <Mail className="h-4 w-4" />
               Continue with Google
             </Button>
 
-            <div className="relative">
+            <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-border" />
               </div>
@@ -105,9 +105,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <Label htmlFor="email" className="mb-2 block">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -119,10 +119,10 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline">
+                <Link href="/auth/forgot-password" className="text-xs text-primary hover:text-primary/80">
                   Forgot password?
                 </Link>
               </div>
@@ -153,14 +153,14 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-muted-foreground mt-6">
             Don't have an account?{" "}
-            <Link href="/auth/register" className="text-primary hover:underline font-medium">
+            <Link href="/auth/register" className="text-primary hover:text-primary/80 font-medium">
               Create one
             </Link>
           </p>
 
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">
             <Shield className="h-3 w-3 text-success" />
             <span>256-bit SSL encrypted</span>
           </div>

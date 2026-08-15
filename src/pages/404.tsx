@@ -13,8 +13,8 @@ export default function NotFound() {
       </Head>
 
       <main className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-6 px-4">
-          <div className="relative inline-flex items-center justify-center">
+        <div className="text-center px-4">
+          <div className="relative inline-flex items-center justify-center mb-6">
             <div className="h-24 w-24 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
               <Shield className="h-10 w-10 text-primary/30" />
             </div>
@@ -22,14 +22,14 @@ export default function NotFound() {
               ERR_404
             </span>
           </div>
-          <div className="space-y-2">
-            <h1 className="font-display text-5xl font-bold text-foreground">404</h1>
+          <div className="mb-6">
+            <h1 className="font-display text-5xl font-bold text-foreground mb-2">404</h1>
             <p className="text-lg text-muted-foreground max-w-md">
               This page doesn't exist or has been moved. Check the URL or return to safety.
             </p>
           </div>
           <div className="flex items-center justify-center gap-3">
-            <Button variant="outline" className="gap-2 border-border hover:bg-muted" asChild>
+            <Button variant="outline" className="gap-2 border-border" asChild>
               <Link href="/">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Home
