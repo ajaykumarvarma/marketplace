@@ -69,7 +69,7 @@ export default function SellPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="border-border hover:bg-muted">
+              <Button size="lg" variant="outline" className="border-border hover:border-primary/30">
                 View Seller Fees
               </Button>
             </div>

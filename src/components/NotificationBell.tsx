@@ -62,7 +62,7 @@ export function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-md hover:bg-muted"
+        className="relative p-2 rounded-md hover:border-border border border-transparent"
         aria-label="Notifications"
       >
         <Bell className="h-5 w-5 text-muted-foreground" />
@@ -88,7 +88,7 @@ export function NotificationBell() {
                   <div
                     key={n.id}
                     onClick={() => markRead(n.id)}
-                    className={`px-4 py-3 border-b border-border hover:bg-muted/50 cursor-pointer ${!n.read ? "bg-primary/5" : ""}`}
+                    className={`px-4 py-3 border-b border-border cursor-pointer border-l-2 ${!n.read ? "bg-primary/5 border-l-primary" : "border-l-transparent"}`}
                   >
                     <p className="text-sm font-medium text-foreground">{n.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{n.message}</p>

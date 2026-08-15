@@ -110,7 +110,7 @@ export default function MarketplacePage() {
               <option value="price_high">Price: High to Low</option>
               <option value="newest">Newest</option>
             </select>
-            <Button variant="outline" className="gap-2 border-border hover:bg-muted">
+            <Button variant="outline" className="gap-2 border-border hover:border-primary/30">
               <SlidersHorizontal className="h-4 w-4" />
               Filters
             </Button>

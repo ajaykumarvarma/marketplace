@@ -30,7 +30,7 @@ export function CTASection() {
                 </Button>
               </Link>
               <Link href="/security">
-                <Button size="lg" variant="outline" className="gap-2 border-border hover:bg-muted font-medium">
+                <Button size="lg" variant="outline" className="gap-2 border-border hover:border-primary/30 font-medium">
                   Learn About Fees
                 </Button>
               </Link>
