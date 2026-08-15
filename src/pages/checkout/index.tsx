@@ -36,8 +36,8 @@ export default function CheckoutPage() {
       <>
         <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
         <div className="container py-12">
-          <div className="animate-pulse max-w-4xl mx-auto space-y-4">
-            <div className="h-8 bg-muted rounded w-1/3" />
+          <div className="animate-pulse max-w-4xl mx-auto">
+            <div className="h-8 bg-muted rounded w-1/3 mb-4" />
             <div className="h-48 bg-muted rounded-lg" />
           </div>
         </div>
