@@ -134,7 +134,7 @@ export default function SellerDashboardPage() {
                     </thead>
                     <tbody>
                       {orders.map((order) => (
-                        <tr key={order.id} className="border-b border-border hover:bg-muted/30">
+                        <tr key={order.id} className="border-b border-border hover:bg-card">
                           <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
                           <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
                           <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
@@ -165,7 +165,7 @@ export default function SellerDashboardPage() {
                     </thead>
                     <tbody>
                       {products.map((product) => (
-                        <tr key={product.id} className="border-b border-border hover:bg-muted/30">
+                        <tr key={product.id} className="border-b border-border hover:bg-card">
                           <td className="px-4 py-3 text-foreground">{product.title}</td>
                           <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
                           <td className="px-4 py-3 font-mono text-foreground">{product.stock}</td>
@@ -174,10 +174,10 @@ export default function SellerDashboardPage() {
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" aria-label="View product">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-foreground" aria-label="View product">
                                 <Eye className="h-4 w-4" />
                               </button>
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-primary" aria-label="Analytics">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-primary" aria-label="Analytics">
                                 <BarChart3 className="h-4 w-4" />
                               </button>
                             </div>

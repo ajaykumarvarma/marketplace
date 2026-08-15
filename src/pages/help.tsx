@@ -41,9 +41,9 @@ export default function HelpPage() {
             <div key={item.title} className="bg-card border border-border rounded-lg p-6">
               <div className="flex items-center gap-3 mb-2">
                 <item.icon className="h-5 w-5 text-primary" />
-                <h3 className="font-display text-lg font-semibold text-foreground">{item.title}</h3>
+                <h2 className="font-display text-lg font-semibold text-foreground">{item.title}</h2>
               </div>
-              <p className="text-muted-foreground">{item.answer}</p>
+              <p className="text-foreground/70">{item.answer}</p>
             </div>
           ))}
         </div>

@@ -167,7 +167,7 @@ export default function AdminDashboardPage() {
                 {loading ? (
                   <div>
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="h-12 bg-muted rounded mb-3 animate-pulse" />
+                      <div key={i} className="h-12 bg-muted rounded mb-3" />
                     ))}
                   </div>
                 ) : (
@@ -233,7 +233,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody>
                     {fraudLogs.map((log) => (
-                      <tr key={log.id} className="border-b border-border hover:bg-muted/30">
+                      <tr key={log.id} className="border-b border-border hover:bg-card">
                         <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
                         <td className="px-4 py-3">
                           <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
@@ -249,11 +249,11 @@ export default function AdminDashboardPage() {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
                             {!log.reviewed_at && (
-                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-success" title="Resolve" aria-label="Resolve alert">
+                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-success" title="Resolve" aria-label="Resolve alert">
                                 <CheckCircle className="h-4 w-4" />
                               </button>
                             )}
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" title="Block User" aria-label="Block user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-destructive" title="Block User" aria-label="Block user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>
@@ -286,7 +286,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody>
                     {users.map((user) => (
-                      <tr key={user.id} className="border-b border-border hover:bg-muted/30">
+                      <tr key={user.id} className="border-b border-border hover:bg-card">
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-foreground">{user.full_name || "Anonymous"}</p>
@@ -306,10 +306,10 @@ export default function AdminDashboardPage() {
                         <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-destructive" title="Ban" aria-label="Ban user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-destructive" title="Ban" aria-label="Ban user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>

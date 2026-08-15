@@ -55,7 +55,7 @@ export default function OrdersPage() {
         {loading ? (
           <div>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-card border border-border rounded-lg p-5 animate-pulse mb-4">
+              <div key={i} className="bg-card border border-border rounded-lg p-5 mb-4">
                 <div className="h-4 bg-muted rounded w-1/4 mb-3" />
                 <div className="h-3 bg-muted rounded w-1/2" />
               </div>
@@ -97,7 +97,7 @@ export default function OrdersPage() {
                   </div>
 
                   {order.status === "pending" && (
-                    <div className="bg-muted/50 rounded-md p-3 flex items-start gap-3 text-sm">
+                    <div className="bg-card border border-border rounded-md p-3 flex items-start gap-3 text-sm">
                       <Shield className="h-4 w-4 text-success shrink-0 mt-0.5" />
                       <div>
                         <p className="text-foreground font-medium">Escrow Protection Active</p>
