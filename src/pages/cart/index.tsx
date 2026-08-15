@@ -20,7 +20,7 @@ export default function CartPage() {
         <div className="container py-12">
           <div className="max-w-4xl mx-auto">
             <h1 className="font-display text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
-            <div className="animate-pulse">
+            <div>
               <div className="h-24 bg-muted rounded-lg mb-4" />
               <div className="h-24 bg-muted rounded-lg" />
             </div>

@@ -26,7 +26,7 @@ interface Product {
 
 function ProductCardSkeleton() {
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden animate-pulse">
+    <div className="bg-card border border-border rounded-lg overflow-hidden">
       <div className="aspect-[4/3] bg-muted" />
       <div className="p-4">
         <div className="h-4 bg-muted rounded w-3/4 mb-3" />

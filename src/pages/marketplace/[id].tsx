@@ -63,7 +63,7 @@ export default function ProductDetailPage() {
       <>
         <SEO title="Product — TradeVault" description="Browse digital goods on TradeVault." />
         <div className="container py-12">
-          <div className="animate-pulse max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="h-8 bg-muted rounded w-1/4 mb-6" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2">
