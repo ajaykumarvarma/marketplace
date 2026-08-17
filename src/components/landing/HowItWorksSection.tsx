@@ -53,7 +53,7 @@ export function HowItWorksSection() {
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px flex-1 bg-border" />
-              <span className="text-xs font-mono uppercase tracking-wider text-primary">For Sellers</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">For Sellers</span>
               <div className="h-px flex-1 bg-border" />
             </div>
             <div className="flex flex-col gap-6">

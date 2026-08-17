@@ -89,7 +89,7 @@ export function HeroSection() {
               <div>
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="text-muted-foreground">Order ID</span>
-                  <span className="font-mono text-accent font-semibold">TV-2847-XF</span>
+                  <span className="font-mono text-foreground font-semibold">TV-2847-XF</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden mb-2">
                   <div className="h-full w-3/4 bg-primary rounded-full" />
