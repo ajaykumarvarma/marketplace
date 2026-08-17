@@ -9,6 +9,8 @@ interface Profile {
   avatar_url: string | null;
   created_at: string;
   updated_at: string;
+  two_factor_enabled: boolean;
+  two_factor_secret: string | null;
 }
 
 interface AuthContextType {
@@ -22,6 +24,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, role: "buyer" | "seller") => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -102,6 +105,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   }
 
+  async function refreshProfile() {
+    if (user) {
+      await fetchProfile(user.id);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -115,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signUp,
         signOut,
         resetPassword,
+        refreshProfile,
       }}
     >
       {children}

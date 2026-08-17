@@ -195,15 +195,18 @@ export default function SellerDashboardPage() {
 
             <TabsContent value="analytics" className="mt-4">
               <RevenueStats
-                totalRevenue={stats.revenue}
-                totalOrders={orders.length}
-                activeOrders={stats.activeOrders}
-                avgOrderValue={orders.length > 0 ? stats.revenue / orders.length : 0}
-                conversionRate={4.2}
+                stats={{
+                  totalRevenue: stats.revenue,
+                  totalOrders: orders.length,
+                  totalProducts: stats.productCount,
+                  uniqueBuyers: 0,
+                  revenueChange: 12.5,
+                  ordersChange: 3,
+                }}
               />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <SalesChart orders={orders.map((o) => ({ date: o.created_at, amount: o.total_amount || 0 }))} />
-                <TopProductsChart products={products.map((p) => ({ name: p.title, revenue: p.price * p.stock, sales: p.stock }))} />
+                <SalesChart data={orders.map((o) => ({ date: o.created_at, revenue: o.total_amount || 0, orders: 1 }))} />
+                <TopProductsChart data={products.map((p) => ({ name: p.title, revenue: p.price * p.stock, sales: p.stock }))} />
               </div>
             </TabsContent>
           </Tabs>
