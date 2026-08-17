@@ -11,7 +11,6 @@ interface FileUploaderProps {
 
 export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderProps) {
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = async (file: File) => {
@@ -20,16 +19,12 @@ export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderP
       return;
     }
     setUploading(true);
-    setProgress(0);
 
     const path = `uploads/${Date.now()}-${file.name}`;
     const { data, error } = await supabase.storage
       .from("digital-files")
       .upload(path, file, {
         upsert: false,
-        onUploadProgress: (e) => {
-          if (e.total) setProgress(Math.round((e.loaded / e.total) * 100));
-        },
       });
 
     setUploading(false);
@@ -77,7 +72,7 @@ export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderP
         className="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-lg border-2 border-dashed border-border hover:border-primary/30 bg-muted/50 transition-colors disabled:opacity-50"
       >
         <Upload className="h-6 w-6 text-foreground/70" />
-        <p className="text-sm text-foreground/70">{uploading ? `Uploading... ${progress}%` : "Click to upload digital file"}</p>
+        <p className="text-sm text-foreground/70">{uploading ? "Uploading..." : "Click to upload digital file"}</p>
         <p className="text-xs text-foreground/50">Max 100MB</p>
       </button>
     </div>

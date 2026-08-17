@@ -16,6 +16,7 @@ type Order = {
   created_at: string;
   delivery_method: string | null;
   escrow_released: boolean;
+  seller_id: string;
   product: { title: string; delivery_content: string | null } | null;
 };
 
@@ -25,6 +26,7 @@ export default function OrderDetailPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
+  const [sellerProfile, setSellerProfile] = useState<{ full_name: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
 
@@ -38,9 +40,8 @@ export default function OrderDetailPage() {
     const { data, error } = await supabase
       .from("orders")
       .select(`
-        id, status, created_at, delivery_method, escrow_released,
-        product:product_id(title, delivery_content),
-        seller:seller_id(full_name)
+        id, status, created_at, delivery_method, escrow_released, seller_id,
+        product:product_id(title, delivery_content)
       `)
       .eq("id", id as string)
       .eq("buyer_id", user!.id)
@@ -50,6 +51,12 @@ export default function OrderDetailPage() {
       setOrder(null);
     } else {
       setOrder(data as any);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", data.seller_id)
+        .maybeSingle();
+      setSellerProfile(profile);
     }
     setLoading(false);
   }
@@ -219,7 +226,7 @@ export default function OrderDetailPage() {
               <MessageSquare className="h-5 w-5 text-primary" />
               Order Messages
             </h2>
-            <ChatWindow orderId={order.id} otherUserName="Seller" />
+            <ChatWindow orderId={order.id} receiverId={order.seller_id} otherParty={sellerProfile as any} />
           </div>
 
           <div className="flex gap-3">

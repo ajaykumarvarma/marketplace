@@ -13,10 +13,11 @@ type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 interface ChatWindowProps {
   orderId: string;
+  receiverId: string;
   otherParty: Profile | null;
 }
 
-export function ChatWindow({ orderId, otherParty }: ChatWindowProps) {
+export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -63,6 +64,7 @@ export function ChatWindow({ orderId, otherParty }: ChatWindowProps) {
     await supabase.from("messages").insert({
       order_id: orderId,
       sender_id: user.id,
+      receiver_id: receiverId,
       content: input.trim(),
       read: false,
     });

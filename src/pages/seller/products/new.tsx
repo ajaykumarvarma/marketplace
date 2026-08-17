@@ -192,8 +192,8 @@ export default function NewProductPage() {
               </div>
               <div className="mb-4">
                 <Label className="mb-2 block">Digital Files</Label>
-                <FileUploader onUpload={(files) => {
-                  toast({ title: `${files.length} file(s) uploaded`, description: "Files will be securely delivered to buyers." });
+                <FileUploader onUpload={(file) => {
+                  toast({ title: "File uploaded", description: `${file.name} will be securely delivered to buyers.` });
                 }} />
                 <p className="text-xs text-muted-foreground mt-2">Upload files that will be securely delivered to buyers after purchase. Max 100MB per file.</p>
               </div>
