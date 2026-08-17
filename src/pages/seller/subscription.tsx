@@ -167,7 +167,7 @@ function Feature({ included, text }: { included: boolean; text: string }) {
   return (
     <div className="flex items-center gap-2 text-sm">
       {included ? <Check className="h-4 w-4 text-success" /> : <X className="h-4 w-4 text-muted-foreground/60" />}
-      <span className={included ? "text-foreground/90" : "text-muted-foreground/80"}>{text}</span>
+      <span className={included ? "text-foreground" : "text-muted-foreground"}>{text}</span>
     </div>
   );
 }

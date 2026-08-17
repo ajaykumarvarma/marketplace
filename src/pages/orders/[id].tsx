@@ -164,7 +164,7 @@ export default function OrderDetailPage() {
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-4 mb-4">
                   <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${i <= currentStep ? "bg-success/20" : "bg-muted"}`}>
-                    {i <= currentStep ? <CheckCircle className="h-4 w-4 text-success" /> : <Clock className="h-4 w-4 text-foreground/70" />}
+                    {i <= currentStep ? <CheckCircle className="h-4 w-4 text-success" /> : <Clock className="h-4 w-4 text-muted-foreground" />}
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">{step}</p>
