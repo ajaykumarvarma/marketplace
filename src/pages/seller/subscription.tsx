@@ -103,7 +103,7 @@ export default function SubscriptionPage() {
       <div className="container py-8">
         <div className="text-center mb-8">
           <h1 className="font-display text-2xl font-bold mb-2">Seller Plans</h1>
-          <p className="text-foreground/70">Choose the plan that fits your business</p>
+          <p className="text-muted-foreground">Choose the plan that fits your business</p>
           <div className="flex justify-center gap-2 mt-4">
             <Button variant={billingCycle === "monthly" ? "default" : "outline"} size="sm" onClick={() => setBillingCycle("monthly")}>Monthly</Button>
             <Button variant={billingCycle === "yearly" ? "default" : "outline"} size="sm" onClick={() => setBillingCycle("yearly")}>Yearly <Badge className="ml-1 bg-accent text-accent-foreground">Save 20%</Badge></Button>
@@ -112,7 +112,7 @@ export default function SubscriptionPage() {
 
         {currentPlan && (
           <div className="mb-6 p-4 border border-primary/20 rounded-lg bg-primary/5 text-center">
-            <p className="text-sm text-foreground/70">Current Plan: <span className="font-semibold text-foreground">{currentPlan.name}</span></p>
+            <p className="text-sm text-muted-foreground">Current Plan: <span className="font-semibold text-foreground">{currentPlan.name}</span></p>
             {subscription?.cancel_at_period_end && (
               <p className="text-xs text-destructive mt-1">Cancels on {new Date(subscription.current_period_end!).toLocaleDateString()}</p>
             )}
@@ -133,10 +133,10 @@ export default function SubscriptionPage() {
                   {plan.slug === "pro" && <Crown className="h-5 w-5 text-accent" />}
                   <h3 className="font-display text-lg font-semibold">{plan.name}</h3>
                 </div>
-                <p className="text-sm text-foreground/70 mb-4">{plan.description}</p>
+                <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
                 <div className="mb-4">
                   <span className="font-display text-3xl font-bold">${billingCycle === "monthly" ? plan.price_monthly : plan.price_yearly}</span>
-                  <span className="text-foreground/50">/{billingCycle === "monthly" ? "mo" : "yr"}</span>
+                  <span className="text-muted-foreground">/{billingCycle === "monthly" ? "mo" : "yr"}</span>
                 </div>
                 <div className="space-y-2 mb-6">
                   <Feature included={true} text={`${plan.max_products} products`} />
@@ -166,8 +166,8 @@ export default function SubscriptionPage() {
 function Feature({ included, text }: { included: boolean; text: string }) {
   return (
     <div className="flex items-center gap-2 text-sm">
-      {included ? <Check className="h-4 w-4 text-success" /> : <X className="h-4 w-4 text-foreground/30" />}
-      <span className={included ? "text-foreground/80" : "text-foreground/40"}>{text}</span>
+      {included ? <Check className="h-4 w-4 text-success" /> : <X className="h-4 w-4 text-muted-foreground/60" />}
+      <span className={included ? "text-foreground/90" : "text-muted-foreground/80"}>{text}</span>
     </div>
   );
 }

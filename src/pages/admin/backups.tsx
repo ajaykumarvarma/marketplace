@@ -72,7 +72,7 @@ export default function BackupsPage() {
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">
               Database Backups
             </h1>
-            <p className="text-foreground/70">
+            <p className="text-muted-foreground">
               Automated and on-demand backups of all platform data
             </p>
           </div>
@@ -98,21 +98,21 @@ export default function BackupsPage() {
                 Backup History
               </h2>
             </div>
-            <Badge variant="outline" className="text-xs border-border text-foreground/70">
+            <Badge variant="outline" className="text-xs border-border text-muted-foreground">
               {backups.length} backup{backups.length !== 1 ? "s" : ""}
             </Badge>
           </div>
 
           {loading ? (
-            <div className="p-8 text-center text-foreground/70">
+            <div className="p-8 text-center text-muted-foreground">
               <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
               Loading backups...
             </div>
           ) : backups.length === 0 ? (
             <div className="p-8 text-center">
-              <FileText className="h-12 w-12 text-foreground/50 mx-auto mb-3" />
-              <p className="text-foreground/70">No backups yet</p>
-              <p className="text-sm text-foreground/50 mt-1">
+              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground">No backups yet</p>
+              <p className="text-sm text-muted-foreground/80 mt-1">
                 Click Run Backup to create your first backup
               </p>
             </div>
@@ -121,7 +121,7 @@ export default function BackupsPage() {
               {backups.map((b) => (
                 <div
                   key={b.name}
-                  className="flex items-center justify-between px-6 py-4 border-b border-border last:border-0 hover:bg-card"
+                  className="flex items-center justify-between px-6 py-4 border-b border-border last:border-0 hover:bg-muted"
                 >
                   <div className="flex items-center gap-3">
                     <FileText className="h-5 w-5 text-primary" />
@@ -129,14 +129,14 @@ export default function BackupsPage() {
                       <p className="text-sm font-mono text-foreground">
                         {b.name}
                       </p>
-                      <p className="text-xs text-foreground/70 flex items-center gap-1">
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {new Date(b.createdAt).toLocaleString()}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-foreground/70 font-mono">
+                    <span className="text-xs text-muted-foreground font-mono">
                       {formatSize(b.size)}
                     </span>
                     <Button size="sm" variant="outline" className="gap-1 border-border">

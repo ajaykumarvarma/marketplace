@@ -57,7 +57,7 @@ export default function FraudDashboard() {
       <div className="container py-12 text-center">
         <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
         <h1 className="font-display text-xl font-bold">Access Denied</h1>
-        <p className="text-foreground/70">Admin only.</p>
+        <p className="text-muted-foreground">Admin only.</p>
       </div>
     );
   }
@@ -90,7 +90,7 @@ export default function FraudDashboard() {
           <div className="text-center py-12 border border-border rounded-lg bg-card">
             <CheckCircle className="h-12 w-12 text-success mx-auto mb-4" />
             <h2 className="font-display text-lg font-semibold">No Alerts</h2>
-            <p className="text-foreground/70">All clear. No fraud alerts match your filter.</p>
+            <p className="text-muted-foreground">All clear. No fraud alerts match your filter.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -107,11 +107,11 @@ export default function FraudDashboard() {
                         {alert.severity}
                       </Badge>
                       <Badge variant="outline">{alert.alert_type}</Badge>
-                      <span className="text-xs text-foreground/50">{new Date(alert.created_at).toLocaleDateString()}</span>
+                      <span className="text-xs text-muted-foreground">{new Date(alert.created_at).toLocaleDateString()}</span>
                     </div>
-                    <p className="text-sm text-foreground/80">{alert.description}</p>
+                    <p className="text-sm text-foreground/90">{alert.description}</p>
                     {alert.user && (
-                      <p className="text-xs text-foreground/50 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         User: {alert.user.full_name || alert.user.email}
                       </p>
                     )}
