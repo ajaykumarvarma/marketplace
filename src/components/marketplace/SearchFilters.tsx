@@ -64,7 +64,7 @@ export function SearchFilters({
       {expanded && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 border border-border rounded-lg bg-card">
           <div>
-            <label className="text-xs font-medium text-foreground/70 mb-1 block">Category</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">Category</label>
             <select
               value={activeCategory === "All" ? "" : activeCategory}
               onChange={(e) => onCategoryChange(e.target.value || "All")}
@@ -77,7 +77,7 @@ export function SearchFilters({
             </select>
           </div>
           <div>
-            <label className="text-xs font-medium text-foreground/70 mb-1 block">Min Price</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">Min Price</label>
             <Input
               type="number"
               placeholder="0"
@@ -87,7 +87,7 @@ export function SearchFilters({
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-foreground/70 mb-1 block">Max Price</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">Max Price</label>
             <Input
               type="number"
               placeholder="9999"
@@ -97,7 +97,7 @@ export function SearchFilters({
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-foreground/70 mb-1 block">Sort By</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">Sort By</label>
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value)}

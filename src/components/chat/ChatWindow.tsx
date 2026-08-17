@@ -122,7 +122,7 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
         </Avatar>
         <div>
           <p className="text-sm font-medium text-foreground">{otherParty?.full_name || "Trading Partner"}</p>
-          <p className="text-xs text-foreground/70">Order chat</p>
+          <p className="text-xs text-muted-foreground">Order chat</p>
         </div>
       </div>
 
@@ -148,11 +148,11 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
                     <p>{msg.content}</p>
                   )}
                   <div className="flex items-center gap-1 mt-1 justify-end">
-                    <span className="text-[10px] text-foreground/50">
+                    <span className="text-[10px] text-muted-foreground">
                       {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                     {isMe && (
-                      msg.read ? <CheckCheck className="h-3 w-3 text-primary" /> : <Check className="h-3 w-3 text-foreground/50" />
+                      msg.read ? <CheckCheck className="h-3 w-3 text-primary" /> : <Check className="h-3 w-3 text-muted-foreground" />
                     )}
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
           onClick={() => fileInputRef.current?.click()}
           disabled={uploadingFile}
         >
-          {uploadingFile ? <Loader2 className="h-4 w-4 animate-spin text-foreground/70" /> : <Paperclip className="h-4 w-4 text-foreground/70" />}
+          {uploadingFile ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : <Paperclip className="h-4 w-4 text-muted-foreground" />}
         </Button>
         <Input
           value={input}

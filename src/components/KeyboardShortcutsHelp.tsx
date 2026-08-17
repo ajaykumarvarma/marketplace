@@ -90,7 +90,7 @@ export function KeyboardShortcutsHelp() {
             <div className="flex flex-col gap-2">
               {navShortcuts.map((s) => (
                 <div key={s.keys} className="flex items-center justify-between">
-                  <span className="text-sm text-foreground/70">{s.description}</span>
+                  <span className="text-sm text-muted-foreground">{s.description}</span>
                   <kbd className="px-2 py-1 rounded bg-muted border border-border font-mono text-xs text-foreground">
                     {s.keys}
                   </kbd>
@@ -104,7 +104,7 @@ export function KeyboardShortcutsHelp() {
             <div className="flex flex-col gap-2">
               {shortcuts.slice(0, 3).map((s) => (
                 <div key={s.key} className="flex items-center justify-between">
-                  <span className="text-sm text-foreground/70">{s.description}</span>
+                  <span className="text-sm text-muted-foreground">{s.description}</span>
                   <kbd className="px-2 py-1 rounded bg-muted border border-border font-mono text-xs text-foreground">
                     {getShortcutLabel(s)}
                   </kbd>
@@ -117,7 +117,7 @@ export function KeyboardShortcutsHelp() {
             <h3 className="font-display text-sm font-semibold text-foreground mb-3">General</h3>
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground/70">Close modal or dropdown</span>
+                <span className="text-sm text-muted-foreground">Close modal or dropdown</span>
                 <kbd className="px-2 py-1 rounded bg-muted border border-border font-mono text-xs text-foreground">
                   Escape
                 </kbd>
@@ -125,7 +125,7 @@ export function KeyboardShortcutsHelp() {
             </div>
           </section>
 
-          <p className="text-xs text-foreground/50 pt-2 border-t border-border">
+          <p className="text-xs text-muted-foreground pt-2 border-t border-border">
             Press <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border font-mono text-xs">?</kbd>{" "}
             from anywhere to open this dialog.
           </p>

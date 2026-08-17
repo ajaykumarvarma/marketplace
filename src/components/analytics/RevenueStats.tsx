@@ -46,7 +46,7 @@ export function RevenueStats({ stats }: RevenueStatsProps) {
       {cards.map((card) => (
         <div key={card.label} className="bg-card border border-border rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-foreground/70">{card.label}</p>
+            <p className="text-sm text-muted-foreground">{card.label}</p>
             <card.icon className="h-4 w-4 text-primary" />
           </div>
           <p className="font-mono text-2xl font-bold text-foreground">{card.value}</p>

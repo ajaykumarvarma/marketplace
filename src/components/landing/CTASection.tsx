@@ -17,7 +17,7 @@ export function CTASection() {
               Ready to Trade with Confidence?
             </h2>
 
-            <p className="text-foreground/80 text-lg max-w-lg">
+            <p className="text-foreground text-lg max-w-lg">
               Join thousands of buyers and sellers who trust TradeVault for secure, 
               escrow-protected digital goods transactions.
             </p>

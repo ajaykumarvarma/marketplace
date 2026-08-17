@@ -47,11 +47,11 @@ export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderP
         <FileText className="h-5 w-5 text-primary" />
         <div className="flex-1 min-w-0">
           <p className="text-sm text-foreground truncate">{uploadedFile.name}</p>
-          <p className="text-xs text-foreground/70">{(uploadedFile.size / 1024 / 1024).toFixed(2)} MB</p>
+          <p className="text-xs text-muted-foreground">{(uploadedFile.size / 1024 / 1024).toFixed(2)} MB</p>
         </div>
         {onRemove && (
           <Button variant="ghost" size="icon" onClick={onRemove} aria-label="Remove file">
-            <X className="h-4 w-4 text-foreground/70" />
+            <X className="h-4 w-4 text-muted-foreground" />
           </Button>
         )}
       </div>
@@ -69,11 +69,11 @@ export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderP
       <button
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-lg border-2 border-dashed border-border hover:border-primary/30 bg-muted/50 transition-colors disabled:opacity-50"
+        className="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-lg border-2 border-dashed border-border hover:border-primary/30 bg-muted transition-colors disabled:opacity-50"
       >
-        <Upload className="h-6 w-6 text-foreground/70" />
-        <p className="text-sm text-foreground/70">{uploading ? "Uploading..." : "Click to upload digital file"}</p>
-        <p className="text-xs text-foreground/50">Max 100MB</p>
+        <Upload className="h-6 w-6 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">{uploading ? "Uploading..." : "Click to upload digital file"}</p>
+        <p className="text-xs text-muted-foreground">Max 100MB</p>
       </button>
     </div>
   );

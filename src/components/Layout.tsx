@@ -98,14 +98,14 @@ export function Layout({ children }: LayoutProps) {
                 key={s.key}
                 className="flex items-center justify-between py-2 border-b border-border last:border-0"
               >
-                <span className="text-sm text-foreground/70">{s.description}</span>
+                <span className="text-sm text-muted-foreground">{s.description}</span>
                 <kbd className="inline-flex items-center gap-1 px-2 py-1 rounded bg-muted border border-border font-mono text-xs text-foreground">
                   {formatShortcut(s)}
                 </kbd>
               </div>
             ))}
           </div>
-          <p className="text-xs text-foreground/70 mt-4 text-center">
+          <p className="text-xs text-muted-foreground mt-4 text-center">
             Press <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border font-mono text-xs">Esc</kbd> to close this dialog.
           </p>
         </DialogContent>
