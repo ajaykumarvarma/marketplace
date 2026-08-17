@@ -73,11 +73,13 @@ export function CategoriesSection() {
               <Link
                 key={cat.label}
                 href={`/marketplace?category=${cat.slug}`}
-                className="p-5 bg-card border border-border rounded-lg hover:border-primary/30"
+                className="p-5 bg-card border border-border rounded-lg hover:border-primary/50 hover:bg-muted transition-colors group"
               >
-                <cat.icon className={`h-6 w-6 ${cat.color} mb-3`} />
+                <div className={`inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 border border-primary/25 mb-3 group-hover:bg-primary/25`}>
+                  <cat.icon className={`h-5 w-5 ${cat.color}`} />
+                </div>
                 <h3 className="font-display font-semibold text-foreground mb-1">{cat.label}</h3>
-                <p className="text-xs text-muted-foreground font-mono">{(counts[cat.slug] || 0).toLocaleString()} listings</p>
+                <p className="text-sm text-muted-foreground font-mono">{(counts[cat.slug] || 0).toLocaleString()} listings</p>
               </Link>
             ))}
           </div>

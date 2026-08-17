@@ -42,15 +42,15 @@ export function TopSellersSection() {
 
   const tierBadge = (tier: string | null) => {
     switch (tier) {
-      case "gold": return "bg-warning/10 text-warning border-warning/20";
-      case "silver": return "bg-muted text-muted-foreground";
-      case "bronze": return "bg-destructive/10 text-destructive border-destructive/20";
-      default: return "bg-success/10 text-success border-success/20";
+      case "gold": return "bg-warning/20 text-warning border-warning/30";
+      case "silver": return "bg-muted text-foreground border-border";
+      case "bronze": return "bg-destructive/20 text-destructive border-destructive/30";
+      default: return "bg-success/20 text-success border-success/30";
     }
   };
 
   return (
-    <section className="py-16 md:py-24 border-y border-border bg-card/30">
+    <section className="py-16 md:py-24 border-y border-border bg-muted">
       <div className="container">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-1">
@@ -76,10 +76,10 @@ export function TopSellersSection() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-foreground text-sm truncate">{seller.full_name || "Unnamed Seller"}</span>
-                          <Shield className="h-3 w-3 text-success" />
+                          <Shield className="h-3 w-3 text-success shrink-0" />
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                          <span className={`px-1.5 py-0.5 rounded text-xs border ${tierBadge(seller.verification_tier)}`}>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className={`px-1.5 py-0.5 rounded text-xs border font-medium ${tierBadge(seller.verification_tier)}`}>
                             {(seller.verification_tier || "verified").toUpperCase()}
                           </span>
                         </div>
@@ -114,17 +114,17 @@ export function TopSellersSection() {
                   <Link key={product.id} href={`/marketplace/${product.id}`}>
                     <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/30">
                       <div className="flex items-start justify-between mb-3">
-                        <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                        <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground bg-card border border-border px-2 py-0.5 rounded">
                           {product.category || "Digital"}
                         </span>
                       </div>
 
-                      <h4 className="font-display font-medium text-foreground mb-2 hover:text-primary">
+                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
                         {product.title}
                       </h4>
 
                       <div className="flex items-end gap-2 mb-3">
-                        <span className="font-mono text-lg font-semibold text-accent">${product.price.toFixed(2)}</span>
+                        <span className="font-mono text-lg font-bold text-accent">${product.price.toFixed(2)}</span>
                         {product.original_price && (
                           <span className="font-mono text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                         )}
@@ -132,7 +132,7 @@ export function TopSellersSection() {
 
                       <div className="flex items-center justify-between pt-3 border-t border-border">
                         <span className="text-xs text-muted-foreground">by {product.seller?.full_name || "Unknown"}</span>
-                        <Button size="sm" className="h-7 text-xs bg-primary hover:bg-primary/90 text-primary-foreground">
+                        <Button size="sm" className="h-8 text-xs bg-primary hover:bg-primary/90 text-primary-foreground">
                           View
                         </Button>
                       </div>

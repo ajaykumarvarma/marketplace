@@ -8,7 +8,7 @@ export function CTASection() {
       <div className="container">
         <div className="relative overflow-hidden rounded-lg bg-card border border-border p-8 md:p-12 lg:p-16">
           <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto gap-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium">
               <Shield className="h-4 w-4" />
               <span>Zero Fraud Tolerance</span>
             </div>
@@ -17,7 +17,7 @@ export function CTASection() {
               Ready to Trade with Confidence?
             </h2>
 
-            <p className="text-foreground text-lg max-w-lg">
+            <p className="text-muted-foreground text-lg max-w-lg">
               Join thousands of buyers and sellers who trust TradeVault for secure, 
               escrow-protected digital goods transactions.
             </p>
@@ -30,7 +30,7 @@ export function CTASection() {
                 </Button>
               </Link>
               <Link href="/security">
-                <Button size="lg" variant="outline" className="gap-2 border-border hover:border-primary/30 font-medium">
+                <Button size="lg" variant="outline" className="gap-2 border-border hover:border-primary/50 font-medium">
                   Learn About Fees
                 </Button>
               </Link>

@@ -36,14 +36,14 @@ export function HowItWorksSection() {
               {buyerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 border border-primary/20 shrink-0">
-                      <step.icon className="h-4 w-4 text-primary" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 border border-primary/30 shrink-0">
+                      <step.icon className="h-5 w-5 text-primary" />
                     </div>
                     {i < buyerSteps.length - 1 && <div className="w-px h-full bg-border mt-2" />}
                   </div>
                   <div className="pb-6">
                     <h3 className="font-display font-semibold text-foreground mb-1">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
                   </div>
                 </div>
               ))}
@@ -60,14 +60,14 @@ export function HowItWorksSection() {
               {sellerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 border border-accent/20 shrink-0">
-                      <step.icon className="h-4 w-4 text-accent" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 border border-accent/30 shrink-0">
+                      <step.icon className="h-5 w-5 text-accent" />
                     </div>
                     {i < sellerSteps.length - 1 && <div className="w-px h-full bg-border mt-2" />}
                   </div>
                   <div className="pb-6">
                     <h3 className="font-display font-semibold text-foreground mb-1">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
                   </div>
                 </div>
               ))}

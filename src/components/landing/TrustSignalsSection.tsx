@@ -51,15 +51,15 @@ export function TrustSignalsSection() {
           {trustItems.map((item) => (
             <div
               key={item.title}
-              className="p-6 bg-card border border-border rounded-lg"
+              className="p-6 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 border border-primary/20 shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 border border-primary/30 shrink-0">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <h3 className="font-display font-semibold text-foreground mb-1.5">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                 </div>
               </div>
             </div>

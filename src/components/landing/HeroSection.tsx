@@ -39,7 +39,7 @@ export function HeroSection() {
       <div className="container relative pt-20 pb-16 md:pt-28 md:pb-24">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="flex-1 flex flex-col gap-8 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium">
               <Shield className="h-4 w-4" />
               <span>Escrow-Protected Transactions</span>
             </div>
@@ -54,30 +54,26 @@ export function HeroSection() {
               built-in fraud protection, instant delivery, and escrow-backed trust.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/marketplace">
-                <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium">
-                  Browse Marketplace
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/sell">
-                <Button size="lg" variant="outline" className="gap-2 border-border font-medium">
-                  Start Selling
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className={`h-7 w-7 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs font-medium text-foreground ${i > 1 ? "-ml-2" : ""}`}>
+                  <div key={i} className={`h-8 w-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs font-medium text-foreground ${i > 1 ? "-ml-2" : ""}`}>
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}
               </div>
-              <span>Trusted by <span className="text-foreground font-medium">1,200+</span> sellers worldwide</span>
+              <span>Trusted by <span className="text-foreground font-semibold">1,200+</span> sellers worldwide</span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center bg-card border border-border rounded-lg py-3">
+                  <div className="font-mono text-xl font-bold text-foreground">
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1 font-medium">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -92,40 +88,29 @@ export function HeroSection() {
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-xs mb-2">
+                <div className="flex items-center justify-between text-sm mb-2">
                   <span className="text-muted-foreground">Order ID</span>
-                  <span className="font-mono text-accent">TV-2847-XF</span>
+                  <span className="font-mono text-accent font-semibold">TV-2847-XF</span>
                 </div>
-                <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mb-2">
+                <div className="h-2 w-full bg-muted rounded-full overflow-hidden mb-2">
                   <div className="h-full w-3/4 bg-primary rounded-full" />
                 </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Processing escrow...</span>
-                  <span className="font-mono">74%</span>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Processing escrow...</span>
+                  <span className="font-mono text-foreground font-semibold">74%</span>
                 </div>
               </div>
 
               <div className="mt-4 pt-4 border-t border-border">
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                  <span>Amount</span>
-                  <span className="font-mono text-foreground">$47.99</span>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="text-muted-foreground">Amount</span>
+                  <span className="font-mono text-foreground font-semibold">$47.99</span>
                 </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Method</span>
-                  <span className="font-mono text-foreground">Escrow</span>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Method</span>
+                  <span className="font-mono text-foreground font-semibold">Escrow</span>
                 </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="font-mono text-lg font-semibold text-foreground">
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{stat.label}</div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
