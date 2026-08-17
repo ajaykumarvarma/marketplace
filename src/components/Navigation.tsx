@@ -103,6 +103,18 @@ export function Navigation() {
                     {t("myOrders")}
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/referrals" className="flex items-center gap-2 cursor-pointer">
+                    <User className="h-4 w-4" />
+                    Referrals
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/developer" className="flex items-center gap-2 cursor-pointer">
+                    <Shield className="h-4 w-4" />
+                    API & Webhooks
+                  </Link>
+                </DropdownMenuItem>
                 {isSeller && (
                   <DropdownMenuItem asChild>
                     <Link href="/seller/dashboard" className="flex items-center gap-2 cursor-pointer">
@@ -119,6 +131,13 @@ export function Navigation() {
                     </Link>
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/settings/notifications" className="flex items-center gap-2 cursor-pointer">
+                    <Bell className="h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive cursor-pointer">
                   <LogOut className="h-4 w-4 mr-2" />

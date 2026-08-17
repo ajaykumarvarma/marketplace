@@ -86,35 +86,30 @@ export default function CheckoutPage() {
     setProcessing(true);
 
     const product = items[0];
-    const [deviceFingerprint, ipAddress] = await Promise.all([
-      getDeviceFingerprint(),
-      getClientIP(),
-    ]);
+    const orderAmount = product.price * product.quantity;
+    const deviceFingerprint = await getDeviceFingerprint();
+    const ipAddress = await getClientIP();
 
-    const fraudCheck = await checkFraudRisk({
-      buyerId: user.id,
-      sellerId: product.seller || "unknown",
-      productId: product.id,
-      price: product.price * product.quantity,
-      ipAddress,
-      deviceFingerprint,
-    });
+    const fraudCheck = await checkFraudRisk(user.id, orderAmount, deviceFingerprint);
+    const riskScore = fraudCheck.score;
+    const blocked = fraudCheck.decision === "block";
+    const flags = fraudCheck.factors.map((f) => f.reason);
 
-    setFraudResult(fraudCheck);
+    setFraudResult({ riskScore, flags, blocked });
 
-    if (fraudCheck.blocked) {
-      await logFraudEvent("blocked", user.id, fraudCheck.flags, fraudCheck.riskScore, { ipAddress, deviceFingerprint });
+    if (blocked) {
+      await logFraudEvent("blocked", { userId: user.id, flags, riskScore, ipAddress, deviceFingerprint });
       toast({ title: "Transaction blocked", description: "This transaction was flagged as high risk. Contact support if you believe this is an error.", variant: "destructive" });
       setProcessing(false);
       return;
     }
 
-    if (fraudCheck.riskScore >= 50) {
-      await logFraudEvent("auto_hold", user.id, fraudCheck.flags, fraudCheck.riskScore, { ipAddress, deviceFingerprint });
+    if (riskScore >= 40) {
+      await logFraudEvent("auto_hold", { userId: user.id, flags, riskScore, ipAddress, deviceFingerprint });
       toast({ title: "Transaction on hold", description: "Your order is under review for security. You will be notified shortly.", variant: "default" });
     }
 
-    const total = product.price * product.quantity * 1.02;
+    const total = orderAmount * 1.02;
     const { data: productData } = await supabase
       .from("products")
       .select("seller_id")
@@ -123,13 +118,13 @@ export default function CheckoutPage() {
 
     const { data: orderData, error } = await supabase.from("orders").insert({
       buyer_id: user.id,
-      seller_id: productData?.seller_id || product.seller || "unknown",
+      seller_id: productData?.seller_id || "unknown",
       product_id: product.id,
       quantity: product.quantity,
       total_amount: total,
       delivery_method: "digital",
       payment_method: paymentMethod,
-      status: fraudCheck.riskScore >= 50 ? "processing" : "pending",
+      status: riskScore >= 40 ? "processing" : "pending",
     } as any).select().single();
 
     setProcessing(false);
@@ -244,7 +239,7 @@ export default function CheckoutPage() {
             <div className="bg-card border border-border rounded-lg p-4 md:p-6 sm:sticky sm:top-24">
               <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
               
-              {fraudResult && fraudResult.riskScore >= 50 && (
+              {fraudResult && fraudResult.riskScore >= 40 && (
                 <div className={`p-3 rounded-lg ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
                   <div className="flex items-center gap-2">
                     <AlertTriangle className={`h-4 w-4 ${fraudResult.blocked ? "text-destructive" : "text-warning"}`} />
