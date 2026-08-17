@@ -127,7 +127,7 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+      <ScrollArea className="flex-1 p-4" ref={bottomRef}>
         <div className="space-y-3">
           {messages.map((msg) => {
             const isMe = msg.sender_id === user.id;
