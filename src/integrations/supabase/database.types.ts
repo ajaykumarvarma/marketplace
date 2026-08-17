@@ -296,12 +296,70 @@ export type Database = {
         }
         Relationships: []
       }
+      order_files: {
+        Row: {
+          content_type: string
+          created_at: string | null
+          download_count: number
+          expires_at: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id: string
+          max_downloads: number
+          order_id: string
+          product_id: string
+        }
+        Insert: {
+          content_type: string
+          created_at?: string | null
+          download_count?: number
+          expires_at?: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id?: string
+          max_downloads?: number
+          order_id: string
+          product_id: string
+        }
+        Update: {
+          content_type?: string
+          created_at?: string | null
+          download_count?: number
+          expires_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          id?: string
+          max_downloads?: number
+          order_id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_files_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_files_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           buyer_id: string
           coupon_id: string | null
           created_at: string | null
           delivery_email: string | null
+          delivery_method: string | null
           device_fingerprint: string | null
           discount_amount: number
           escrow_released: boolean
@@ -322,6 +380,7 @@ export type Database = {
           coupon_id?: string | null
           created_at?: string | null
           delivery_email?: string | null
+          delivery_method?: string | null
           device_fingerprint?: string | null
           discount_amount?: number
           escrow_released?: boolean
@@ -342,6 +401,7 @@ export type Database = {
           coupon_id?: string | null
           created_at?: string | null
           delivery_email?: string | null
+          delivery_method?: string | null
           device_fingerprint?: string | null
           discount_amount?: number
           escrow_released?: boolean
@@ -593,6 +653,47 @@ export type Database = {
           },
           {
             foreignKeyName: "reviews_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seller_analytics: {
+        Row: {
+          date: string
+          id: string
+          orders_count: number
+          products_sold: number
+          revenue: number
+          seller_id: string
+          unique_buyers: number
+          views: number
+        }
+        Insert: {
+          date?: string
+          id?: string
+          orders_count?: number
+          products_sold?: number
+          revenue?: number
+          seller_id: string
+          unique_buyers?: number
+          views?: number
+        }
+        Update: {
+          date?: string
+          id?: string
+          orders_count?: number
+          products_sold?: number
+          revenue?: number
+          seller_id?: string
+          unique_buyers?: number
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_analytics_seller_id_fkey"
             columns: ["seller_id"]
             isOneToOne: false
             referencedRelation: "profiles"
