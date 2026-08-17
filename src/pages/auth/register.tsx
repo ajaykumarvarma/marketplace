@@ -82,7 +82,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setAccountType("buyer")}
-              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${accountType === "buyer" ? "bg-card text-foreground shadow-sm" : "text-foreground/70 hover:text-foreground hover:bg-card/50"}`}
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${accountType === "buyer" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
             >
               <User className="h-4 w-4" />
               Buyer
@@ -90,7 +90,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setAccountType("seller")}
-              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${accountType === "seller" ? "bg-card text-foreground shadow-sm" : "text-foreground/70 hover:text-foreground hover:bg-card/50"}`}
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${accountType === "seller" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
             >
               <Store className="h-4 w-4" />
               Seller
