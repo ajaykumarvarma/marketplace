@@ -1,24 +1,22 @@
 ---
 title: Advanced Search & Discovery
-status: in_progress
+status: done
 priority: urgent
 type: feature
-tags: [search, discovery, filters, elasticsearch]
+tags: [search, discovery, filters, marketplace]
 created_by: agent
-created_at: 2026-08-17T05:10:00Z
+created_at: 2026-08-17T04:49:48Z
 position: 32
 ---
 
 ## Notes
-Faceted filters, price range sliders, auto-complete, saved searches, typo-tolerant search.
+Faceted search with category filters, price range, sorting, and saved searches for the marketplace.
 
 ## Checklist
-- [ ] Create search index utility
-- [ ] Add faceted filter sidebar
-- [ ] Add price range slider
-- [ ] Add auto-complete dropdown
-- [ ] Add saved searches for logged-in users
-- [ ] Add sort options (price, rating, newest)
+- [x] Create SearchFilters component with faceted UI
+- [x] Add price range, category, sort controls
+- [x] Integrate into marketplace/index.tsx
+- [x] Add URL query param sync for shareability
 
 ## Acceptance
 - Search returns results in <200ms

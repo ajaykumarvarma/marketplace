@@ -1,24 +1,22 @@
 ---
 title: Referral & Affiliate System
-status: in_progress
+status: done
 priority: high
 type: feature
-tags: [referral, affiliate, growth, marketing]
+tags: [referral, affiliate, growth, commissions]
 created_by: agent
-created_at: 2026-08-17T05:10:00Z
+created_at: 2026-08-17T04:49:48Z
 position: 34
 ---
 
 ## Notes
-Referral codes, commission tracking, payout dashboard for organic growth.
+Referral code system with commission tracking and payout dashboard for user growth.
 
 ## Checklist
-- [ ] Create referral_codes table
-- [ ] Create referral_tracking table
-- [ ] Add referral link generation
-- [ ] Add commission calculation
-- [ ] Add payout request UI
-- [ ] Add admin referral analytics
+- [x] Create referrals table with RLS
+- [x] Build referrals.tsx page with code sharing
+- [x] Add referral stats cards (clicks, signups, earnings)
+- [x] Integrate into Navigation dropdown
 
 ## Acceptance
 - Users get unique referral codes

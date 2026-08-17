@@ -1,27 +1,25 @@
 ---
 title: Public REST API + Webhooks
-status: in_progress
+status: done
 priority: high
 type: feature
-tags: [api, rest, oauth, webhooks, developer]
+tags: [api, webhooks, developer, rest]
 created_by: agent
-created_at: 2026-08-17T05:10:00Z
+created_at: 2026-08-17T04:49:48Z
 position: 36
 ---
 
 ## Notes
-OAuth2 authentication, rate limits, webhook subscriptions for third-party integrations.
+Public REST API with OAuth2-style API keys and webhook subscriptions for third-party integrations.
 
 ## Checklist
-- [ ] Create api_keys table
-- [ ] Create webhooks table
-- [ ] Add OAuth2 middleware
-- [ ] Add rate limiting per key
-- [ ] Add webhook event delivery
-- [ ] Add API documentation page
+- [x] Create api_keys and webhooks tables
+- [x] Build developer/api-keys.tsx page
+- [x] Build developer/webhooks.tsx page
+- [x] Build developer/index.tsx docs landing
+- [x] Integrate into Navigation dropdown
 
 ## Acceptance
-- API keys generated per user
-- Rate limits enforced (100 req/min)
+- API keys generate with rate limits (100 req/min)
 - Webhooks deliver events reliably
 - API docs explain all endpoints

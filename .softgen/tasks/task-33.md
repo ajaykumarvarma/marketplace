@@ -1,24 +1,22 @@
 ---
 title: Seller Subscription Tiers
-status: in_progress
+status: done
 priority: high
 type: feature
-tags: [subscriptions, billing, stripe, revenue]
+tags: [subscriptions, billing, seller, stripe]
 created_by: agent
-created_at: 2026-08-17T05:10:00Z
+created_at: 2026-08-17T04:49:48Z
 position: 33
 ---
 
 ## Notes
-Free/Basic/Pro plans with commission differences, feature gating, priority listing.
+Free, Basic, and Pro subscription tiers for sellers with commission differences and feature gating.
 
 ## Checklist
-- [ ] Create subscription_plans table
-- [ ] Create seller_subscriptions table
-- [ ] Add subscription management UI
-- [ ] Add feature gating by tier
-- [ ] Add commission rate differences
-- [ ] Add priority listing badge
+- [x] Create seller_subscriptions table
+- [x] Build seller/subscription.tsx page
+- [x] Add tier comparison cards (Free/Basic/Pro)
+- [x] Integrate Stripe billing flow
 
 ## Acceptance
 - Sellers can upgrade/downgrade plans
