@@ -109,7 +109,7 @@ export default function FraudDashboard() {
                       <Badge variant="outline">{alert.alert_type}</Badge>
                       <span className="text-xs text-muted-foreground">{new Date(alert.created_at).toLocaleDateString()}</span>
                     </div>
-                    <p className="text-sm text-foreground/90">{alert.description}</p>
+                    <p className="text-sm text-foreground">{alert.description}</p>
                     {alert.user && (
                       <p className="text-xs text-muted-foreground mt-1">
                         User: {alert.user.full_name || alert.user.email}

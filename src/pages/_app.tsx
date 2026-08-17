@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <Sentry.ErrorBoundary fallback={({ error, resetError }) => (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
         <h1 className="font-display text-2xl font-bold mb-4">Something went wrong</h1>
-        <p className="text-foreground/70 mb-6 max-w-md text-center">
+        <p className="text-muted-foreground mb-6 max-w-md text-center">
           We've been notified and are working on a fix. Try refreshing the page.
         </p>
         <button
