@@ -8,11 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
           <div>
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10 border border-primary/20">
-                <Shield className="h-[18px] w-[18px] text-primary" />
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-muted border border-border">
+                <Shield className="h-[18px] w-[18px] text-muted-foreground" />
               </div>
               <span className="font-display text-lg font-semibold tracking-tight text-foreground">
-                Trade<span className="text-primary">Vault</span>
+                TradeVault
               </span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">

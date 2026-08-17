@@ -202,7 +202,7 @@ export default function ProductDetailPage() {
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="border-border text-muted-foreground">{product.category?.name || "Other"}</Badge>
                 {product.seller?.role !== "buyer" && (
-                  <Badge className="bg-success/10 text-success border-success/20">
+                  <Badge className="bg-muted text-foreground border-border">
                     <Shield className="h-3 w-3 mr-1" /> Verified Seller
                   </Badge>
                 )}
@@ -233,7 +233,7 @@ export default function ProductDetailPage() {
                     <div className="flex items-center gap-1 mb-3">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button key={star} onClick={() => setReviewRating(star)} className="p-0.5">
-                          <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-warning text-warning" : "text-muted"}`} />
+                          <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-foreground text-foreground" : "text-muted"}`} />
                         </button>
                       ))}
                     </div>
@@ -266,7 +266,7 @@ export default function ProductDetailPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, j) => (
-                          <Star key={j} className={`h-4 w-4 ${j < review.rating ? "fill-warning text-warning" : "text-muted"}`} />
+                          <Star key={j} className={`h-4 w-4 ${j < review.rating ? "fill-foreground text-foreground" : "text-muted"}`} />
                         ))}
                       </div>
                     </div>
@@ -281,21 +281,21 @@ export default function ProductDetailPage() {
               <TabsContent value="delivery" className="mt-4">
                 <div className="bg-card border border-border rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-3">
-                    <Clock className="h-5 w-5 text-primary" />
+                    <Clock className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium text-foreground">Estimated Delivery</p>
                       <p className="text-sm text-muted-foreground">{product.delivery_time}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 mb-3">
-                    <Shield className="h-5 w-5 text-success" />
+                    <Shield className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium text-foreground">Escrow Protection</p>
                       <p className="text-sm text-muted-foreground">Your payment is held securely until delivery is confirmed</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent" />
+                    <CheckCircle className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium text-foreground">Instant Access</p>
                       <p className="text-sm text-muted-foreground">Digital delivery — no shipping required</p>
@@ -316,7 +316,7 @@ export default function ProductDetailPage() {
                   )}
                 </div>
                 {product.original_price && (
-                  <Badge className="mt-2 bg-success/10 text-success border-success/20">
+                  <Badge className="mt-2 bg-muted text-foreground border-border">
                     Save {Math.round((1 - product.price / product.original_price) * 100)}%
                   </Badge>
                 )}
@@ -351,7 +351,7 @@ export default function ProductDetailPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <div className="flex items-center gap-0.5">
-                        <Star className="h-3 w-3 fill-warning text-warning" />
+                        <Star className="h-3 w-3 fill-foreground text-foreground" />
                         <span>{avgRating}</span>
                       </div>
                     </div>

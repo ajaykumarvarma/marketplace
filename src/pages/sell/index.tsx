@@ -51,13 +51,12 @@ export default function SellPage() {
       <div>
         <section className="border-b border-border">
           <div className="container py-16 md:py-24 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium mb-6">
               <Store className="h-4 w-4" />
               <span>Seller Program</span>
             </div>
             <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground max-w-2xl mx-auto mb-6">
-              Turn Your Digital Goods Into{" "}
-              <span className="text-accent">Revenue</span>
+              Turn Your Digital Goods Into Revenue
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-6">
               Join 1,200+ sellers earning on TradeVault. Low fees, instant payouts, and enterprise-grade security.
@@ -69,7 +68,7 @@ export default function SellPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="border-border hover:border-primary/30">
+              <Button size="lg" variant="outline" className="border-border hover:border-border">
                 View Seller Fees
               </Button>
             </div>
@@ -80,8 +79,8 @@ export default function SellPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
               <div key={feature.title} className="bg-card border border-border rounded-lg p-6">
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                  <feature.icon className="h-5 w-5 text-primary" />
+                <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center mb-3">
+                  <feature.icon className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <h3 className="font-display font-semibold text-foreground mb-1">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground">{feature.description}</p>
@@ -98,7 +97,7 @@ export default function SellPage() {
                 <div className="flex flex-col gap-4">
                   {steps.map((step, i) => (
                     <div key={step} className="flex items-center gap-4">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-mono font-medium text-primary">
+                      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-mono font-medium text-muted-foreground">
                         {i + 1}
                       </div>
                       <span className="text-foreground">{step}</span>
@@ -124,7 +123,7 @@ export default function SellPage() {
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-border">
                     <span className="text-sm text-muted-foreground">This Month</span>
-                    <span className="font-mono text-accent">+$3,240.00</span>
+                    <span className="font-mono text-foreground">+$3,240.00</span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-border">
                     <span className="text-sm text-muted-foreground">Active Orders</span>
@@ -132,7 +131,7 @@ export default function SellPage() {
                   </div>
                   <div className="flex items-center justify-between py-2">
                     <span className="text-sm text-muted-foreground">Completion Rate</span>
-                    <span className="font-mono text-success">99.2%</span>
+                    <span className="font-mono text-foreground">99.2%</span>
                   </div>
                 </div>
               </div>
@@ -153,9 +152,9 @@ export default function SellPage() {
               </Button>
             </Link>
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-success" /> 5% Fee Only</span>
-              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-success" /> Instant Payouts</span>
-              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-success" /> 24/7 Support</span>
+              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-muted-foreground" /> 5% Fee Only</span>
+              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-muted-foreground" /> Instant Payouts</span>
+              <span className="flex items-center gap-1"><CheckCircle className="h-4 w-4 text-muted-foreground" /> 24/7 Support</span>
             </div>
           </div>
         </section>

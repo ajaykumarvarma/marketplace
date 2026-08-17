@@ -54,8 +54,8 @@ export default function LoginPage() {
       <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="text-center mb-6">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mx-auto mb-3">
-              <Shield className="h-6 w-6 text-primary" />
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-muted border border-border mx-auto mb-3">
+              <Shield className="h-6 w-6 text-muted-foreground" />
             </div>
             <h1 className="font-display text-2xl font-bold text-foreground mb-2">Welcome back</h1>
             <p className="text-sm text-muted-foreground">Sign in to your TradeVault account</p>
@@ -161,7 +161,7 @@ export default function LoginPage() {
           </p>
 
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">
-            <Shield className="h-3 w-3 text-success" />
+            <Shield className="h-3 w-3 text-muted-foreground" />
             <span>256-bit SSL encrypted</span>
           </div>
         </div>

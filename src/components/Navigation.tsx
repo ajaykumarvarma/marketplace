@@ -33,12 +33,12 @@ export function Navigation() {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded bg-primary/10 border border-primary/20">
-            <Shield className="h-[18px] w-[18px] text-primary" />
-            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent" />
+          <div className="relative flex h-8 w-8 items-center justify-center rounded bg-muted border border-border">
+            <Shield className="h-[18px] w-[18px] text-muted-foreground" />
+            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-muted-foreground" />
           </div>
           <span className="font-display text-lg font-semibold tracking-tight text-foreground">
-            Trade<span className="text-primary">Vault</span>
+            TradeVault
           </span>
         </Link>
 
@@ -86,7 +86,7 @@ export function Navigation() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="gap-2 pl-2 pr-3">
                   <Avatar className="h-7 w-7">
-                    <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
+                    <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
                       {userInitial}
                     </AvatarFallback>
                   </Avatar>
