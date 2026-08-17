@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Shield, Eye, EyeOff, Github, Mail, Store, User, AlertTriangle } from "lucide-react";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,6 +37,23 @@ export default function RegisterPage() {
     if (authError) {
       setError(authError.message);
     } else {
+      // Track referral if present
+      const refCode = router.query.ref as string;
+      if (refCode) {
+        const { data: refData } = await supabase
+          .from("referral_codes")
+          .select("user_id")
+          .eq("code", refCode)
+          .maybeSingle();
+        if (refData) {
+          await supabase.from("referral_tracking").insert({
+            referrer_id: refData.user_id,
+            referral_code: refCode,
+            commission_amount: 0,
+            paid: false,
+          });
+        }
+      }
       router.push("/marketplace");
     }
   };

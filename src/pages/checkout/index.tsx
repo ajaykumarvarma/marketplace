@@ -12,7 +12,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { checkFraudRisk, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
+import { checkFraudRisk, recordFraudScore, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -126,6 +126,10 @@ export default function CheckoutPage() {
       payment_method: paymentMethod,
       status: riskScore >= 40 ? "processing" : "pending",
     } as any).select().single();
+
+    if (orderData) {
+      await recordFraudScore(orderData.id, user.id, fraudCheck);
+    }
 
     setProcessing(false);
 

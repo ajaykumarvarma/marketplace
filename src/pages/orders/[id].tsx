@@ -20,6 +20,14 @@ type Order = {
   product: { title: string; delivery_content: string | null } | null;
 };
 
+type OrderFile = {
+  id: string;
+  file_name: string;
+  file_path: string;
+  file_size: number;
+  content_type: string;
+};
+
 export default function OrderDetailPage() {
   const router = useRouter();
   const { id } = router.query;
@@ -27,6 +35,7 @@ export default function OrderDetailPage() {
   const { toast } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
   const [sellerProfile, setSellerProfile] = useState<{ full_name: string | null } | null>(null);
+  const [orderFiles, setOrderFiles] = useState<OrderFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
 
@@ -57,6 +66,13 @@ export default function OrderDetailPage() {
         .eq("id", data.seller_id)
         .maybeSingle();
       setSellerProfile(profile);
+
+      const { data: files } = await supabase
+        .from("order_files")
+        .select("id, file_name, file_path, file_size, content_type")
+        .eq("order_id", data.id)
+        .eq("status", "delivered");
+      setOrderFiles(files || []);
     }
     setLoading(false);
   }
@@ -194,15 +210,31 @@ export default function OrderDetailPage() {
               </div>
               <div className="bg-muted rounded-lg p-4 mb-4">
                 <p className="text-sm text-foreground/70 mb-3">Method: {order.delivery_method || "Digital delivery"}</p>
+                {orderFiles.length > 0 ? (
+                  <div className="space-y-2 mb-3">
+                    {orderFiles.map((file) => (
+                      <a
+                        key={file.id}
+                        href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/digital-files/${file.file_path}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>{file.file_name} ({(file.file_size / 1024 / 1024).toFixed(2)} MB)</span>
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-foreground/50 mb-3">No files attached to this order.</p>
+                )}
                 <div className="flex gap-3">
-                  <Button size="sm" variant="outline" className="gap-2 border-border">
-                    <Download className="h-4 w-4" />
-                    Download
-                  </Button>
-                  <Button size="sm" variant="outline" className="gap-2 border-border">
-                    <MessageSquare className="h-4 w-4" />
-                    Contact Seller
-                  </Button>
+                  <Link href={`/marketplace/${order.id}`}>
+                    <Button size="sm" variant="outline" className="gap-2 border-border">
+                      <MessageSquare className="h-4 w-4" />
+                      Contact Seller
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
