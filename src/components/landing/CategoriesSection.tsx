@@ -4,14 +4,14 @@ import { Gamepad2, Key, Palette, Code, Megaphone, GraduationCap, Crown, Wrench, 
 import { supabase } from "@/integrations/supabase/client";
 
 const categoryConfig = [
-  { slug: "game-keys", icon: Gamepad2, label: "Game Keys", color: "text-accent" },
-  { slug: "accounts", icon: Key, label: "Accounts", color: "text-primary" },
-  { slug: "design-assets", icon: Palette, label: "Design Assets", color: "text-warning" },
-  { slug: "software", icon: Code, label: "Software", color: "text-success" },
-  { slug: "marketing", icon: Megaphone, label: "Marketing", color: "text-destructive" },
-  { slug: "courses", icon: GraduationCap, label: "Courses", color: "text-primary" },
-  { slug: "premium", icon: Crown, label: "Premium", color: "text-accent" },
-  { slug: "services", icon: Wrench, label: "Services", color: "text-warning" },
+  { slug: "game-keys", icon: Gamepad2, label: "Game Keys" },
+  { slug: "accounts", icon: Key, label: "Accounts" },
+  { slug: "design-assets", icon: Palette, label: "Design Assets" },
+  { slug: "software", icon: Code, label: "Software" },
+  { slug: "marketing", icon: Megaphone, label: "Marketing" },
+  { slug: "courses", icon: GraduationCap, label: "Courses" },
+  { slug: "premium", icon: Crown, label: "Premium" },
+  { slug: "services", icon: Wrench, label: "Services" },
 ];
 
 export function CategoriesSection() {
@@ -76,7 +76,7 @@ export function CategoriesSection() {
                 className="p-5 bg-card border border-border rounded-lg hover:border-primary/50 hover:bg-muted transition-colors group"
               >
                 <div className={`inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 border border-primary/25 mb-3 group-hover:bg-primary/25`}>
-                  <cat.icon className={`h-5 w-5 ${cat.color}`} />
+                  <cat.icon className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="font-display font-semibold text-foreground mb-1">{cat.label}</h3>
                 <p className="text-sm text-muted-foreground font-mono">{(counts[cat.slug] || 0).toLocaleString()} listings</p>

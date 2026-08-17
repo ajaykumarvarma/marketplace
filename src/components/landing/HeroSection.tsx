@@ -39,14 +39,13 @@ export function HeroSection() {
       <div className="container relative pt-20 pb-16 md:pt-28 md:pb-24">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="flex-1 flex flex-col gap-8 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium">
               <Shield className="h-4 w-4" />
               <span>Escrow-Protected Transactions</span>
             </div>
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight">
-              The Secure Marketplace for{" "}
-              <span className="text-accent">Digital Goods</span>
+              The Secure Marketplace for Digital Goods
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-lg">

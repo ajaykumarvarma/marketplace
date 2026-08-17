@@ -42,10 +42,10 @@ export function TopSellersSection() {
 
   const tierBadge = (tier: string | null) => {
     switch (tier) {
-      case "gold": return "bg-warning/20 text-warning border-warning/30";
+      case "gold": return "bg-muted text-foreground border-border";
       case "silver": return "bg-muted text-foreground border-border";
-      case "bronze": return "bg-destructive/20 text-destructive border-destructive/30";
-      default: return "bg-success/20 text-success border-success/30";
+      case "bronze": return "bg-muted text-foreground border-border";
+      default: return "bg-muted text-foreground border-border";
     }
   };
 
@@ -124,7 +124,7 @@ export function TopSellersSection() {
                       </h4>
 
                       <div className="flex items-end gap-2 mb-3">
-                        <span className="font-mono text-lg font-bold text-accent">${product.price.toFixed(2)}</span>
+                        <span className="font-mono text-lg font-bold text-foreground">${product.price.toFixed(2)}</span>
                         {product.original_price && (
                           <span className="font-mono text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                         )}

@@ -29,7 +29,7 @@ export function HowItWorksSection() {
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px flex-1 bg-border" />
-              <span className="text-xs font-mono uppercase tracking-wider text-primary">For Buyers</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">For Buyers</span>
               <div className="h-px flex-1 bg-border" />
             </div>
             <div className="flex flex-col gap-6">
@@ -53,15 +53,15 @@ export function HowItWorksSection() {
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px flex-1 bg-border" />
-              <span className="text-xs font-mono uppercase tracking-wider text-accent">For Sellers</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-primary">For Sellers</span>
               <div className="h-px flex-1 bg-border" />
             </div>
             <div className="flex flex-col gap-6">
               {sellerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 border border-accent/30 shrink-0">
-                      <step.icon className="h-5 w-5 text-accent" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 border border-primary/30 shrink-0">
+                      <step.icon className="h-5 w-5 text-primary" />
                     </div>
                     {i < sellerSteps.length - 1 && <div className="w-px h-full bg-border mt-2" />}
                   </div>

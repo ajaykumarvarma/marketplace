@@ -8,7 +8,7 @@ export function CTASection() {
       <div className="container">
         <div className="relative overflow-hidden rounded-lg bg-card border border-border p-8 md:p-12 lg:p-16">
           <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto gap-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium">
               <Shield className="h-4 w-4" />
               <span>Zero Fraud Tolerance</span>
             </div>
