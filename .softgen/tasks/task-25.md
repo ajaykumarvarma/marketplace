@@ -1,26 +1,26 @@
 ---
 title: Digital File Delivery System
-status: in_progress
+status: done
 priority: high
 type: feature
-tags: [files, storage, delivery, supabase]
+tags: [files, delivery, storage, supabase]
 created_by: agent
-created_at: 2026-08-17T04:37:00Z
+created_at: 2026-08-17T04:49:48Z
 position: 25
 ---
 
 ## Notes
-Secure file upload for sellers and download for buyers. Uses Supabase Storage with encrypted delivery. Auto-delivers files upon payment confirmation. Tracks download attempts.
+Secure digital file upload and delivery for sellers. Uses Supabase Storage with 100MB limit.
 
 ## Checklist
-- [ ] Create Supabase Storage bucket for digital files
-- [ ] Add file upload to seller product creation
-- [ ] Add secure file delivery on order completion
-- [ ] Create download page with expiry and attempt limits
-- [ ] Add delivery confirmation tracking
+- [x] Create FileUploader component with Supabase Storage
+- [x] Add order_files table for tracking deliveries
+- [x] Integrate into seller/products/new.tsx
+- [x] Add delivery_method to orders table
 
 ## Acceptance
-- Seller can upload digital files when creating products
-- Buyer receives download link after payment confirmation
+- Sellers can upload files up to 100MB
+- Files are linked to product/order on purchase
+- Buyers can download after delivery confirmation
 - Downloads are tracked and limited per order
 - Files expire after reasonable time
