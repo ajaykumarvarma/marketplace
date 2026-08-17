@@ -5,6 +5,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { useRouter } from "next/router";
+import * as Sentry from "@sentry/nextjs";
 import type { AppProps } from "next/app";
 import "@/styles/globals.css";
 
@@ -22,17 +23,32 @@ export default function App({ Component, pageProps }: AppProps) {
   const messages = messagesByLocale[locale] || messagesEn;
 
   return (
-    <AuthProvider>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <CartProvider>
-            <Layout>
-              <Component {...pageProps} />
-              <Toaster />
-            </Layout>
-          </CartProvider>
-        </NextIntlClientProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <Sentry.ErrorBoundary fallback={({ error, resetError }) => (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
+        <h1 className="font-display text-2xl font-bold mb-4">Something went wrong</h1>
+        <p className="text-foreground/70 mb-6 max-w-md text-center">
+          We've been notified and are working on a fix. Try refreshing the page.
+        </p>
+        <button
+          onClick={resetError}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+        >
+          Try Again
+        </button>
+      </div>
+    )}>
+      <AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            <CartProvider>
+              <Layout>
+                <Component {...pageProps} />
+                <Toaster />
+              </Layout>
+            </CartProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </Sentry.ErrorBoundary>
   );
 }
