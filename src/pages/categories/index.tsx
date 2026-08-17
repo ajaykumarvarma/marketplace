@@ -109,7 +109,24 @@ const categories = [
 export default function CategoriesPage() {
   return (
     <>
-      <SEO title="Browse Categories — TradeVault" description="Explore all digital goods categories on TradeVault. Game keys, accounts, software, subscriptions, and more." />
+      <SEO
+        title="Browse Categories — TradeVault"
+        description="Explore all digital goods categories on TradeVault. Game keys, accounts, software, subscriptions, and more."
+        image="https://tradevault.io/og-image.png"
+        url="https://tradevault.io/categories"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "TradeVault Categories",
+          itemListElement: categories.map((cat, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: cat.name,
+            url: `https://tradevault.io/marketplace?category=${cat.id}`,
+            description: cat.description
+          }))
+        }}
+      />
       <div className="container py-8 md:py-12">
         <div className="mb-6">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Categories</h1>

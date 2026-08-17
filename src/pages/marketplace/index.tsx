@@ -82,7 +82,24 @@ export default function MarketplacePage() {
 
   return (
     <>
-      <SEO title="Marketplace — TradeVault" description="Browse thousands of digital goods. Game keys, accounts, software, and more with escrow protection." />
+      <SEO
+        title="Marketplace — TradeVault"
+        description="Browse thousands of digital goods. Game keys, accounts, software, subscriptions, and more with escrow protection."
+        image="https://tradevault.io/og-image.png"
+        url="https://tradevault.io/marketplace"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "TradeVault Marketplace",
+          url: "https://tradevault.io/marketplace",
+          description: "Browse thousands of verified digital goods from trusted sellers.",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://tradevault.io/marketplace?q={search_term}",
+            "query-input": "required name=search_term"
+          }
+        }}
+      />
       <div className="container py-8 md:py-12 flex flex-col gap-8">
         <div className="mb-2">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Marketplace</h1>

@@ -145,7 +145,40 @@ export default function ProductDetailPage() {
 
   return (
     <>
-      <SEO title={`${product.title} — TradeVault`} description={product.description.slice(0, 160)} />
+      <SEO
+        title={`${product.title} — TradeVault`}
+        description={product.description.slice(0, 155)}
+        image={product.image_url || "https://tradevault.io/og-image.png"}
+        url={`https://tradevault.io/marketplace/${product.id}`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title,
+          image: product.image_url || "https://tradevault.io/og-image.png",
+          description: product.description.slice(0, 255),
+          sku: product.id,
+          brand: {
+            "@type": "Brand",
+            name: product.seller?.full_name || "TradeVault Seller"
+          },
+          offers: {
+            "@type": "Offer",
+            url: `https://tradevault.io/marketplace/${product.id}`,
+            priceCurrency: "USD",
+            price: product.price.toString(),
+            availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            seller: {
+              "@type": "Person",
+              name: product.seller?.full_name || "Unknown"
+            }
+          },
+          aggregateRating: product.reviews && product.reviews.length > 0 ? {
+            "@type": "AggregateRating",
+            ratingValue: avgRating,
+            reviewCount: product.reviews.length.toString()
+          } : undefined
+        }}
+      />
       <div className="container py-8 md:py-12">
         <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
           <ArrowLeft className="h-4 w-4" />
