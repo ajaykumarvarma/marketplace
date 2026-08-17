@@ -15,6 +15,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          active: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          permissions: string[]
+          rate_limit: number
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name: string
+          permissions?: string[]
+          rate_limit?: number
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          permissions?: string[]
+          rate_limit?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cart_items: {
         Row: {
           created_at: string | null
@@ -164,6 +214,67 @@ export type Database = {
           },
         ]
       }
+      fraud_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string
+          id: string
+          order_id: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description: string
+          id?: string
+          order_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          order_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fraud_alerts_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraud_alerts_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraud_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fraud_logs: {
         Row: {
           created_at: string | null
@@ -225,6 +336,51 @@ export type Database = {
           },
         ]
       }
+      fraud_scores: {
+        Row: {
+          created_at: string
+          decision: string
+          factors: Json
+          id: string
+          order_id: string
+          score: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          decision?: string
+          factors?: Json
+          id?: string
+          order_id: string
+          score: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          decision?: string
+          factors?: Json
+          id?: string
+          order_id?: string
+          score?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fraud_scores_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraud_scores_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
@@ -259,6 +415,47 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_preferences: {
+        Row: {
+          category: string
+          channel: string
+          created_at: string
+          enabled: boolean
+          frequency: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          channel: string
+          created_at?: string
+          enabled?: boolean
+          frequency?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          channel?: string
+          created_at?: string
+          enabled?: boolean
+          frequency?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -598,6 +795,101 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_codes: {
+        Row: {
+          active: boolean
+          clicks: number
+          code: string
+          commission_earned: number
+          commission_rate: number
+          conversions: number
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          clicks?: number
+          code: string
+          commission_earned?: number
+          commission_rate?: number
+          conversions?: number
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          clicks?: number
+          code?: string
+          commission_earned?: number
+          commission_rate?: number
+          conversions?: number
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_tracking: {
+        Row: {
+          commission_amount: number
+          created_at: string
+          first_order_at: string | null
+          id: string
+          paid: boolean
+          referral_code: string
+          referred_id: string | null
+          referrer_id: string
+          signup_at: string | null
+        }
+        Insert: {
+          commission_amount?: number
+          created_at?: string
+          first_order_at?: string | null
+          id?: string
+          paid?: boolean
+          referral_code: string
+          referred_id?: string | null
+          referrer_id: string
+          signup_at?: string | null
+        }
+        Update: {
+          commission_amount?: number
+          created_at?: string
+          first_order_at?: string | null
+          id?: string
+          paid?: boolean
+          referral_code?: string
+          referred_id?: string | null
+          referrer_id?: string
+          signup_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_tracking_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_tracking_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           comment: string | null
@@ -695,6 +987,170 @@ export type Database = {
           {
             foreignKeyName: "seller_analytics_seller_id_fkey"
             columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seller_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan_id: string
+          seller_id: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_id: string
+          seller_id: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_id?: string
+          seller_id?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seller_subscriptions_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_plans: {
+        Row: {
+          active: boolean
+          analytics_advanced: boolean
+          commission_rate: number
+          created_at: string
+          custom_branding: boolean
+          description: string | null
+          featured_listing: boolean
+          id: string
+          max_products: number
+          name: string
+          price_monthly: number
+          price_yearly: number
+          priority_support: boolean
+          slug: string
+          stripe_price_id_monthly: string | null
+          stripe_price_id_yearly: string | null
+        }
+        Insert: {
+          active?: boolean
+          analytics_advanced?: boolean
+          commission_rate?: number
+          created_at?: string
+          custom_branding?: boolean
+          description?: string | null
+          featured_listing?: boolean
+          id?: string
+          max_products?: number
+          name: string
+          price_monthly?: number
+          price_yearly?: number
+          priority_support?: boolean
+          slug: string
+          stripe_price_id_monthly?: string | null
+          stripe_price_id_yearly?: string | null
+        }
+        Update: {
+          active?: boolean
+          analytics_advanced?: boolean
+          commission_rate?: number
+          created_at?: string
+          custom_branding?: boolean
+          description?: string | null
+          featured_listing?: boolean
+          id?: string
+          max_products?: number
+          name?: string
+          price_monthly?: number
+          price_yearly?: number
+          priority_support?: boolean
+          slug?: string
+          stripe_price_id_monthly?: string | null
+          stripe_price_id_yearly?: string | null
+        }
+        Relationships: []
+      }
+      webhooks: {
+        Row: {
+          active: boolean
+          created_at: string
+          events: string[]
+          failure_count: number
+          id: string
+          last_status: number | null
+          last_triggered_at: string | null
+          name: string
+          secret: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_status?: number | null
+          last_triggered_at?: string | null
+          name: string
+          secret: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_status?: number | null
+          last_triggered_at?: string | null
+          name?: string
+          secret?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhooks_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
