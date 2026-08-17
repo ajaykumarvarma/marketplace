@@ -70,8 +70,7 @@ export default function OrderDetailPage() {
       const { data: files } = await supabase
         .from("order_files")
         .select("id, file_name, file_path, file_size, content_type")
-        .eq("order_id", data.id)
-        .eq("status", "delivered");
+        .eq("order_id", data.id);
       setOrderFiles(files || []);
     }
     setLoading(false);

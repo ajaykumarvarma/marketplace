@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import { SearchFilters } from "@/components/marketplace/SearchFilters";
 
 interface Product {
   id: string;
@@ -44,6 +45,7 @@ export default function MarketplacePage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"featured" | "price_low" | "price_high" | "newest">("featured");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
 
@@ -68,7 +70,8 @@ export default function MarketplacePage() {
   const filtered = products.filter((p) => {
     const matchesCategory = activeCategory === "All" || p.category?.name === activeCategory;
     const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.seller?.full_name?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
+    return matchesCategory && matchesSearch && matchesPrice;
   });
 
   const sorted = [...filtered].sort((a, b) => {
@@ -106,33 +109,17 @@ export default function MarketplacePage() {
           <p className="text-muted-foreground">Browse verified digital goods from trusted sellers</p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search products, sellers, categories..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-muted border-border"
-            />
-          </div>
-          <div className="flex gap-2">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="px-3 py-2 rounded-md bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            >
-              <option value="featured">Featured</option>
-              <option value="price_low">Price: Low to High</option>
-              <option value="price_high">Price: High to Low</option>
-              <option value="newest">Newest</option>
-            </select>
-            <Button variant="outline" className="gap-2 border-border hover:border-primary/30">
-              <SlidersHorizontal className="h-4 w-4" />
-              Filters
-            </Button>
-          </div>
-        </div>
+        <SearchFilters
+          categories={categories.map((c) => c.name)}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={(val) => setSortBy(val as typeof sortBy)}
+          onPriceChange={setPriceRange}
+          resultCount={sorted.length}
+        />
 
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => (
