@@ -79,9 +79,9 @@ export default function LoginPage() {
           )}
 
           {attempts > 0 && !locked && !error && (
-            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-center gap-2 mb-4">
-              <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
-              <p className="text-xs text-warning">{5 - attempts} attempts remaining before temporary lock</p>
+            <div className="bg-muted border border-border rounded-lg p-3 flex items-center gap-2 mb-4">
+              <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0" />
+              <p className="text-xs text-foreground">{5 - attempts} attempts remaining before temporary lock</p>
             </div>
           )}
 

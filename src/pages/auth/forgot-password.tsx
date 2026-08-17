@@ -24,8 +24,8 @@ export default function ForgotPasswordPage() {
           </div>
 
           {sent ? (
-            <div className="bg-success/10 border border-success/20 rounded-lg p-6 text-center mb-4">
-              <CheckCircle className="h-8 w-8 text-success mx-auto mb-3" />
+            <div className="bg-muted border border-border rounded-lg p-6 text-center mb-4">
+              <CheckCircle className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <h3 className="font-medium text-foreground mb-2">Check your email</h3>
               <p className="text-sm text-muted-foreground mb-4">If an account exists for {email}, you'll receive a password reset link shortly.</p>
               <Button variant="outline" className="border-border" onClick={() => setSent(false)}>

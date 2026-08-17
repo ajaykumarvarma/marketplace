@@ -370,7 +370,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Protection</span>
-                  <span className="text-success flex items-center gap-1">
+                  <span className="text-foreground flex items-center gap-1">
                     <Shield className="h-3 w-3" /> Escrow
                   </span>
                 </div>
