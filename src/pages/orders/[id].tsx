@@ -8,6 +8,7 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { ChatWindow } from "@/components/chat/ChatWindow";
 
 type Order = {
   id: string;
@@ -212,6 +213,14 @@ export default function OrderDetailPage() {
               <p className="text-xs text-foreground/70">Save this information securely. It will not be shown again.</p>
             </div>
           )}
+
+          <div className="bg-card border border-border rounded-lg p-6 mb-8">
+            <h2 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-primary" />
+              Order Messages
+            </h2>
+            <ChatWindow orderId={order.id} otherUserName="Seller" />
+          </div>
 
           <div className="flex gap-3">
             <Link href="/marketplace">

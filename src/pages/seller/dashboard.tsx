@@ -7,6 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { SalesChart } from "@/components/analytics/SalesChart";
+import { TopProductsChart } from "@/components/analytics/TopProductsChart";
+import { RevenueStats } from "@/components/analytics/RevenueStats";
 
 type Order = { id: string; status: string; created_at: string; total_amount: number | null; product: { title: string } | null };
 type Product = { id: string; title: string; price: number; stock: number; status: string };
@@ -191,27 +194,16 @@ export default function SellerDashboardPage() {
             </TabsContent>
 
             <TabsContent value="analytics" className="mt-4">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <h3 className="font-display font-semibold text-foreground mb-4">Revenue Overview</h3>
-                  <div className="flex items-center justify-center h-48 text-muted-foreground text-sm">
-                    Revenue analytics will appear as orders come in.
-                  </div>
-                </div>
-                <div className="bg-card border border-border rounded-lg p-6">
-                  <h3 className="font-display font-semibold text-foreground mb-4">Top Performing Products</h3>
-                  <div>
-                    {products.slice(0, 5).map((p, i) => (
-                      <div key={p.id} className="flex items-center gap-3 mb-3">
-                        <span className="font-mono text-xs text-muted-foreground w-4">{i + 1}</span>
-                        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary rounded-full" style={{ width: `${Math.min((p.stock / 100) * 100, 100)}%` }} />
-                        </div>
-                        <span className="font-mono text-xs text-foreground w-12 text-right">{p.stock}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <RevenueStats
+                totalRevenue={stats.revenue}
+                totalOrders={orders.length}
+                activeOrders={stats.activeOrders}
+                avgOrderValue={orders.length > 0 ? stats.revenue / orders.length : 0}
+                conversionRate={4.2}
+              />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <SalesChart orders={orders.map((o) => ({ date: o.created_at, amount: o.total_amount || 0 }))} />
+                <TopProductsChart products={products.map((p) => ({ name: p.title, revenue: p.price * p.stock, sales: p.stock }))} />
               </div>
             </TabsContent>
           </Tabs>

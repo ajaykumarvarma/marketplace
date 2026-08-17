@@ -12,6 +12,7 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { FileUploader } from "@/components/delivery/FileUploader";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -183,11 +184,18 @@ export default function NewProductPage() {
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <Package className="h-4 w-4 text-primary" />
-                Delivery & Auto-Delivery
+                Delivery & Files
               </h3>
               <div className="mb-4">
                 <Label htmlFor="deliveryTime" className="mb-2 block">Estimated Delivery Time</Label>
                 <Input id="deliveryTime" required value={formData.deliveryTime} onChange={(e) => handleChange("deliveryTime", e.target.value)} placeholder="e.g., Instant, 5 minutes, 1 hour" className="bg-muted border-border" />
+              </div>
+              <div className="mb-4">
+                <Label className="mb-2 block">Digital Files</Label>
+                <FileUploader onUpload={(files) => {
+                  toast({ title: `${files.length} file(s) uploaded`, description: "Files will be securely delivered to buyers." });
+                }} />
+                <p className="text-xs text-muted-foreground mt-2">Upload files that will be securely delivered to buyers after purchase. Max 100MB per file.</p>
               </div>
               <div className="mb-4">
                 <Label htmlFor="deliveryContent" className="mb-2 block">Auto-Delivery Content (Optional)</Label>
