@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Shield, AlertTriangle, Users, ShoppingCart, DollarSign, Ban, Eye, CheckCircle, XCircle, TrendingUp, Activity, Loader2 } from "lucide-react";
+import { Shield, AlertTriangle, Users, ShoppingCart, DollarSign, Ban, Eye, CheckCircle, XCircle, TrendingUp, Activity, Loader2, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -119,6 +119,12 @@ export default function AdminDashboardPage() {
             <p className="text-muted-foreground">Fraud detection, user management, and platform analytics</p>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/admin/backups">
+              <Button variant="outline" size="sm" className="gap-2 border-border">
+                <Database className="h-4 w-4" />
+                Backups
+              </Button>
+            </Link>
             <Badge className={`gap-1 ${openAlerts > 0 ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-success/10 text-success border-success/20"}`}>
               <AlertTriangle className="h-3 w-3" />
               {openAlerts} Open Alert{openAlerts !== 1 ? "s" : ""}
