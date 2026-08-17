@@ -1,50 +1,41 @@
 import { useState, useCallback } from "react";
-import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-interface FilterState {
-  query: string;
-  category: string;
-  minPrice: number | "";
-  maxPrice: number | "";
-  rating: number;
-  sortBy: "relevance" | "price_asc" | "price_desc" | "rating" | "newest";
-}
-
 interface SearchFiltersProps {
-  onFilterChange: (filters: FilterState) => void;
-  initialFilters?: Partial<FilterState>;
-  categories?: { id: string; name: string }[];
+  categories: { id: string; name: string }[];
+  activeCategory: string;
+  onCategoryChange: (category: string) => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  sortBy: "featured" | "price_low" | "price_high" | "newest";
+  onSortChange: (sort: string) => void;
+  onPriceChange: (range: [number, number]) => void;
+  resultCount: number;
 }
 
-export function SearchFilters({ onFilterChange, initialFilters, categories = [] }: SearchFiltersProps) {
-  const [filters, setFilters] = useState<FilterState>({
-    query: initialFilters?.query ?? "",
-    category: initialFilters?.category ?? "",
-    minPrice: initialFilters?.minPrice ?? "",
-    maxPrice: initialFilters?.maxPrice ?? "",
-    rating: initialFilters?.rating ?? 0,
-    sortBy: initialFilters?.sortBy ?? "relevance",
-  });
+export function SearchFilters({
+  categories,
+  activeCategory,
+  onCategoryChange,
+  searchQuery,
+  onSearchChange,
+  sortBy,
+  onSortChange,
+  onPriceChange,
+  resultCount,
+}: SearchFiltersProps) {
   const [expanded, setExpanded] = useState(false);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
-  const updateFilter = useCallback(<K extends keyof FilterState>(key: K, value: FilterState[K]) => {
-    setFilters((prev) => {
-      const next = { ...prev, [key]: value };
-      onFilterChange(next);
-      return next;
-    });
-  }, [onFilterChange]);
-
-  const clearFilters = () => {
-    const cleared: FilterState = { query: "", category: "", minPrice: "", maxPrice: "", rating: 0, sortBy: "relevance" };
-    setFilters(cleared);
-    onFilterChange(cleared);
+  const applyPrice = () => {
+    onPriceChange([Number(minPrice) || 0, Number(maxPrice) || 10000]);
   };
 
-  const activeCount = [filters.category, filters.minPrice !== "" ? "price" : "", filters.rating > 0 ? "rating" : ""].filter(Boolean).length;
+  const activeCount = [activeCategory !== "All" ? "cat" : "", minPrice || maxPrice ? "price" : ""].filter(Boolean).length;
 
   return (
     <div className="space-y-3">
@@ -53,8 +44,8 @@ export function SearchFilters({ onFilterChange, initialFilters, categories = [] 
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search products..."
-            value={filters.query}
-            onChange={(e) => updateFilter("query", e.target.value)}
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
             className="pl-10 bg-muted border-border"
           />
         </div>
@@ -64,7 +55,7 @@ export function SearchFilters({ onFilterChange, initialFilters, categories = [] 
           {activeCount > 0 && <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">{activeCount}</Badge>}
         </Button>
         {activeCount > 0 && (
-          <Button variant="ghost" size="icon" onClick={clearFilters}>
+          <Button variant="ghost" size="icon" onClick={() => { onCategoryChange("All"); setMinPrice(""); setMaxPrice(""); onPriceChange([0, 10000]); }}>
             <X className="h-4 w-4" />
           </Button>
         )}
@@ -75,13 +66,13 @@ export function SearchFilters({ onFilterChange, initialFilters, categories = [] 
           <div>
             <label className="text-xs font-medium text-foreground/70 mb-1 block">Category</label>
             <select
-              value={filters.category}
-              onChange={(e) => updateFilter("category", e.target.value)}
+              value={activeCategory === "All" ? "" : activeCategory}
+              onChange={(e) => onCategoryChange(e.target.value || "All")}
               className="w-full h-9 px-3 rounded-md bg-muted border border-border text-sm"
             >
               <option value="">All Categories</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.name}>{c.name}</option>
               ))}
             </select>
           </div>
@@ -90,8 +81,8 @@ export function SearchFilters({ onFilterChange, initialFilters, categories = [] 
             <Input
               type="number"
               placeholder="0"
-              value={filters.minPrice}
-              onChange={(e) => updateFilter("minPrice", e.target.value === "" ? "" : Number(e.target.value))}
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
               className="bg-muted border-border"
             />
           </div>
@@ -100,24 +91,27 @@ export function SearchFilters({ onFilterChange, initialFilters, categories = [] 
             <Input
               type="number"
               placeholder="9999"
-              value={filters.maxPrice}
-              onChange={(e) => updateFilter("maxPrice", e.target.value === "" ? "" : Number(e.target.value))}
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
               className="bg-muted border-border"
             />
           </div>
           <div>
             <label className="text-xs font-medium text-foreground/70 mb-1 block">Sort By</label>
             <select
-              value={filters.sortBy}
-              onChange={(e) => updateFilter("sortBy", e.target.value as FilterState["sortBy"])}
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
               className="w-full h-9 px-3 rounded-md bg-muted border border-border text-sm"
             >
-              <option value="relevance">Relevance</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
+              <option value="featured">Featured</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
               <option value="newest">Newest First</option>
             </select>
+          </div>
+          <div className="sm:col-span-2 lg:col-span-4 flex justify-between items-center">
+            <span className="text-xs text-muted-foreground">{resultCount} results</span>
+            <Button size="sm" variant="outline" onClick={applyPrice}>Apply Price Filter</Button>
           </div>
         </div>
       )}

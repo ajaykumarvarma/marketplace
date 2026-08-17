@@ -110,7 +110,7 @@ export default function MarketplacePage() {
         </div>
 
         <SearchFilters
-          categories={categories.map((c) => c.name)}
+          categories={categories}
           activeCategory={activeCategory}
           onCategoryChange={setActiveCategory}
           searchQuery={searchQuery}
