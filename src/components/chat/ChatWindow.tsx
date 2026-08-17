@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Paperclip, Check, CheckCheck } from "lucide-react";
+import { Send, Paperclip, Check, CheckCheck, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -22,7 +22,8 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -72,6 +73,31 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
     setSending(false);
   };
 
+  const handleFileAttachment = async (file: File) => {
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File too large. Max 10MB for chat attachments.");
+      return;
+    }
+    setUploadingFile(true);
+    const path = `chat/${orderId}/${Date.now()}-${file.name}`;
+    const { data, error } = await supabase.storage
+      .from("chat-attachments")
+      .upload(path, file, { upsert: false });
+    setUploadingFile(false);
+    if (error) {
+      alert("Upload failed: " + error.message);
+      return;
+    }
+    await supabase.from("messages").insert({
+      order_id: orderId,
+      sender_id: user!.id,
+      receiver_id: receiverId,
+      content: `📎 [File: ${file.name}](${data.path})`,
+      read: false,
+      attachment_url: data.path,
+    });
+  };
+
   const markRead = async () => {
     await supabase
       .from("messages")
@@ -105,10 +131,23 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
         <div className="space-y-3">
           {messages.map((msg) => {
             const isMe = msg.sender_id === user.id;
+            const isAttachment = msg.attachment_url;
             return (
               <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[75%] px-3 py-2 rounded-lg text-sm ${isMe ? "bg-primary/15 text-foreground" : "bg-muted text-foreground"}`}>
-                  <p>{msg.content}</p>
+                  {isAttachment ? (
+                    <a
+                      href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/chat-attachments/${msg.attachment_url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-primary hover:underline"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Download attachment</span>
+                    </a>
+                  ) : (
+                    <p>{msg.content}</p>
+                  )}
                   <div className="flex items-center gap-1 mt-1 justify-end">
                     <span className="text-[10px] text-foreground/50">
                       {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
@@ -126,8 +165,21 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
       </ScrollArea>
 
       <div className="px-4 py-3 border-t border-border flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="shrink-0" aria-label="Attach file">
-          <Paperclip className="h-4 w-4 text-foreground/70" />
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          onChange={(e) => e.target.files?.[0] && handleFileAttachment(e.target.files[0])}
+        />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0"
+          aria-label="Attach file"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploadingFile}
+        >
+          {uploadingFile ? <Loader2 className="h-4 w-4 animate-spin text-foreground/70" /> : <Paperclip className="h-4 w-4 text-foreground/70" />}
         </Button>
         <Input
           value={input}

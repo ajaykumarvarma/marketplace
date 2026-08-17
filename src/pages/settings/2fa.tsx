@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SEO } from "@/components/SEO";
-import speakeasy from "speakeasy";
 import QRCode from "react-qr-code";
 
 export default function TwoFactorAuthPage() {
@@ -26,24 +25,36 @@ export default function TwoFactorAuthPage() {
     if (!user) router.push("/auth/login");
   }, [user, router]);
 
-  const generateSecret = () => {
-    const s = speakeasy.generateSecret({
-      name: `TradeVault (${user?.email})`,
-      length: 32,
+  const generateSecret = async () => {
+    try {
+      const res = await fetch("/api/2fa/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: user?.email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setSecret(data.secret);
+      setQrUrl(data.otpauth_url);
+      setStep("setup");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate secret");
+    }
+  };
+
+  const verifyCode = async (token: string, secretToVerify: string) => {
+    const res = await fetch("/api/2fa/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret: secretToVerify, code: token }),
     });
-    setSecret(s.base32);
-    setQrUrl(s.otpauth_url || "");
-    setStep("setup");
+    const data = await res.json();
+    return data.valid === true;
   };
 
   const verifyAndEnable = async () => {
     setError("");
-    const valid = speakeasy.totp.verify({
-      secret,
-      encoding: "base32",
-      token: code,
-      window: 2,
-    });
+    const valid = await verifyCode(code, secret);
     if (!valid) {
       setError("Invalid code. Please try again.");
       return;
@@ -63,12 +74,7 @@ export default function TwoFactorAuthPage() {
 
   const disable2FA = async () => {
     setError("");
-    const valid = speakeasy.totp.verify({
-      secret: profile?.two_factor_secret || "",
-      encoding: "base32",
-      token: code,
-      window: 2,
-    });
+    const valid = await verifyCode(code, profile?.two_factor_secret || "");
     if (!valid) {
       setError("Invalid code. Cannot disable 2FA.");
       return;
