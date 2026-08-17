@@ -84,7 +84,7 @@ export default function ReferralsPage() {
       <div className="container py-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-display text-2xl font-bold mb-2">Referral Program</h1>
-          <p className="text-foreground/70 mb-6">Invite friends and earn {referralCode?.commission_rate || 5}% commission on their first order.</p>
+          <p className="text-muted-foreground mb-6">Invite friends and earn {referralCode?.commission_rate || 5}% commission on their first order.</p>
 
           {loading ? (
             <div className="flex justify-center py-12">
@@ -117,7 +117,7 @@ export default function ReferralsPage() {
               {referrals.length === 0 ? (
                 <div className="text-center py-8 border border-border rounded-lg bg-card">
                   <Link2 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-foreground/70">No referrals yet. Share your link to get started!</p>
+                  <p className="text-sm text-muted-foreground">No referrals yet. Share your link to get started!</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -125,11 +125,11 @@ export default function ReferralsPage() {
                     <div key={i} className="flex items-center justify-between p-3 border border-border rounded-lg bg-card">
                       <div>
                         <p className="text-sm font-medium">{ref.referred_id ? "Referred User" : "Pending"}</p>
-                        <p className="text-xs text-foreground/50">{ref.signup_at ? new Date(ref.signup_at).toLocaleDateString() : "Not signed up yet"}</p>
+                        <p className="text-xs text-muted-foreground">{ref.signup_at ? new Date(ref.signup_at).toLocaleDateString() : "Not signed up yet"}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-semibold">${ref.commission_amount.toFixed(2)}</p>
-                        <p className="text-xs text-foreground/50">{ref.paid ? "Paid" : "Pending"}</p>
+                        <p className="text-xs text-muted-foreground">{ref.paid ? "Paid" : "Pending"}</p>
                       </div>
                     </div>
                   ))}
@@ -148,7 +148,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     <div className="border border-border rounded-lg bg-card p-4 text-center">
       <div className="text-primary mx-auto mb-1">{icon}</div>
       <p className="font-display text-xl font-bold">{value}</p>
-      <p className="text-xs text-foreground/50">{label}</p>
+      <p className="text-xs text-muted-foreground">{label}</p>
     </div>
   );
 }

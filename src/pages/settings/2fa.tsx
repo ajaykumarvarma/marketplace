@@ -109,7 +109,7 @@ export default function TwoFactorAuthPage() {
           <Shield className="h-8 w-8 text-primary" />
           <div>
             <h1 className="font-display text-2xl font-bold text-foreground">Two-Factor Authentication</h1>
-            <p className="text-foreground/70">Add an extra layer of security to your account</p>
+            <p className="text-muted-foreground">Add an extra layer of security to your account</p>
           </div>
         </div>
 

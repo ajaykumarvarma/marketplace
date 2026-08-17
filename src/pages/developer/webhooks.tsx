@@ -97,7 +97,7 @@ export default function WebhooksPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="font-display text-2xl font-bold">Webhooks</h1>
-              <p className="text-foreground/70 text-sm">Subscribe to platform events for real-time integrations.</p>
+              <p className="text-muted-foreground text-sm">Subscribe to platform events for real-time integrations.</p>
             </div>
             <Button onClick={() => setDialogOpen(true)} className="gap-2">
               <Plus className="h-4 w-4" />
@@ -113,7 +113,7 @@ export default function WebhooksPage() {
             <div className="text-center py-12 border border-border rounded-lg bg-card">
               <Webhook className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h2 className="font-display text-lg font-semibold">No Webhooks</h2>
-              <p className="text-foreground/70 text-sm mb-4">Add a webhook to receive real-time event notifications.</p>
+              <p className="text-muted-foreground text-sm mb-4">Add a webhook to receive real-time event notifications.</p>
               <Button onClick={() => setDialogOpen(true)}>Add First Webhook</Button>
             </div>
           ) : (
@@ -130,10 +130,10 @@ export default function WebhooksPage() {
                           <span className="text-xs text-destructive flex items-center gap-1"><X className="h-3 w-3" /> Inactive</span>
                         )}
                       </div>
-                      <p className="text-xs text-foreground/50 font-mono mt-1">{wh.url}</p>
+                      <p className="text-xs text-muted-foreground font-mono mt-1">{wh.url}</p>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {wh.events.map((e) => (
-                          <span key={e} className="text-xs px-2 py-0.5 rounded bg-muted text-foreground/70">{e}</span>
+                          <span key={e} className="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground">{e}</span>
                         ))}
                       </div>
                       {wh.failure_count > 0 && (

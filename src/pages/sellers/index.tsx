@@ -91,7 +91,7 @@ export default function SellersPage() {
       <div className="container py-8 md:py-12">
         <div className="mb-6">
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Top Sellers</h1>
-          <p className="text-foreground/70">Verified merchants with proven track records</p>
+          <p className="text-muted-foreground">Verified merchants with proven track records</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -168,7 +168,7 @@ export default function SellersPage() {
         <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
           <Shield className="h-8 w-8 text-primary mx-auto mb-4" />
           <h3 className="font-display font-semibold text-foreground mb-2">Want to become a seller?</h3>
-          <p className="text-sm text-foreground/70 max-w-md mx-auto mb-4">
+          <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
             Join thousands of verified sellers. Get access to fraud-protected transactions and instant payouts.
           </p>
           <Link href="/sell">

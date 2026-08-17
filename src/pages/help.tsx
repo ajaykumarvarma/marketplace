@@ -43,7 +43,7 @@ export default function HelpPage() {
                 <item.icon className="h-5 w-5 text-primary" />
                 <h2 className="font-display text-lg font-semibold text-foreground">{item.title}</h2>
               </div>
-              <p className="text-foreground/70">{item.answer}</p>
+              <p className="text-muted-foreground">{item.answer}</p>
             </div>
           ))}
         </div>

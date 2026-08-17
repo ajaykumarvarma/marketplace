@@ -90,7 +90,7 @@ export default function ApiKeysPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="font-display text-2xl font-bold">API Keys</h1>
-              <p className="text-foreground/70 text-sm">Manage keys for the TradeVault REST API.</p>
+              <p className="text-muted-foreground text-sm">Manage keys for the TradeVault REST API.</p>
             </div>
             <Button onClick={() => { setDialogOpen(true); setNewKeyValue(null); setNewKeyName(""); }} className="gap-2">
               <Plus className="h-4 w-4" />
@@ -106,7 +106,7 @@ export default function ApiKeysPage() {
             <div className="text-center py-12 border border-border rounded-lg bg-card">
               <Key className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h2 className="font-display text-lg font-semibold">No API Keys</h2>
-              <p className="text-foreground/70 text-sm mb-4">Create a key to start using the TradeVault API.</p>
+              <p className="text-muted-foreground text-sm mb-4">Create a key to start using the TradeVault API.</p>
               <Button onClick={() => setDialogOpen(true)}>Create First Key</Button>
             </div>
           ) : (
@@ -116,8 +116,8 @@ export default function ApiKeysPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold text-sm">{key.name}</h3>
-                      <p className="text-xs text-foreground/50 font-mono mt-1">{key.key_prefix}...••••</p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-foreground/50">
+                      <p className="text-xs text-muted-foreground font-mono mt-1">{key.key_prefix}...••••</p>
+                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {key.last_used_at ? new Date(key.last_used_at).toLocaleDateString() : "Never used"}</span>
                         <span>{key.rate_limit} req/min</span>
                       </div>
@@ -139,7 +139,7 @@ export default function ApiKeysPage() {
               {newKeyValue ? (
                 <div className="space-y-4">
                   <div className="p-3 bg-muted border border-border rounded-lg">
-                    <p className="text-xs text-foreground/50 mb-1">Your API Key (copy now — shown once)</p>
+                    <p className="text-xs text-muted-foreground mb-1">Your API Key (copy now — shown once)</p>
                     <div className="flex gap-2">
                       <code className="flex-1 text-xs font-mono break-all">{newKeyValue}</code>
                       <Button size="sm" variant="outline" onClick={copyKey}>
@@ -148,7 +148,7 @@ export default function ApiKeysPage() {
                     </div>
                   </div>
                   <AlertTriangle className="h-4 w-4 text-warning inline mr-1" />
-                  <span className="text-xs text-foreground/50">Store this key securely. It cannot be shown again.</span>
+                  <span className="text-xs text-muted-foreground">Store this key securely. It cannot be shown again.</span>
                 </div>
               ) : (
                 <div className="space-y-4">

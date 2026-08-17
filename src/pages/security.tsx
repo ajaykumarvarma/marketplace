@@ -13,7 +13,7 @@ export default function SecurityPage() {
             SOC 2 Type II Compliant
           </div>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">Security Infrastructure</h1>
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Multi-layered security architecture protecting every transaction with real-time fraud detection, escrow protection, and encrypted data handling.
           </p>
         </div>

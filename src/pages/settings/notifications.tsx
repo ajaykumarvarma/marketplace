@@ -100,7 +100,7 @@ export default function NotificationSettings() {
       <div className="container py-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="font-display text-2xl font-bold mb-2">Notifications</h1>
-          <p className="text-foreground/70 mb-6">Control how and when you receive updates.</p>
+          <p className="text-muted-foreground mb-6">Control how and when you receive updates.</p>
 
           {loading ? (
             <div className="flex justify-center py-12">
@@ -112,7 +112,7 @@ export default function NotificationSettings() {
                 <div key={cat.key} className="border border-border rounded-lg bg-card p-4">
                   <div className="mb-3">
                     <h3 className="font-semibold">{cat.label}</h3>
-                    <p className="text-xs text-foreground/50">{cat.description}</p>
+                    <p className="text-xs text-muted-foreground">{cat.description}</p>
                   </div>
                   <div className="space-y-3">
                     {CHANNELS.map((ch) => {
