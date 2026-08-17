@@ -115,12 +115,12 @@ export default function OrderDetailPage() {
   }
 
   const statusConfig: Record<string, { color: string; icon: typeof CheckCircle }> = {
-    pending: { color: "bg-warning/10 text-warning border-warning/20", icon: Clock },
-    processing: { color: "bg-primary/10 text-primary border-primary/20", icon: Package },
-    shipped: { color: "bg-accent/10 text-accent border-accent/20", icon: CheckCircle },
-    delivered: { color: "bg-accent/10 text-accent border-accent/20", icon: CheckCircle },
-    completed: { color: "bg-success/10 text-success border-success/20", icon: CheckCircle },
-    disputed: { color: "bg-destructive/10 text-destructive border-destructive/20", icon: AlertTriangle },
+    pending: { color: "bg-muted text-foreground border-border", icon: Clock },
+    processing: { color: "bg-muted text-foreground border-border", icon: Package },
+    shipped: { color: "bg-muted text-foreground border-border", icon: CheckCircle },
+    delivered: { color: "bg-muted text-foreground border-border", icon: CheckCircle },
+    completed: { color: "bg-muted text-foreground border-border", icon: CheckCircle },
+    disputed: { color: "bg-muted text-foreground border-border", icon: AlertTriangle },
     cancelled: { color: "bg-muted text-muted-foreground", icon: AlertTriangle },
   };
 
@@ -163,8 +163,8 @@ export default function OrderDetailPage() {
             <div>
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-4 mb-4">
-                  <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${i <= currentStep ? "bg-success/20" : "bg-muted"}`}>
-                    {i <= currentStep ? <CheckCircle className="h-4 w-4 text-success" /> : <Clock className="h-4 w-4 text-muted-foreground" />}
+                  <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${i <= currentStep ? "bg-muted" : "bg-muted"}`}>
+                    {i <= currentStep ? <CheckCircle className="h-4 w-4 text-foreground" /> : <Clock className="h-4 w-4 text-muted-foreground" />}
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">{step}</p>
@@ -177,7 +177,7 @@ export default function OrderDetailPage() {
 
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <Shield className="h-5 w-5 text-success" />
+              <Shield className="h-5 w-5 text-muted-foreground" />
               <h2 className="font-display font-semibold text-foreground">Escrow Protection</h2>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
@@ -187,7 +187,7 @@ export default function OrderDetailPage() {
             </p>
             {order.status === "delivered" && (
               <div className="flex gap-3">
-                <Button onClick={confirmDelivery} disabled={confirming} className="gap-2 bg-success hover:bg-success/90 text-success-foreground">
+                <Button onClick={confirmDelivery} disabled={confirming} className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
                   {confirming ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
                   Confirm Delivery
                 </Button>
@@ -204,7 +204,7 @@ export default function OrderDetailPage() {
           {(order.status === "delivered" || order.status === "completed") && (
             <div className="bg-card border border-border rounded-lg p-6 mb-8">
               <div className="flex items-center gap-2 mb-4">
-                <Package className="h-5 w-5 text-primary" />
+                <Package className="h-5 w-5 text-muted-foreground" />
                 <h2 className="font-display font-semibold text-foreground">Delivery Details</h2>
               </div>
               <div className="bg-muted rounded-lg p-4 mb-4">
@@ -217,7 +217,7 @@ export default function OrderDetailPage() {
                         href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/digital-files/${file.file_path}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                        className="flex items-center gap-2 text-sm text-foreground hover:underline"
                       >
                         <Download className="h-4 w-4" />
                         <span>{file.file_name} ({(file.file_size / 1024 / 1024).toFixed(2)} MB)</span>
@@ -240,9 +240,9 @@ export default function OrderDetailPage() {
           )}
 
           {order.status === "completed" && (
-            <div className="bg-success/5 border border-success/20 rounded-lg p-4 mb-8">
+            <div className="bg-muted border border-border rounded-lg p-4 mb-8">
               <h3 className="font-medium text-foreground flex items-center gap-2 mb-3">
-                <Download className="h-4 w-4 text-success" />
+                <Download className="h-4 w-4 text-muted-foreground" />
                 Your Digital Goods
               </h3>
               <div className="bg-background rounded-lg p-3 font-mono text-sm text-foreground break-all mb-2">
@@ -254,7 +254,7 @@ export default function OrderDetailPage() {
 
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <h2 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-primary" />
+              <MessageSquare className="h-5 w-5 text-muted-foreground" />
               Order Messages
             </h2>
             <ChatWindow orderId={order.id} receiverId={order.seller_id} otherParty={sellerProfile as any} />

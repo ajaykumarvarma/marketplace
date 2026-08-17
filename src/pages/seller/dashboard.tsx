@@ -57,14 +57,14 @@ export default function SellerDashboardPage() {
 
   const statusBadge = (status: string) => {
     const map: Record<string, string> = {
-      delivered: "bg-success/10 text-success border-success/20",
-      completed: "bg-success/10 text-success border-success/20",
-      pending: "bg-warning/10 text-warning border-warning/20",
-      processing: "bg-primary/10 text-primary border-primary/20",
-      disputed: "bg-destructive/10 text-destructive border-destructive/20",
-      active: "bg-success/10 text-success border-success/20",
-      low_stock: "bg-warning/10 text-warning border-warning/20",
-      out_of_stock: "bg-destructive/10 text-destructive border-destructive/20",
+      delivered: "bg-muted text-foreground border-border",
+      completed: "bg-muted text-foreground border-border",
+      pending: "bg-muted text-foreground border-border",
+      processing: "bg-muted text-foreground border-border",
+      disputed: "bg-muted text-foreground border-border",
+      active: "bg-muted text-foreground border-border",
+      low_stock: "bg-muted text-foreground border-border",
+      out_of_stock: "bg-muted text-foreground border-border",
       paused: "bg-muted text-muted-foreground",
     };
     return map[status] || "bg-muted text-muted-foreground";
@@ -96,8 +96,8 @@ export default function SellerDashboardPage() {
           ].map((stat) => (
             <div key={stat.label} className="bg-card border border-border rounded-lg p-5">
               <div className="flex items-center justify-between mb-3">
-                <stat.icon className="h-5 w-5 text-primary" />
-                <span className={`text-xs font-medium flex items-center gap-0.5 ${stat.up ? "text-success" : "text-destructive"}`}>
+                <stat.icon className="h-5 w-5 text-muted-foreground" />
+                <span className="text-xs font-medium flex items-center gap-0.5 text-foreground">
                   {stat.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
                   {stat.change}
                 </span>
@@ -112,7 +112,7 @@ export default function SellerDashboardPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
           </div>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -177,10 +177,10 @@ export default function SellerDashboardPage() {
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-foreground" aria-label="View product">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="View product">
                                 <Eye className="h-4 w-4" />
                               </button>
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-primary" aria-label="Analytics">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="Analytics">
                                 <BarChart3 className="h-4 w-4" />
                               </button>
                             </div>

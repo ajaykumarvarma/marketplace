@@ -8,7 +8,7 @@ export default function SecurityPage() {
       <SEO title="Security — TradeVault" description="TradeVault's enterprise-grade security infrastructure, fraud detection, and buyer protection systems." />
       <div className="container py-12 md:py-20">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-success/10 border border-success/20 text-success text-sm mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted border border-border text-muted-foreground text-sm mb-4">
             <Shield className="h-4 w-4" />
             SOC 2 Type II Compliant
           </div>
@@ -28,7 +28,7 @@ export default function SecurityPage() {
             { icon: Clock, title: "Rate Limiting", desc: "Intelligent per-IP and per-user rate limits prevent brute force, scraping, and inventory hoarding." },
           ].map((f) => (
             <div key={f.title} className="bg-card border border-border rounded-lg p-6">
-              <f.icon className="h-8 w-8 text-primary mb-3" />
+              <f.icon className="h-8 w-8 text-muted-foreground mb-3" />
               <h3 className="font-display font-semibold text-foreground mb-2">{f.title}</h3>
               <p className="text-sm text-muted-foreground">{f.desc}</p>
             </div>
@@ -58,7 +58,7 @@ export default function SecurityPage() {
           <div className="flex flex-wrap gap-3">
             {["SOC 2 Type II", "PCI DSS Level 1", "GDPR Compliant", "ISO 27001", "CCPA Ready"].map((cert) => (
               <div key={cert} className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg border border-border">
-                <CheckCircle className="h-4 w-4 text-success" />
+                <CheckCircle className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-foreground">{cert}</span>
               </div>
             ))}

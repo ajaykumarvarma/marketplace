@@ -142,8 +142,8 @@ export default function CategoriesPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <cat.icon className="h-5 w-5 text-primary" />
+                  <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
+                    <cat.icon className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div>
                     <h3 className="font-display font-semibold text-foreground">{cat.name}</h3>
@@ -156,11 +156,11 @@ export default function CategoriesPage() {
               <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
 
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                <Shield className="h-3 w-3 text-success" />
+                <Shield className="h-3 w-3 text-muted-foreground" />
                 <span>Top seller: {cat.topSeller}</span>
                 <span>·</span>
                 <div className="flex items-center gap-0.5">
-                  <Star className="h-3 w-3 fill-warning text-warning" />
+                  <Star className="h-3 w-3 fill-muted-foreground text-muted-foreground" />
                   <span>{cat.rating}</span>
                 </div>
               </div>
@@ -177,13 +177,13 @@ export default function CategoriesPage() {
         </div>
 
         <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
-          <TrendingUp className="h-8 w-8 text-primary mx-auto mb-4" />
+          <TrendingUp className="h-8 w-8 text-muted-foreground mx-auto mb-4" />
           <h3 className="font-display font-semibold text-foreground mb-2">Can't find what you're looking for?</h3>
           <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
             Our marketplace grows daily. Request a category or browse the full marketplace for uncategorized listings.
           </p>
           <Link href="/marketplace">
-            <span className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80">
+            <span className="inline-flex items-center gap-2 text-sm text-foreground hover:text-muted-foreground">
               Browse All Listings <ArrowRight className="h-4 w-4" />
             </span>
           </Link>

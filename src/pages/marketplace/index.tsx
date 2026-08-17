@@ -142,7 +142,7 @@ export default function MarketplacePage() {
                       loading="lazy"
                     />
                     {product.stock < 10 && (
-                      <Badge className="absolute top-3 left-3 bg-destructive/10 text-destructive border-destructive/20 text-xs z-10">
+                      <Badge className="absolute top-3 left-3 bg-muted text-foreground border-border text-xs z-10">
                         Low Stock
                       </Badge>
                     )}
@@ -154,7 +154,7 @@ export default function MarketplacePage() {
                 </Link>
                 <div className="p-4">
                   <Link href={`/marketplace/${product.id}`}>
-                    <h3 className="font-medium text-foreground hover:text-primary line-clamp-1 mb-2">{product.title}</h3>
+                    <h3 className="font-medium text-foreground hover:text-foreground line-clamp-1 mb-2">{product.title}</h3>
                   </Link>
                   <div className="flex items-center gap-2 mb-2">
                     <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-foreground">
@@ -162,7 +162,7 @@ export default function MarketplacePage() {
                     </div>
                     <span className="text-xs text-muted-foreground truncate">{product.seller?.full_name || "Unknown Seller"}</span>
                     {product.seller?.role === "seller" && (
-                      <Badge variant="outline" className="text-xs h-4 px-1 bg-success/10 text-success border-success/20">
+                      <Badge variant="outline" className="text-xs h-4 px-1 bg-muted text-foreground border-border">
                         <Shield className="h-2.5 w-2.5 mr-0.5" />
                         Verified
                       </Badge>
@@ -180,7 +180,7 @@ export default function MarketplacePage() {
                   </div>
                   <Button
                     size="sm"
-                    className="w-full gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
+                    className="w-full gap-2 bg-muted hover:bg-muted text-foreground border border-border"
                     onClick={(e) => {
                       e.preventDefault();
                       addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" });

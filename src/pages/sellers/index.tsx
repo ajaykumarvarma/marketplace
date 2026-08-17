@@ -108,13 +108,13 @@ export default function SellersPage() {
                   <div>
                     <div className="flex items-center gap-1.5">
                       <h3 className="font-display font-semibold text-foreground">{seller.name}</h3>
-                      {seller.verified && <BadgeCheck className="h-4 w-4 text-success" />}
+                      {seller.verified && <BadgeCheck className="h-4 w-4 text-muted-foreground" />}
                     </div>
                     <p className="text-xs text-muted-foreground">{seller.tagline}</p>
                   </div>
                 </div>
                 {seller.badge && (
-                  <Badge className="bg-accent/10 text-accent border-accent/20 text-xs">
+                  <Badge className="bg-muted text-foreground border-border text-xs">
                     <Award className="h-3 w-3 mr-1" />
                     {seller.badge}
                   </Badge>
@@ -124,7 +124,7 @@ export default function SellersPage() {
               <div className="grid grid-cols-3 gap-3 text-center mb-4">
                 <div className="bg-muted rounded p-2">
                   <div className="flex items-center justify-center gap-1">
-                    <Star className="h-3 w-3 fill-warning text-warning" />
+                    <Star className="h-3 w-3 fill-muted-foreground text-muted-foreground" />
                     <span className="font-mono text-sm font-semibold text-foreground">{seller.rating}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">Rating</p>
@@ -150,13 +150,13 @@ export default function SellersPage() {
               <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border mb-4">
                 <span>Since {seller.since}</span>
                 <span className="flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3 text-success" />
+                  <TrendingUp className="h-3 w-3 text-muted-foreground" />
                   {seller.responseTime}
                 </span>
               </div>
 
               <Link href={`/marketplace?seller=${seller.id}`}>
-                <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-primary/10 text-primary text-sm font-medium border border-transparent hover:border-primary/30">
+                <span className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-muted text-foreground text-sm font-medium border border-transparent hover:border-border">
                   <Store className="h-4 w-4" />
                   View Store
                 </span>
@@ -166,13 +166,13 @@ export default function SellersPage() {
         </div>
 
         <div className="bg-card border border-border rounded-lg p-8 text-center mt-8">
-          <Shield className="h-8 w-8 text-primary mx-auto mb-4" />
+          <Shield className="h-8 w-8 text-muted-foreground mx-auto mb-4" />
           <h3 className="font-display font-semibold text-foreground mb-2">Want to become a seller?</h3>
           <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
             Join thousands of verified sellers. Get access to fraud-protected transactions and instant payouts.
           </p>
           <Link href="/sell">
-            <span className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80">
+            <span className="inline-flex items-center gap-2 text-sm text-foreground hover:text-muted-foreground">
               Start Selling <ArrowRight className="h-4 w-4" />
             </span>
           </Link>

@@ -34,9 +34,7 @@ interface OrderStats {
 }
 
 const riskColor = (risk: number) => {
-  if (risk >= 70) return "bg-destructive/10 text-destructive border-destructive/20";
-  if (risk >= 40) return "bg-warning/10 text-warning border-warning/20";
-  return "bg-success/10 text-success border-success/20";
+  return "bg-muted text-foreground border-border";
 };
 
 export default function AdminDashboardPage() {
@@ -113,7 +111,7 @@ export default function AdminDashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Shield className="h-5 w-5 text-primary" />
+              <Shield className="h-5 w-5 text-muted-foreground" />
               <h1 className="font-display text-3xl font-bold text-foreground">Admin Command</h1>
             </div>
             <p className="text-muted-foreground">Fraud detection, user management, and platform analytics</p>
@@ -125,7 +123,7 @@ export default function AdminDashboardPage() {
                 Backups
               </Button>
             </Link>
-            <Badge className={`gap-1 ${openAlerts > 0 ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-success/10 text-success border-success/20"}`}>
+            <Badge className={`gap-1 ${openAlerts > 0 ? "bg-muted text-foreground border-border" : "bg-muted text-foreground border-border"}`}>
               <AlertTriangle className="h-3 w-3" />
               {openAlerts} Open Alert{openAlerts !== 1 ? "s" : ""}
             </Badge>
@@ -141,8 +139,8 @@ export default function AdminDashboardPage() {
           ].map((stat) => (
             <div key={stat.label} className="bg-card border border-border rounded-lg p-5">
               <div className="flex items-center justify-between mb-3">
-                <stat.icon className="h-5 w-5 text-primary" />
-                {stat.good && <span className="text-xs font-medium text-success">Resolved</span>}
+                <stat.icon className="h-5 w-5 text-muted-foreground" />
+                {stat.good && <span className="text-xs font-medium text-foreground">Resolved</span>}
               </div>
               <div>
                 <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
@@ -166,7 +164,7 @@ export default function AdminDashboardPage() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-display font-semibold text-foreground">Live Activity</h3>
                   <div className="flex items-center gap-1.5">
-                    <Activity className="h-4 w-4 text-success" />
+                    <Activity className="h-4 w-4 text-muted-foreground" />
                     <span className="text-xs text-muted-foreground font-mono">{liveOrders} orders</span>
                   </div>
                 </div>
@@ -203,9 +201,9 @@ export default function AdminDashboardPage() {
                   return (
                     <div>
                       {[
-                        { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-success" },
-                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-warning" },
-                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-destructive" },
+                        { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-muted" },
+                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-muted" },
+                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-muted" },
                       ].map((r) => (
                         <div key={r.label} className="mb-4">
                           <div className="flex items-center justify-between text-sm mb-1">
@@ -248,18 +246,18 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.reason}</td>
                         <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${log.reviewed_at ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>
+                          <Badge variant="outline" className={`text-xs ${log.reviewed_at ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
                             {log.reviewed_at ? "Resolved" : "Open"}
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
                             {!log.reviewed_at && (
-                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-success" title="Resolve" aria-label="Resolve alert">
+                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Resolve" aria-label="Resolve alert">
                                 <CheckCircle className="h-4 w-4" />
                               </button>
                             )}
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-destructive" title="Block User" aria-label="Block user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Block User" aria-label="Block user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>
@@ -305,17 +303,17 @@ export default function AdminDashboardPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs capitalize ${user.verification_tier === "gold" ? "bg-warning/10 text-warning" : user.verification_tier === "silver" ? "bg-muted text-foreground" : "bg-muted text-muted-foreground"}`}>
+                          <Badge variant="outline" className={`text-xs capitalize ${user.verification_tier === "gold" ? "bg-muted text-foreground" : user.verification_tier === "silver" ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
                             {user.verification_tier}
                           </Badge>
                         </td>
                         <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-destructive" title="Ban" aria-label="Ban user">
+                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Ban" aria-label="Ban user">
                               <Ban className="h-4 w-4" />
                             </button>
                           </div>
