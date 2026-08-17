@@ -113,7 +113,7 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
   if (!user) return null;
 
   return (
-    <div className="flex flex-col h-[500px] bg-card border border-border rounded-lg overflow-hidden">
+    <div className="flex flex-col h-[400px] sm:h-[500px] max-h-[70vh] bg-card border border-border rounded-lg overflow-hidden">
       <div className="px-4 py-3 border-b border-border flex items-center gap-3">
         <Avatar className="h-8 w-8">
           <AvatarFallback className="bg-primary/10 text-primary text-xs">
@@ -126,8 +126,8 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-4" ref={bottomRef}>
-        <div className="space-y-3">
+      <ScrollArea className="flex-1 p-4">
+        <div className="space-y-3" ref={bottomRef}>
           {messages.map((msg) => {
             const isMe = msg.sender_id === user.id;
             const fileMatch = msg.content.match(/^📎 FILE:([^|]+)\|(.+)$/);
@@ -159,7 +159,6 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
               </div>
             );
           })}
-          <div ref={bottomRef} />
         </div>
       </ScrollArea>
 

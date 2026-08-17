@@ -103,8 +103,8 @@ export default function MarketplacePage() {
           }
         }}
       />
-      <div className="container py-8 md:py-12 flex flex-col gap-8">
-        <div className="mb-2">
+      <div className="container py-8 md:py-12 flex flex-col gap-6">
+        <div>
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Marketplace</h1>
           <p className="text-muted-foreground">Browse verified digital goods from trusted sellers</p>
         </div>
@@ -120,18 +120,6 @@ export default function MarketplacePage() {
           onPriceChange={setPriceRange}
           resultCount={sorted.length}
         />
-
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.name)}
-              className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap ${activeCategory === cat.name ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
 
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
