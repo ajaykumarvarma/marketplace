@@ -65,7 +65,7 @@ export default function CartPage() {
                     <div className="flex items-center gap-1 sm:gap-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border hover:border-primary/30"
+                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border"
                         aria-label="Decrease quantity"
                       >
                         <Minus className="h-3 w-3" />
@@ -73,7 +73,7 @@ export default function CartPage() {
                       <span className="font-mono text-sm w-8 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border hover:border-primary/30"
+                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border hover:border-border"
                         aria-label="Increase quantity"
                       >
                         <Plus className="h-3 w-3" />
@@ -81,7 +81,7 @@ export default function CartPage() {
                     </div>
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-primary/30 text-muted-foreground hover:text-destructive"
+                      className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground"
                       aria-label="Remove item"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -100,11 +100,11 @@ export default function CartPage() {
                     </div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-muted-foreground">Protection Fee</span>
-                      <span className="font-mono text-success">Free</span>
+                      <span className="font-mono text-foreground">Free</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Escrow</span>
-                      <span className="text-success flex items-center gap-1">
+                      <span className="text-foreground flex items-center gap-1">
                         <Shield className="h-3 w-3" /> Included
                       </span>
                     </div>
@@ -122,7 +122,7 @@ export default function CartPage() {
                     </Button>
                   </Link>
                   <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-3">
-                    <Shield className="h-3 w-3 text-success" />
+                    <Shield className="h-3 w-3 text-muted-foreground" />
                     <span>Escrow protected checkout</span>
                   </div>
                 </div>

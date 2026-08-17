@@ -44,7 +44,7 @@ export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderP
   if (uploadedFile) {
     return (
       <div className="flex items-center gap-3 p-3 bg-muted rounded-lg border border-border">
-        <FileText className="h-5 w-5 text-primary" />
+        <FileText className="h-5 w-5 text-muted-foreground" />
         <div className="flex-1 min-w-0">
           <p className="text-sm text-foreground truncate">{uploadedFile.name}</p>
           <p className="text-xs text-muted-foreground">{(uploadedFile.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -69,7 +69,7 @@ export function FileUploader({ onUpload, onRemove, uploadedFile }: FileUploaderP
       <button
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-lg border-2 border-dashed border-border hover:border-primary/30 bg-muted transition-colors disabled:opacity-50"
+        className="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-lg border-2 border-dashed border-border hover:border-border bg-muted transition-colors disabled:opacity-50"
       >
         <Upload className="h-6 w-6 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{uploading ? "Uploading..." : "Click to upload digital file"}</p>

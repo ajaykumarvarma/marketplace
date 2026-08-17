@@ -162,9 +162,9 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "card" ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
+                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "card" ? "border-foreground bg-muted" : "border-border bg-card hover:border-border"}`}
                 >
-                  <CreditCard className="h-5 w-5 text-primary" />
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
                   <div className="text-left">
                     <p className="font-medium text-foreground text-sm">Credit Card</p>
                     <p className="text-xs text-muted-foreground">Visa, Mastercard</p>
@@ -173,9 +173,9 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("crypto")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "crypto" ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/30"}`}
+                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "crypto" ? "border-foreground bg-muted" : "border-border bg-card hover:border-border"}`}
                 >
-                  <Bitcoin className="h-5 w-5 text-warning" />
+                  <Bitcoin className="h-5 w-5 text-muted-foreground" />
                   <div className="text-left">
                     <p className="font-medium text-foreground text-sm">Cryptocurrency</p>
                     <p className="text-xs text-muted-foreground">BTC, ETH, USDT</p>
@@ -211,7 +211,7 @@ export default function CheckoutPage() {
               {paymentMethod === "crypto" && (
                 <div className="bg-card border border-border rounded-lg p-4 mb-4">
                   <p className="text-sm text-muted-foreground mb-3">Send the exact amount to the address shown after confirmation. Your order will be processed once the transaction is verified.</p>
-                  <div className="flex items-center gap-2 text-sm text-warning">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Lock className="h-4 w-4" />
                     <span>Network: Ethereum (ERC-20)</span>
                   </div>
@@ -219,7 +219,7 @@ export default function CheckoutPage() {
               )}
 
               <div className="flex items-start gap-3 pt-4 mb-4">
-                <Shield className="h-5 w-5 text-success shrink-0 mt-0.5" />
+                <Shield className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-foreground mb-1">Escrow Protected</p>
                   <p className="text-xs text-muted-foreground">Your payment is held securely until you confirm delivery. If the seller fails to deliver, you get a full refund.</p>
@@ -244,19 +244,19 @@ export default function CheckoutPage() {
               <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
               
               {fraudResult && fraudResult.riskScore >= 40 && (
-                <div className={`p-3 rounded-lg mb-4 ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
+                <div className="p-3 rounded-lg mb-4 bg-muted border border-border">
                   <div className="flex items-center gap-2 mb-1">
-                    <AlertTriangle className={`h-4 w-4 ${fraudResult.blocked ? "text-destructive" : "text-warning"}`} />
-                    <span className={`text-sm font-medium ${fraudResult.blocked ? "text-destructive" : "text-warning"}`}>
+                    <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium text-foreground">
                       {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
                     </span>
                   </div>
                   <div className="mb-1">
                     {fraudResult.flags.map((flag, i) => (
-                      <p key={i} className={`text-xs ${fraudResult.blocked ? "text-destructive/80" : "text-warning/80"}`}>• {flag}</p>
+                      <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
                     ))}
                   </div>
-                  <p className={`text-xs font-mono ${fraudResult.blocked ? "text-destructive/70" : "text-warning/70"}`}>Risk Score: {fraudResult.riskScore}/100</p>
+                  <p className="text-xs font-mono text-muted-foreground">Risk Score: {fraudResult.riskScore}/100</p>
                 </div>
               )}
 

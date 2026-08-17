@@ -116,7 +116,7 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
     <div className="flex flex-col h-[400px] sm:h-[500px] max-h-[70vh] bg-card border border-border rounded-lg overflow-hidden">
       <div className="px-4 py-3 border-b border-border flex items-center gap-3">
         <Avatar className="h-8 w-8">
-          <AvatarFallback className="bg-primary/10 text-primary text-xs">
+          <AvatarFallback className="bg-muted text-muted-foreground text-xs">
             {otherParty?.full_name?.[0]?.toUpperCase() || "?"}
           </AvatarFallback>
         </Avatar>
@@ -133,13 +133,13 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
             const fileMatch = msg.content.match(/^📎 FILE:([^|]+)\|(.+)$/);
             return (
               <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[75%] px-3 py-2 rounded-lg text-sm ${isMe ? "bg-primary/15 text-foreground" : "bg-muted text-foreground"}`}>
+                <div className={`max-w-[75%] px-3 py-2 rounded-lg text-sm ${isMe ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
                   {fileMatch ? (
                     <a
                       href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/chat-attachments/${fileMatch[1]}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary hover:underline"
+                      className="flex items-center gap-2 text-foreground hover:underline"
                     >
                       <FileText className="h-4 w-4" />
                       <span>{fileMatch[2]}</span>
@@ -152,7 +152,7 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
                       {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                     {isMe && (
-                      msg.read ? <CheckCheck className="h-3 w-3 text-primary" /> : <Check className="h-3 w-3 text-muted-foreground" />
+                      msg.read ? <CheckCheck className="h-3 w-3 text-muted-foreground" /> : <Check className="h-3 w-3 text-muted-foreground" />
                     )}
                   </div>
                 </div>

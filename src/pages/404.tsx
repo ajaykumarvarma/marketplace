@@ -15,8 +15,8 @@ export default function NotFound() {
       <main className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center px-4">
           <div className="relative inline-flex items-center justify-center mb-6">
-            <div className="h-24 w-24 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
-              <Shield className="h-10 w-10 text-primary/30" />
+            <div className="h-24 w-24 rounded-full bg-muted border border-border flex items-center justify-center">
+              <Shield className="h-10 w-10 text-muted-foreground" />
             </div>
             <span className="absolute -top-2 -right-2 font-mono text-xs bg-muted border border-border px-2 py-0.5 rounded text-muted-foreground">
               ERR_404

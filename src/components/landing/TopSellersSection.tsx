@@ -76,7 +76,7 @@ export function TopSellersSection() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-foreground text-sm truncate">{seller.full_name || "Unnamed Seller"}</span>
-                          <Shield className="h-3 w-3 text-success shrink-0" />
+                          <Shield className="h-3 w-3 text-muted-foreground shrink-0" />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           <span className={`px-1.5 py-0.5 rounded text-xs border font-medium ${tierBadge(seller.verification_tier)}`}>
@@ -119,7 +119,7 @@ export function TopSellersSection() {
                         </span>
                       </div>
 
-                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
+                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-foreground transition-colors">
                         {product.title}
                       </h4>
 

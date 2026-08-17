@@ -47,11 +47,11 @@ export function RevenueStats({ stats }: RevenueStatsProps) {
         <div key={card.label} className="bg-card border border-border rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
             <p className="text-sm text-muted-foreground">{card.label}</p>
-            <card.icon className="h-4 w-4 text-primary" />
+            <card.icon className="h-4 w-4 text-muted-foreground" />
           </div>
           <p className="font-mono text-2xl font-bold text-foreground">{card.value}</p>
           {card.change !== 0 && (
-            <div className={`flex items-center gap-1 mt-2 text-xs ${card.change > 0 ? "text-success" : "text-destructive"}`}>
+            <div className="flex items-center gap-1 mt-2 text-xs text-foreground">
               {card.change > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
               {Math.abs(card.change)}% vs last period
             </div>

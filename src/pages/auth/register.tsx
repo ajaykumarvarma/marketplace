@@ -72,9 +72,9 @@ export default function RegisterPage() {
           </div>
 
           {error && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2 mb-4">
-              <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-              <p className="text-xs text-destructive">{error}</p>
+            <div className="bg-muted border border-border rounded-lg p-3 flex items-center gap-2 mb-4">
+              <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0" />
+              <p className="text-xs text-foreground">{error}</p>
             </div>
           )}
 
@@ -140,7 +140,7 @@ export default function RegisterPage() {
             <div className="flex items-start gap-2 mb-4">
               <input type="checkbox" id="terms" className="mt-1 h-4 w-4 rounded border-border bg-muted accent-primary" required />
               <label htmlFor="terms" className="text-xs text-muted-foreground">
-                I agree to the <Link href="/terms" className="text-primary hover:text-primary/80">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:text-primary/80">Privacy Policy</Link>
+                I agree to the <Link href="/terms" className="text-foreground hover:text-muted-foreground">Terms of Service</Link> and <Link href="/privacy" className="text-foreground hover:text-muted-foreground">Privacy Policy</Link>
               </label>
             </div>
 
@@ -150,7 +150,7 @@ export default function RegisterPage() {
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            Already have an account? <Link href="/auth/login" className="text-primary hover:text-primary/80 font-medium">Sign in</Link>
+            Already have an account? <Link href="/auth/login" className="text-foreground hover:text-muted-foreground font-medium">Sign in</Link>
           </p>
 
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4">

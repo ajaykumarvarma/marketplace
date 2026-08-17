@@ -62,19 +62,19 @@ export default function LoginPage() {
           </div>
 
           {locked && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 flex items-start gap-3 mb-4">
-              <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+            <div className="bg-muted border border-border rounded-lg p-4 flex items-start gap-3 mb-4">
+              <AlertTriangle className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-destructive">Account temporarily locked</p>
-                <p className="text-xs text-destructive/70">Too many failed attempts. Try again in {Math.floor(lockTimer / 60)}:{String(lockTimer % 60).padStart(2, "0")}.</p>
+                <p className="text-sm font-medium text-foreground">Account temporarily locked</p>
+                <p className="text-xs text-muted-foreground">Too many failed attempts. Try again in {Math.floor(lockTimer / 60)}:{String(lockTimer % 60).padStart(2, "0")}.</p>
               </div>
             </div>
           )}
 
           {error && !locked && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2 mb-4">
-              <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-              <p className="text-xs text-destructive">{error}</p>
+            <div className="bg-muted border border-border rounded-lg p-3 flex items-center gap-2 mb-4">
+              <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0" />
+              <p className="text-xs text-foreground">{error}</p>
             </div>
           )}
 
@@ -122,7 +122,7 @@ export default function LoginPage() {
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/auth/forgot-password" className="text-xs text-primary hover:text-primary/80">
+                <Link href="/auth/forgot-password" className="text-xs text-foreground hover:text-muted-foreground">
                   Forgot password?
                 </Link>
               </div>
@@ -155,7 +155,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Don't have an account?{" "}
-            <Link href="/auth/register" className="text-primary hover:text-primary/80 font-medium">
+            <Link href="/auth/register" className="text-foreground hover:text-muted-foreground font-medium">
               Create one
             </Link>
           </p>
