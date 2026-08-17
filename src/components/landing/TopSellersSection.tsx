@@ -70,7 +70,7 @@ export function TopSellersSection() {
                 {sellers.map((seller) => (
                   <Link key={seller.id} href={`/sellers/${seller.id}`}>
                     <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 mb-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">
+                      <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-bold text-foreground">
                         {(seller.full_name || "S")[0].toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -112,7 +112,7 @@ export function TopSellersSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {products.map((product) => (
                   <Link key={product.id} href={`/marketplace/${product.id}`}>
-                    <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/30">
+                    <div className="p-5 bg-card border border-border rounded-lg hover:border-border">
                       <div className="flex items-start justify-between mb-3">
                         <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground bg-card border border-border px-2 py-0.5 rounded">
                           {product.category || "Digital"}
