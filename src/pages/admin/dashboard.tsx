@@ -229,7 +229,7 @@ export default function AdminDashboardPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border bg-muted/50">
+                    <tr className="border-b border-border bg-muted">
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Risk</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Reason</th>
@@ -239,7 +239,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody>
                     {fraudLogs.map((log) => (
-                      <tr key={log.id} className="border-b border-border hover:bg-card">
+                      <tr key={log.id} className="border-b border-border hover:bg-muted transition-colors">
                         <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
                         <td className="px-4 py-3">
                           <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
@@ -282,7 +282,7 @@ export default function AdminDashboardPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border bg-muted/50">
+                    <tr className="border-b border-border bg-muted">
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Role</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tier</th>
@@ -292,7 +292,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody>
                     {users.map((user) => (
-                      <tr key={user.id} className="border-b border-border hover:bg-card">
+                      <tr key={user.id} className="border-b border-border hover:bg-muted transition-colors">
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-foreground">{user.full_name || "Anonymous"}</p>

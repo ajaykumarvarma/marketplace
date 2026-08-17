@@ -95,15 +95,15 @@ export default function CartPage() {
                   <h3 className="font-display font-semibold text-foreground mb-4">Order Summary</h3>
                   <div className="text-sm mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-foreground/70">Items ({totalItems})</span>
+                      <span className="text-muted-foreground">Items ({totalItems})</span>
                       <span className="font-mono text-foreground">${totalPrice.toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-foreground/70">Protection Fee</span>
+                      <span className="text-muted-foreground">Protection Fee</span>
                       <span className="font-mono text-success">Free</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-foreground/70">Escrow</span>
+                      <span className="text-muted-foreground">Escrow</span>
                       <span className="text-success flex items-center gap-1">
                         <Shield className="h-3 w-3" /> Included
                       </span>
@@ -121,7 +121,7 @@ export default function CartPage() {
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <div className="flex items-center justify-center gap-1.5 text-xs text-foreground/70 mt-3">
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-3">
                     <Shield className="h-3 w-3 text-success" />
                     <span>Escrow protected checkout</span>
                   </div>

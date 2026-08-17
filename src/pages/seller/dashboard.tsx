@@ -127,7 +127,7 @@ export default function SellerDashboardPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-border bg-muted/50">
+                      <tr className="border-b border-border bg-muted">
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
@@ -137,7 +137,7 @@ export default function SellerDashboardPage() {
                     </thead>
                     <tbody>
                       {orders.map((order) => (
-                        <tr key={order.id} className="border-b border-border hover:bg-card">
+                        <tr key={order.id} className="border-b border-border hover:bg-muted transition-colors">
                           <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
                           <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
                           <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
@@ -158,7 +158,7 @@ export default function SellerDashboardPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-border bg-muted/50">
+                      <tr className="border-b border-border bg-muted">
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
@@ -168,7 +168,7 @@ export default function SellerDashboardPage() {
                     </thead>
                     <tbody>
                       {products.map((product) => (
-                        <tr key={product.id} className="border-b border-border hover:bg-card">
+                        <tr key={product.id} className="border-b border-border hover:bg-muted transition-colors">
                           <td className="px-4 py-3 text-foreground">{product.title}</td>
                           <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
                           <td className="px-4 py-3 font-mono text-foreground">{product.stock}</td>

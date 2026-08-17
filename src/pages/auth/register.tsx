@@ -82,7 +82,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setAccountType("buyer")}
-              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium ${accountType === "buyer" ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${accountType === "buyer" ? "bg-card text-foreground shadow-sm" : "text-foreground/70 hover:text-foreground hover:bg-card/50"}`}
             >
               <User className="h-4 w-4" />
               Buyer
@@ -90,7 +90,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setAccountType("seller")}
-              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium ${accountType === "seller" ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${accountType === "seller" ? "bg-card text-foreground shadow-sm" : "text-foreground/70 hover:text-foreground hover:bg-card/50"}`}
             >
               <Store className="h-4 w-4" />
               Seller
@@ -112,7 +112,7 @@ export default function RegisterPage() {
                 <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+                <span className="bg-background px-2 text-muted-foreground font-medium">Or continue with email</span>
               </div>
             </div>
           </div>
