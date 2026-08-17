@@ -63,13 +63,13 @@ export function TopSellersSection() {
 
             {loading ? (
               <div className="flex justify-center py-8">
-                <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                <Loader2 className="h-6 w-6 text-muted-foreground animate-spin" />
               </div>
             ) : (
               <div>
                 {sellers.map((seller) => (
                   <Link key={seller.id} href={`/sellers/${seller.id}`}>
-                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 mb-3">
+                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-border mb-3">
                       <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-bold text-foreground">
                         {(seller.full_name || "S")[0].toUpperCase()}
                       </div>
@@ -99,14 +99,14 @@ export function TopSellersSection() {
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-display text-xl font-semibold text-foreground">Featured Products</h3>
-              <Link href="/marketplace" className="text-sm font-medium text-primary hover:text-primary/80">
+              <Link href="/marketplace" className="text-sm font-medium text-muted-foreground hover:text-foreground">
                 Browse All →
               </Link>
             </div>
 
             {loading ? (
               <div className="flex justify-center py-8">
-                <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                <Loader2 className="h-6 w-6 text-muted-foreground animate-spin" />
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

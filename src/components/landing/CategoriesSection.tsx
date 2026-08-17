@@ -58,14 +58,14 @@ export function CategoriesSection() {
               Find exactly what you need across our curated digital goods catalog.
             </p>
           </div>
-          <Link href="/categories" className="hidden md:inline-flex text-sm font-medium text-primary hover:text-primary/80">
+          <Link href="/categories" className="hidden md:inline-flex text-sm font-medium text-muted-foreground hover:text-foreground">
             View All →
           </Link>
         </div>
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="h-6 w-6 text-primary animate-spin" />
+            <Loader2 className="h-6 w-6 text-muted-foreground animate-spin" />
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -86,7 +86,7 @@ export function CategoriesSection() {
         )}
 
         <div className="mt-6 text-center md:hidden">
-          <Link href="/categories" className="text-sm font-medium text-primary hover:text-primary/80">
+          <Link href="/categories" className="text-sm font-medium text-muted-foreground hover:text-foreground">
             View All Categories →
           </Link>
         </div>

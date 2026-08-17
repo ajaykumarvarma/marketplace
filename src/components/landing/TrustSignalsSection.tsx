@@ -51,7 +51,7 @@ export function TrustSignalsSection() {
           {trustItems.map((item) => (
             <div
               key={item.title}
-              className="p-6 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors"
+              className="p-6 bg-card border border-border rounded-lg hover:border-border transition-colors"
             >
               <div className="flex items-start gap-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted border border-border shrink-0">
