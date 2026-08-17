@@ -93,7 +93,7 @@ export default function ReferralsPage() {
           ) : (
             <>
               <div className="border border-border rounded-lg bg-card p-6 mb-6">
-                <label className="text-sm font-medium text-foreground/70 mb-2 block">Your Referral Link</label>
+                <label className="text-sm font-medium text-muted-foreground mb-2 block">Your Referral Link</label>
                 <div className="flex gap-2">
                   <Input
                     value={`${typeof window !== "undefined" ? window.location.origin : ""}/auth/register?ref=${referralCode?.code}`}

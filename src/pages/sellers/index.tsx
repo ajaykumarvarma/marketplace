@@ -110,7 +110,7 @@ export default function SellersPage() {
                       <h3 className="font-display font-semibold text-foreground">{seller.name}</h3>
                       {seller.verified && <BadgeCheck className="h-4 w-4 text-success" />}
                     </div>
-                    <p className="text-xs text-foreground">{seller.tagline}</p>
+                    <p className="text-xs text-muted-foreground">{seller.tagline}</p>
                   </div>
                 </div>
                 {seller.badge && (
@@ -127,27 +127,27 @@ export default function SellersPage() {
                     <Star className="h-3 w-3 fill-warning text-warning" />
                     <span className="font-mono text-sm font-semibold text-foreground">{seller.rating}</span>
                   </div>
-                  <p className="text-xs text-foreground">Rating</p>
+                  <p className="text-xs text-muted-foreground">Rating</p>
                 </div>
                 <div className="bg-muted rounded p-2">
                   <span className="font-mono text-sm font-semibold text-foreground">{seller.sales.toLocaleString()}</span>
-                  <p className="text-xs text-foreground">Sales</p>
+                  <p className="text-xs text-muted-foreground">Sales</p>
                 </div>
                 <div className="bg-muted rounded p-2">
                   <span className="font-mono text-sm font-semibold text-foreground">{seller.products}</span>
-                  <p className="text-xs text-foreground">Products</p>
+                  <p className="text-xs text-muted-foreground">Products</p>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {seller.categories.map((c) => (
-                  <Badge key={c} variant="outline" className="border-border text-xs text-foreground">
+                  <Badge key={c} variant="outline" className="border-border text-xs text-muted-foreground">
                     {c}
                   </Badge>
                 ))}
               </div>
 
-              <div className="flex items-center justify-between text-xs text-foreground pt-2 border-t border-border mb-4">
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border mb-4">
                 <span>Since {seller.since}</span>
                 <span className="flex items-center gap-1">
                   <TrendingUp className="h-3 w-3 text-success" />
