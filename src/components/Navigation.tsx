@@ -173,32 +173,32 @@ export function Navigation() {
 
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-background">
-          <div className="container py-4">
-            <Link href="/marketplace" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+          <div className="container py-4 flex flex-col gap-3">
+            <Link href="/marketplace" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
               {t("marketplace")}
             </Link>
-            <Link href="/categories" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+            <Link href="/categories" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
               {t("categories")}
             </Link>
-            <Link href="/sellers" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+            <Link href="/sellers" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
               {t("topSellers")}
             </Link>
-            <Link href="/sell" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+            <Link href="/sell" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
               {t("startSelling")}
             </Link>
 
             {user && (
               <>
-                <Link href="/orders" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+                <Link href="/orders" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
                   {t("myOrders")}
                 </Link>
                 {isSeller && (
-                  <Link href="/seller/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+                  <Link href="/seller/dashboard" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
                     {t("sellerDashboard")}
                   </Link>
                 )}
                 {isAdmin && (
-                  <Link href="/admin/dashboard" className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-3">
+                  <Link href="/admin/dashboard" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
                     {t("adminPanel")}
                   </Link>
                 )}

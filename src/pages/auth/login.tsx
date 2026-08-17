@@ -66,7 +66,7 @@ export default function LoginPage() {
               <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-destructive">Account temporarily locked</p>
-                <p className="text-xs text-muted-foreground">Too many failed attempts. Try again in {Math.floor(lockTimer / 60)}:{String(lockTimer % 60).padStart(2, "0")}.</p>
+                <p className="text-xs text-destructive/70">Too many failed attempts. Try again in {Math.floor(lockTimer / 60)}:{String(lockTimer % 60).padStart(2, "0")}.</p>
               </div>
             </div>
           )}
@@ -74,14 +74,14 @@ export default function LoginPage() {
           {error && !locked && (
             <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2 mb-4">
               <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-              <p className="text-xs text-muted-foreground">{error}</p>
+              <p className="text-xs text-destructive">{error}</p>
             </div>
           )}
 
           {attempts > 0 && !locked && !error && (
             <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-center gap-2 mb-4">
               <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
-              <p className="text-xs text-muted-foreground">{5 - attempts} attempts remaining before temporary lock</p>
+              <p className="text-xs text-warning">{5 - attempts} attempts remaining before temporary lock</p>
             </div>
           )}
 
