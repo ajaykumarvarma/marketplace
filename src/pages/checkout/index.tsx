@@ -244,19 +244,19 @@ export default function CheckoutPage() {
               <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
               
               {fraudResult && fraudResult.riskScore >= 40 && (
-                <div className={`p-3 rounded-lg ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
-                  <div className="flex items-center gap-2">
+                <div className={`p-3 rounded-lg mb-4 ${fraudResult.blocked ? "bg-destructive/10 border border-destructive/20" : "bg-warning/10 border border-warning/20"}`}>
+                  <div className="flex items-center gap-2 mb-1">
                     <AlertTriangle className={`h-4 w-4 ${fraudResult.blocked ? "text-destructive" : "text-warning"}`} />
                     <span className={`text-sm font-medium ${fraudResult.blocked ? "text-destructive" : "text-warning"}`}>
                       {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
                     </span>
                   </div>
-                  <div>
+                  <div className="mb-1">
                     {fraudResult.flags.map((flag, i) => (
-                      <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
+                      <p key={i} className={`text-xs ${fraudResult.blocked ? "text-destructive/80" : "text-warning/80"}`}>• {flag}</p>
                     ))}
                   </div>
-                  <p className="text-xs font-mono text-muted-foreground">Risk Score: {fraudResult.riskScore}/100</p>
+                  <p className={`text-xs font-mono ${fraudResult.blocked ? "text-destructive/70" : "text-warning/70"}`}>Risk Score: {fraudResult.riskScore}/100</p>
                 </div>
               )}
 

@@ -305,7 +305,7 @@ export default function AdminDashboardPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs capitalize ${user.verification_tier === "gold" ? "bg-warning/10 text-warning" : user.verification_tier === "silver" ? "bg-muted text-foreground" : "bg-muted/50 text-muted-foreground"}`}>
+                          <Badge variant="outline" className={`text-xs capitalize ${user.verification_tier === "gold" ? "bg-warning/10 text-warning" : user.verification_tier === "silver" ? "bg-muted text-foreground" : "bg-muted text-muted-foreground"}`}>
                             {user.verification_tier}
                           </Badge>
                         </td>

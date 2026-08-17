@@ -39,9 +39,9 @@ export default function CartPage() {
 
           {items.length === 0 ? (
             <div className="text-center py-16 bg-card border border-border rounded-lg">
-              <ShoppingCart className="h-12 w-12 text-foreground/50 mx-auto mb-4" />
+              <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="font-display text-lg font-medium text-foreground mb-2">Your cart is empty</h3>
-              <p className="text-sm text-foreground/70 mb-4">Browse the marketplace to find digital goods</p>
+              <p className="text-sm text-muted-foreground mb-4">Browse the marketplace to find digital goods</p>
               <Link href="/marketplace">
                 <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
                   Browse Marketplace
@@ -65,7 +65,7 @@ export default function CartPage() {
                     <div className="flex items-center gap-1 sm:gap-2">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border border-border hover:border-primary/30"
+                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border hover:border-primary/30"
                         aria-label="Decrease quantity"
                       >
                         <Minus className="h-3 w-3" />
@@ -73,7 +73,7 @@ export default function CartPage() {
                       <span className="font-mono text-sm w-8 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border border-border hover:border-primary/30"
+                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border hover:border-primary/30"
                         aria-label="Increase quantity"
                       >
                         <Plus className="h-3 w-3" />

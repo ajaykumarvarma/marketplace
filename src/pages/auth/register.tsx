@@ -74,7 +74,7 @@ export default function RegisterPage() {
           {error && (
             <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2 mb-4">
               <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
-              <p className="text-xs text-muted-foreground">{error}</p>
+              <p className="text-xs text-destructive">{error}</p>
             </div>
           )}
 
