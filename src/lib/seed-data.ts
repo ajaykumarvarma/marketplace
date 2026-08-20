@@ -19,7 +19,7 @@ export async function seedCategories() {
   return { success: !error, error };
 }
 
-export async function seedTestUsers() {
+export function seedTestUsers() {
   // Note: These would normally be created via auth.signUp
   // This is for documenting the test user structure
   const testUsers = [
