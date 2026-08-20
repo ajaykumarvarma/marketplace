@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Store, TrendingUp, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2 } from "lucide-react";
+import { Store, TrendingUp, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -26,6 +26,11 @@ export default function SellerDashboardPage() {
     rating: 4.9,
   });
   const [loading, setLoading] = useState(true);
+  const [ordersPage, setOrdersPage] = useState(1);
+  const ordersPerPage = 10;
+
+  const paginatedOrders = orders.slice((ordersPage - 1) * ordersPerPage, ordersPage * ordersPerPage);
+  const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
 
   useEffect(() => {
     if (!user) return;
@@ -123,74 +128,127 @@ export default function SellerDashboardPage() {
             </TabsList>
 
             <TabsContent value="orders" className="mt-4">
-              <div className="bg-card border border-border rounded-lg overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border bg-muted">
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {orders.map((order) => (
-                        <tr key={order.id} className="border-b border-border hover:bg-muted transition-colors">
-                          <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
-                          <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
-                          <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
-                          <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${statusBadge(order.status)}`}>{order.status}</Badge>
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              {orders.length === 0 && !loading ? (
+                <div className="bg-card border border-border rounded-lg p-12 text-center">
+                  <Inbox className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No orders yet</h3>
+                  <p className="text-sm text-muted-foreground mb-4">When buyers purchase your products, orders will appear here.</p>
+                  <Link href="/seller/products/new">
+                    <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                      <Plus className="h-4 w-4" />
+                      Add Your First Product
+                    </Button>
+                  </Link>
                 </div>
-              </div>
+              ) : (
+                <div className="bg-card border border-border rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border bg-muted">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {paginatedOrders.map((order) => (
+                          <tr key={order.id} className="border-b border-border hover:bg-muted transition-colors">
+                            <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
+                            <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
+                            <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
+                            <td className="px-4 py-3">
+                              <Badge variant="outline" className={`text-xs ${statusBadge(order.status)}`}>{order.status}</Badge>
+                            </td>
+                            <td className="px-4 py-3 text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {totalOrderPages > 1 && (
+                    <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={ordersPage === 1}
+                        onClick={() => setOrdersPage(p => p - 1)}
+                        className="border-border"
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-sm text-muted-foreground">
+                        Page {ordersPage} of {totalOrderPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={ordersPage === totalOrderPages}
+                        onClick={() => setOrdersPage(p => p + 1)}
+                        className="border-border"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="products" className="mt-4">
-              <div className="bg-card border border-border rounded-lg overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border bg-muted">
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {products.map((product) => (
-                        <tr key={product.id} className="border-b border-border hover:bg-muted transition-colors">
-                          <td className="px-4 py-3 text-foreground">{product.title}</td>
-                          <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
-                          <td className="px-4 py-3 font-mono text-foreground">{product.stock}</td>
-                          <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${statusBadge(product.status)}`}>{product.status.replace("_", " ")}</Badge>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="View product">
-                                <Eye className="h-4 w-4" />
-                              </button>
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="Analytics">
-                                <BarChart3 className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              {products.length === 0 && !loading ? (
+                <div className="bg-card border border-border rounded-lg p-12 text-center">
+                  <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No products listed</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Start selling by adding your first digital product.</p>
+                  <Link href="/seller/products/new">
+                    <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                      <Plus className="h-4 w-4" />
+                      Add Product
+                    </Button>
+                  </Link>
                 </div>
-              </div>
+              ) : (
+                <div className="bg-card border border-border rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border bg-muted">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {products.map((product) => (
+                          <tr key={product.id} className="border-b border-border hover:bg-muted transition-colors">
+                            <td className="px-4 py-3 text-foreground">{product.title}</td>
+                            <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
+                            <td className="px-4 py-3 font-mono text-foreground">{product.stock}</td>
+                            <td className="px-4 py-3">
+                              <Badge variant="outline" className={`text-xs ${statusBadge(product.status)}`}>{product.status.replace("_", " ")}</Badge>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="View product">
+                                  <Eye className="h-4 w-4" />
+                                </button>
+                                <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="Analytics">
+                                  <BarChart3 className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="analytics" className="mt-4">

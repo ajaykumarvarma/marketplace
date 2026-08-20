@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useDeferredValue, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, SlidersHorizontal, Star, ArrowUpDown, Loader2, Shield, Clock, ShoppingCart } from "lucide-react";
+import { Search, SlidersHorizontal, Star, ArrowUpDown, Loader2, Shield, Clock, ShoppingCart, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SearchFilters } from "@/components/marketplace/SearchFilters";
+import { useToast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -47,7 +48,19 @@ export default function MarketplacePage() {
   const [sortBy, setSortBy] = useState<"featured" | "price_low" | "price_high" | "newest">("featured");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [loading, setLoading] = useState(true);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const { addItem } = useCart();
+  const { toast } = useToast();
+
+  const deferredSearch = useDeferredValue(searchQuery);
+
+  useEffect(() => {
+    const filters: string[] = [];
+    if (activeCategory !== "All") filters.push(activeCategory);
+    if (deferredSearch) filters.push(`"${deferredSearch}"`);
+    if (priceRange[0] > 0 || priceRange[1] < 1000) filters.push(`$${priceRange[0]}-$${priceRange[1]}`);
+    setActiveFilters(filters);
+  }, [activeCategory, deferredSearch, priceRange]);
 
   useEffect(() => {
     async function loadData() {
@@ -69,7 +82,7 @@ export default function MarketplacePage() {
 
   const filtered = products.filter((p) => {
     const matchesCategory = activeCategory === "All" || p.category?.name === activeCategory;
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.seller?.full_name?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = p.title.toLowerCase().includes(deferredSearch.toLowerCase()) || p.seller?.full_name?.toLowerCase().includes(deferredSearch.toLowerCase());
     const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
     return matchesCategory && matchesSearch && matchesPrice;
   });
@@ -82,6 +95,18 @@ export default function MarketplacePage() {
       default: return 0;
     }
   });
+
+  const handleAddToCart = (product: Product) => {
+    addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" });
+    toast({ title: "Added to cart", description: `${product.title} added to your cart.` });
+  };
+
+  const clearAllFilters = () => {
+    setActiveCategory("All");
+    setSearchQuery("");
+    setPriceRange([0, 1000]);
+    setSortBy("featured");
+  };
 
   return (
     <>
@@ -183,7 +208,7 @@ export default function MarketplacePage() {
                     className="w-full gap-2 bg-muted hover:bg-muted text-foreground border border-border"
                     onClick={(e) => {
                       e.preventDefault();
-                      addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" });
+                      handleAddToCart(product);
                     }}
                   >
                     <ShoppingCart className="h-4 w-4" />
@@ -199,7 +224,22 @@ export default function MarketplacePage() {
           <div className="text-center py-16 flex flex-col items-center gap-4">
             <Search className="h-12 w-12 text-muted-foreground mx-auto" />
             <h3 className="font-display text-lg font-medium text-foreground">No products found</h3>
-            <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
+            {activeFilters.length > 0 ? (
+              <>
+                <p className="text-sm text-muted-foreground">No results for: {activeFilters.join(", ")}</p>
+                <Button variant="outline" className="gap-2 border-border" onClick={clearAllFilters}>
+                  <X className="h-4 w-4" />
+                  Clear all filters
+                </Button>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
+                <Link href="/marketplace">
+                  <Button variant="outline" className="border-border">Browse all products</Button>
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>
