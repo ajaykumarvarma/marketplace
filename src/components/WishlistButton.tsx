@@ -13,19 +13,18 @@ export function WishlistButton({ productId }: { productId: string }) {
 
   useEffect(() => {
     if (!user) return;
+    async function checkWishlist() {
+      const { data } = await supabase
+        .from("wishlists")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("product_id", productId)
+        .maybeSingle();
+
+      setIsWishlisted(!!data);
+    }
     checkWishlist();
   }, [user, productId]);
-
-  async function checkWishlist() {
-    const { data } = await supabase
-      .from("wishlists")
-      .select("id")
-      .eq("user_id", user!.id)
-      .eq("product_id", productId)
-      .maybeSingle();
-
-    setIsWishlisted(!!data);
-  }
 
   async function toggleWishlist() {
     if (!user) {

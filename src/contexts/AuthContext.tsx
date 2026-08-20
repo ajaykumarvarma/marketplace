@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import { getDeviceFingerprint } from "@/services/fraudService";
@@ -65,21 +65,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    // Session refresh interval (refresh 5 min before expiry)
-    const refreshInterval = setInterval(() => {
-      if (session && session.expires_at) {
-        const expiresAt = session.expires_at * 1000;
-        const fiveMinBefore = expiresAt - 5 * 60 * 1000;
-        if (Date.now() >= fiveMinBefore) {
-          supabase.auth.refreshSession();
-        }
-      }
-    }, 60 * 1000);
-
     return () => {
       subscription.unsubscribe();
-      clearInterval(refreshInterval);
     };
+  }, []);
+
+  // Session refresh interval (refresh 5 min before expiry)
+  useEffect(() => {
+    if (!session?.expires_at) return;
+    const refreshInterval = setInterval(() => {
+      const expiresAt = session.expires_at * 1000;
+      const fiveMinBefore = expiresAt - 5 * 60 * 1000;
+      if (Date.now() >= fiveMinBefore) {
+        supabase.auth.refreshSession();
+      }
+    }, 60 * 1000);
+    return () => clearInterval(refreshInterval);
   }, [session?.expires_at]);
 
   async function fetchProfile(userId: string) {

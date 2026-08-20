@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-import { Shield, AlertTriangle, CheckCircle, XCircle, Eye, Loader2 } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Shield, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { getFraudAlerts, resolveFraudAlert } from "@/services/fraudService";
-import { supabase } from "@/integrations/supabase/client";
 
 interface FraudAlert {
   id: string;
@@ -25,25 +24,27 @@ export default function FraudDashboard() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "open" | "critical">("all");
 
-  useEffect(() => {
+  const fetchAlerts = useCallback(async () => {
     if (!user) return;
-    fetchAlerts();
-  }, [user, filter]);
-
-  async function fetchAlerts() {
     setLoading(true);
     const status = filter === "all" ? undefined : filter === "open" ? "open" : undefined;
     const { data } = await getFraudAlerts(status);
     let filtered = data;
     if (filter === "critical") {
-      filtered = data.filter((a: any) => a.severity === "critical" || a.severity === "high");
+      filtered = data.filter((a: { severity: string }) => a.severity === "critical" || a.severity === "high");
     }
     setAlerts(filtered);
     setLoading(false);
-  }
+  }, [filter, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchAlerts();
+  }, [user, filter, fetchAlerts]);
 
   async function handleResolve(alertId: string, status: "resolved" | "false_positive") {
-    const { error } = await resolveFraudAlert(alertId, status, user!.id);
+    if (!user?.id) return;
+    const { error } = await resolveFraudAlert(alertId, status, user.id);
     if (error) {
       toast({ title: "Failed to update alert", variant: "destructive" });
     } else {

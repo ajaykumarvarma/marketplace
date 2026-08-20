@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Shield, Download, Database, Clock, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface BackupFile {
@@ -18,11 +17,12 @@ export default function BackupsPage() {
   const [running, setRunning] = useState(false);
   const { session } = useAuth();
 
-  async function fetchBackups() {
+  const fetchBackups = useCallback(async () => {
+    if (!session?.access_token) return;
     setLoading(true);
     try {
       const res = await fetch("/api/backups/list", {
-        headers: { Authorization: `Bearer ${session?.access_token}` },
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
       const data = await res.json();
       setBackups(data.backups || []);
@@ -30,7 +30,7 @@ export default function BackupsPage() {
       console.error("Failed to fetch backups:", err);
     }
     setLoading(false);
-  }
+  }, [session?.access_token]);
 
   async function runBackup() {
     setRunning(true);
@@ -51,7 +51,7 @@ export default function BackupsPage() {
 
   useEffect(() => {
     fetchBackups();
-  }, []);
+  }, [fetchBackups]);
 
   function formatSize(bytes: number): string {
     if (bytes < 1024) return `${bytes} B`;

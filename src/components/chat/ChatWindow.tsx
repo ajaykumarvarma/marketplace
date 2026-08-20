@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Send, Paperclip, Check, CheckCheck, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,25 +90,26 @@ export function ChatWindow({ orderId, receiverId, otherParty }: ChatWindowProps)
     }
     await supabase.from("messages").insert({
       order_id: orderId,
-      sender_id: user!.id,
+      sender_id: user?.id,
       receiver_id: receiverId,
       content: `📎 FILE:${data.path}|${file.name}`,
       read: false,
     });
   };
 
-  const markRead = async () => {
+  const markRead = useCallback(async () => {
+    if (!user?.id) return;
     await supabase
       .from("messages")
       .update({ read: true })
       .eq("order_id", orderId)
-      .neq("sender_id", user?.id || "")
+      .neq("sender_id", user.id)
       .eq("read", false);
-  };
+  }, [orderId, user?.id]);
 
   useEffect(() => {
     markRead();
-  }, [messages.length]);
+  }, [messages.length, orderId, user?.id, markRead]);
 
   if (!user) return null;
 
