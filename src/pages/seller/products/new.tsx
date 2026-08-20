@@ -56,7 +56,7 @@ export default function NewProductPage() {
     }
 
     setLoading(true);
-    const { error } = await supabase.from("products").insert({
+    const productInsert: Record<string, unknown> = {
       seller_id: user.id,
       title: formData.title,
       description: formData.description,
@@ -68,7 +68,9 @@ export default function NewProductPage() {
       delivery_content: formData.deliveryContent || null,
       tags: tags.length > 0 ? tags : null,
       images: images.length > 0 ? images : null,
-    });
+    };
+
+    const { error } = await supabase.from("products").insert(productInsert);
 
     setLoading(false);
     if (error) {
