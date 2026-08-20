@@ -56,21 +56,20 @@ export default function NewProductPage() {
     }
 
     setLoading(true);
-    const productInsert: Record<string, unknown> = {
+    const productInsert = {
       seller_id: user.id,
       title: formData.title,
       description: formData.description,
       price: parseFloat(formData.price),
       original_price: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-      category: formData.category,
-      stock: parseInt(formData.stock),
+      category_id: formData.category,
       delivery_time: formData.deliveryTime,
       delivery_content: formData.deliveryContent || null,
-      tags: tags.length > 0 ? tags : null,
-      images: images.length > 0 ? images : null,
+      image_url: images.length > 0 ? images[0] : null,
+      status: "active",
     };
 
-    const { error } = await supabase.from("products").insert(productInsert);
+    const { error } = await supabase.from("products").insert(productInsert as never);
 
     setLoading(false);
     if (error) {

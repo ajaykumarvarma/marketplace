@@ -235,7 +235,7 @@ export async function checkSellerFraud(
 
 export async function checkCouponAbuse(
   userId: string,
-  couponCode: string
+  _couponCode: string
 ): Promise<{ abused: boolean; reason?: string }> {
   const { count } = await supabase
     .from("orders")

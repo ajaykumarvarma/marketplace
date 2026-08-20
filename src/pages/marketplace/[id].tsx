@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
