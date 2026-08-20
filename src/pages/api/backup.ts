@@ -18,12 +18,31 @@ export default async function handler(
 
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "Unauthorized: Missing Bearer token" });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  const token = authHeader.replace("Bearer ", "");
 
   try {
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Verify the token belongs to an admin user
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    }
+
+    // Verify admin role
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError || profile?.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden: Admin access required" });
+    }
+
     const tables = [
       "profiles",
       "products",
@@ -34,9 +53,13 @@ export default async function handler(
       "fraud_alerts",
       "seller_analytics",
       "categories",
+      "contact_tickets",
+      "notification_preferences",
     ];
 
     const backup: Record<string, unknown[]> = {};
+    let totalRows = 0;
+
     for (const table of tables) {
       const { data, error } = await supabase
         .from(table)
@@ -47,6 +70,7 @@ export default async function handler(
         backup[table] = [];
       } else {
         backup[table] = data || [];
+        totalRows += (data || []).length;
       }
     }
 
@@ -73,10 +97,8 @@ export default async function handler(
       filename,
       path: uploadData?.path,
       tablesBackedUp: tables.length,
-      totalRows: Object.values(backup).reduce(
-        (sum, rows) => sum + (rows as unknown[]).length,
-        0
-      ),
+      totalRows,
+      createdBy: user.email,
     });
   } catch (err) {
     console.error("Backup failed:", err);
