@@ -1,4 +1,4 @@
-import { Shield, Lock, Eye, Server, Fingerprint, AlertTriangle, CheckCircle, Clock, Users } from "lucide-react";
+import { Shield, Lock, Eye, Server, Fingerprint, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 

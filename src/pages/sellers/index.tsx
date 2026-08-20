@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Star, Shield, TrendingUp, ShoppingCart, Award, ArrowRight, Store, BadgeCheck } from "lucide-react";
+import { Star, Shield, TrendingUp, Award, ArrowRight, Store, BadgeCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 
