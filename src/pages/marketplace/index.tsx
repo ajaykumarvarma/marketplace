@@ -27,20 +27,6 @@ interface Product {
   category: { name: string; slug: string } | null;
 }
 
-function ProductCardSkeleton() {
-  return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden">
-      <div className="aspect-[4/3] bg-muted" />
-      <div className="p-4">
-        <div className="h-4 bg-muted rounded w-3/4 mb-3" />
-        <div className="h-3 bg-muted rounded w-1/2 mb-3" />
-        <div className="h-5 bg-muted rounded w-1/3 mb-3" />
-        <div className="h-8 bg-muted rounded w-full" />
-      </div>
-    </div>
-  );
-}
-
 export default function MarketplacePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
