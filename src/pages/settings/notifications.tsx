@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Bell, Mail, Smartphone, Loader2, Check } from "lucide-react";
+import { Bell, Mail, Smartphone, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -104,7 +105,7 @@ export default function NotificationSettings() {
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : (
             <div className="space-y-6">
@@ -125,17 +126,21 @@ export default function NotificationSettings() {
                             <span className="text-sm">{ch.label}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <select
+                            <Select
                               value={pref.frequency}
-                              onChange={(e) => updateFrequency(pref.id, e.target.value as Frequency)}
-                              className="h-8 px-2 rounded bg-muted border border-border text-xs"
+                              onValueChange={(v) => updateFrequency(pref.id, v as Frequency)}
                               disabled={!pref.enabled}
                             >
-                              <option value="immediate">Immediate</option>
-                              <option value="daily">Daily</option>
-                              <option value="weekly">Weekly</option>
-                              <option value="never">Never</option>
-                            </select>
+                              <SelectTrigger className="h-8 w-[120px] text-xs bg-muted border-border">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="immediate">Immediate</SelectItem>
+                                <SelectItem value="daily">Daily</SelectItem>
+                                <SelectItem value="weekly">Weekly</SelectItem>
+                                <SelectItem value="never">Never</SelectItem>
+                              </SelectContent>
+                            </Select>
                             <Switch
                               checked={pref.enabled}
                               onCheckedChange={(v) => updatePref(pref.id, v)}
