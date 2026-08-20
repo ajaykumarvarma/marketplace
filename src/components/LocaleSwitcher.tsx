@@ -23,7 +23,7 @@ export function LocaleSwitcher() {
         <Button
           variant="outline"
           size="icon"
-          className="hidden md:flex border-border hover:border-primary/30"
+          className="hidden md:flex border-border hover:border-border"
           aria-label="Switch language"
           title="Switch language"
         >

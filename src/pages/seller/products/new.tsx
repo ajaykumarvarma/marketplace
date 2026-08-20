@@ -97,7 +97,7 @@ export default function NewProductPage() {
           <form onSubmit={handleSubmit}>
             <div className="mb-8">
               <Label className="flex items-center gap-2 mb-3">
-                <Upload className="h-4 w-4 text-primary" />
+                <Upload className="h-4 w-4 text-muted-foreground" />
                 Product Images
               </Label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -115,7 +115,7 @@ export default function NewProductPage() {
                 <button
                   type="button"
                   onClick={() => setImages([...images, `/generated/hero-product.png`])}
-                  className="aspect-square bg-muted border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary/50"
+                  className="aspect-square bg-muted border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-border"
                 >
                   <Upload className="h-6 w-6 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">Add Image</span>
@@ -125,7 +125,7 @@ export default function NewProductPage() {
 
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
-                <FileText className="h-4 w-4 text-primary" />
+                <FileText className="h-4 w-4 text-muted-foreground" />
                 Basic Information
               </h3>
               <div className="mb-4">
@@ -140,7 +140,7 @@ export default function NewProductPage() {
 
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
-                <DollarSign className="h-4 w-4 text-primary" />
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
                 Pricing
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -157,7 +157,7 @@ export default function NewProductPage() {
 
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
-                <Layers className="h-4 w-4 text-primary" />
+                <Layers className="h-4 w-4 text-muted-foreground" />
                 Category & Inventory
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -183,7 +183,7 @@ export default function NewProductPage() {
 
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
-                <Package className="h-4 w-4 text-primary" />
+                <Package className="h-4 w-4 text-muted-foreground" />
                 Delivery & Files
               </h3>
               <div className="mb-4">
@@ -212,7 +212,7 @@ export default function NewProductPage() {
 
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
-                <Tag className="h-4 w-4 text-primary" />
+                <Tag className="h-4 w-4 text-muted-foreground" />
                 Tags
               </h3>
               <div className="flex gap-2 mb-4">

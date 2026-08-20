@@ -84,11 +84,11 @@ export default function FraudDashboard() {
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : alerts.length === 0 ? (
           <div className="text-center py-12 border border-border rounded-lg bg-card">
-            <CheckCircle className="h-12 w-12 text-success mx-auto mb-4" />
+            <CheckCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h2 className="font-display text-lg font-semibold">No Alerts</h2>
             <p className="text-muted-foreground">All clear. No fraud alerts match your filter.</p>
           </div>
@@ -100,9 +100,9 @@ export default function FraudDashboard() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Badge className={
-                        alert.severity === "critical" ? "bg-destructive/10 text-destructive border-destructive/20" :
-                        alert.severity === "high" ? "bg-warning/10 text-warning border-warning/20" :
-                        "bg-muted text-muted-foreground"
+                        alert.severity === "critical" ? "bg-muted text-foreground border-border" :
+                        alert.severity === "high" ? "bg-muted text-foreground border-border" :
+                        "bg-muted text-foreground border-border"
                       }>
                         {alert.severity}
                       </Badge>
@@ -123,7 +123,7 @@ export default function FraudDashboard() {
                         False Positive
                       </Button>
                       <Button size="sm" onClick={() => handleResolve(alert.id, "resolved")}>
-                        <CheckCircle className="h-4 w-4 mr-1" />
+                        <CheckCircle className="h-4 w-4 mr-1 text-muted-foreground" />
                         Resolve
                       </Button>
                     </div>

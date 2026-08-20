@@ -73,7 +73,7 @@ export function KeyboardShortcutsHelp() {
         <Button
           variant="outline"
           size="icon"
-          className="hidden md:flex border-border hover:border-primary/30"
+          className="hidden md:flex border-border hover:border-border"
           aria-label="Keyboard shortcuts"
           title="Keyboard shortcuts (?)"
         >

@@ -52,9 +52,9 @@ export function WishlistButton({ productId }: { productId: string }) {
       size="sm"
       disabled={loading}
       onClick={toggleWishlist}
-      className={`gap-2 border-border ${isWishlisted ? "text-destructive border-destructive/30" : "text-muted-foreground"}`}
+      className={`gap-2 border-border ${isWishlisted ? "text-foreground" : "text-muted-foreground"}`}
     >
-      <Heart className={`h-4 w-4 ${isWishlisted ? "fill-destructive" : ""}`} />
+      <Heart className={`h-4 w-4 ${isWishlisted ? "fill-foreground" : ""}`} />
       {isWishlisted ? "Saved" : "Save"}
     </Button>
   );

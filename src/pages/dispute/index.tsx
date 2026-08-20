@@ -76,8 +76,8 @@ export default function DisputePage() {
           </Link>
 
           <div className="text-center mb-6">
-            <div className="h-12 w-12 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-3">
-              <AlertTriangle className="h-6 w-6 text-warning" />
+            <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+              <AlertTriangle className="h-6 w-6 text-muted-foreground" />
             </div>
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">File a Dispute</h1>
             <p className="text-muted-foreground max-w-md mx-auto">We're here to help resolve issues between buyers and sellers fairly and quickly.</p>
@@ -90,7 +90,7 @@ export default function DisputePage() {
               { icon: Shield, title: "Team Review", desc: "Our support team reviews the case and mediates a fair outcome" },
             ].map((step, i) => (
               <div key={i} className="bg-card border border-border rounded-lg p-4 text-center">
-                <step.icon className="h-5 w-5 text-primary mx-auto mb-2" />
+                <step.icon className="h-5 w-5 text-muted-foreground mx-auto mb-2" />
                 <h3 className="font-medium text-sm text-foreground mb-1">{step.title}</h3>
                 <p className="text-xs text-muted-foreground">{step.desc}</p>
               </div>
@@ -140,9 +140,9 @@ export default function DisputePage() {
               />
             </div>
 
-            <div className="bg-warning/5 border border-warning/20 rounded-lg p-4 mb-6">
+            <div className="bg-muted border border-border rounded-lg p-4 mb-6">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-foreground">Important</p>
                   <p className="text-xs text-muted-foreground mt-1">False disputes may result in account suspension. Please ensure you have attempted to contact the seller before filing.</p>
@@ -157,7 +157,7 @@ export default function DisputePage() {
             >
               {submitting ? (
                 <>
-                  <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                  <div className="h-4 w-4 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
                   Submitting...
                 </>
               ) : (

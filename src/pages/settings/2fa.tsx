@@ -106,7 +106,7 @@ export default function TwoFactorAuthPage() {
       <SEO title="Two-Factor Authentication — TradeVault" description="Secure your TradeVault account with 2FA." />
       <div className="container py-12 max-w-xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <Shield className="h-8 w-8 text-primary" />
+          <Shield className="h-8 w-8 text-muted-foreground" />
           <div>
             <h1 className="font-display text-2xl font-bold text-foreground">Two-Factor Authentication</h1>
             <p className="text-muted-foreground">Add an extra layer of security to your account</p>
@@ -117,7 +117,7 @@ export default function TwoFactorAuthPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Smartphone className="h-5 w-5 text-primary" />
+                <Smartphone className="h-5 w-5 text-muted-foreground" />
                 {profile?.two_factor_enabled ? "2FA is Enabled" : "Protect Your Account"}
               </CardTitle>
               <CardDescription>
@@ -129,7 +129,7 @@ export default function TwoFactorAuthPage() {
             <CardContent>
               {profile?.two_factor_enabled ? (
                 <div className="space-y-4">
-                  <Badge className="bg-success/10 text-success border-success/20">Active</Badge>
+                  <Badge className="bg-muted text-foreground border-border">Active</Badge>
                   <Button variant="destructive" onClick={() => setStep("disable")}>Disable 2FA</Button>
                 </div>
               ) : (
@@ -182,7 +182,7 @@ export default function TwoFactorAuthPage() {
                 className="font-mono text-center text-lg tracking-widest"
               />
               {error && (
-                <div className="flex items-center gap-2 text-sm text-destructive">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <AlertTriangle className="h-4 w-4" />
                   {error}
                 </div>
@@ -190,7 +190,9 @@ export default function TwoFactorAuthPage() {
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setStep("setup")}>Back</Button>
                 <Button onClick={verifyAndEnable} disabled={loading || code.length !== 6}>
-                  {loading ? "Verifying..." : "Enable 2FA"}
+                  {loading ? (
+                    <div className="h-4 w-4 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
+                  ) : "Enable 2FA"}
                 </Button>
               </div>
             </CardContent>
@@ -200,7 +202,7 @@ export default function TwoFactorAuthPage() {
         {step === "disable" && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-destructive">Disable 2FA</CardTitle>
+              <CardTitle className="text-foreground">Disable 2FA</CardTitle>
               <CardDescription>Enter your authenticator code to confirm.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -212,7 +214,7 @@ export default function TwoFactorAuthPage() {
                 className="font-mono text-center text-lg tracking-widest"
               />
               {error && (
-                <div className="flex items-center gap-2 text-sm text-destructive">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <AlertTriangle className="h-4 w-4" />
                   {error}
                 </div>

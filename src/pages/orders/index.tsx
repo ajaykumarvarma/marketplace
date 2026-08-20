@@ -17,10 +17,10 @@ interface Order {
 }
 
 const statusConfig: Record<string, { icon: typeof Package; color: string; label: string }> = {
-  pending: { icon: Clock, color: "text-warning", label: "Awaiting Delivery" },
-  shipped: { icon: Package, color: "text-primary", label: "In Transit" },
-  delivered: { icon: CheckCircle, color: "text-success", label: "Delivered" },
-  cancelled: { icon: AlertTriangle, color: "text-destructive", label: "Cancelled" },
+  pending: { icon: Clock, color: "text-muted-foreground", label: "Awaiting Delivery" },
+  shipped: { icon: Package, color: "text-muted-foreground", label: "In Transit" },
+  delivered: { icon: CheckCircle, color: "text-muted-foreground", label: "Delivered" },
+  cancelled: { icon: AlertTriangle, color: "text-muted-foreground", label: "Cancelled" },
 };
 
 export default function OrdersPage() {
@@ -76,7 +76,7 @@ export default function OrdersPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-sm text-muted-foreground">{order.id.slice(0, 8).toUpperCase()}</span>
-                          <Badge variant="outline" className={`text-xs ${order.status === "delivered" ? "bg-success/10 text-success border-success/20" : order.status === "cancelled" ? "bg-destructive/10 text-destructive border-destructive/20" : "bg-warning/10 text-warning border-warning/20"}`}>
+                          <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                             <Icon className={`h-3 w-3 mr-1 ${config.color}`} />
                             {config.label}
                           </Badge>
@@ -88,7 +88,7 @@ export default function OrdersPage() {
                     <div className="flex items-center gap-3">
                       <span className="font-mono font-semibold text-foreground">${order.total_amount.toFixed(2)}</span>
                       <Link href={`/orders/${order.id}`}>
-                        <Button variant="ghost" size="sm" className="gap-1 text-primary">
+                        <Button variant="ghost" size="sm" className="gap-1 text-foreground">
                           Details
                           <ArrowRight className="h-3 w-3" />
                         </Button>
@@ -98,7 +98,7 @@ export default function OrdersPage() {
 
                   {order.status === "pending" && (
                     <div className="bg-card border border-border rounded-md p-3 flex items-start gap-3 text-sm">
-                      <Shield className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                      <Shield className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
                       <div>
                         <p className="text-foreground font-medium">Escrow Protection Active</p>
                         <p className="text-muted-foreground">Your payment is held securely. Confirm delivery once you receive your digital goods to release funds to the seller.</p>
