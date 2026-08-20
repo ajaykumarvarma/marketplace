@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </div>
     )}>
       <AuthProvider>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider>
           <NextIntlClientProvider messages={messages} locale={locale}>
             <CartProvider>
               <Layout>
