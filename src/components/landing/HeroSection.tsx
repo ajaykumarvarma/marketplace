@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Shield, ArrowRight, TrendingUp, Users, Package, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Shield, TrendingUp, Users, Package, Clock } from "lucide-react";
 
 const stats = [
   { icon: Package, label: "Products Sold", value: 2847, suffix: "+" },
