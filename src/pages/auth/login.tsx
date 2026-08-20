@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Shield, Eye, EyeOff, Github, Mail, Lock, AlertTriangle } from "lucide-react";
+import { Shield, Eye, EyeOff, Github, Mail, Lock, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,10 +14,13 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [locked, setLocked] = useState(false);
   const [lockTimer, setLockTimer] = useState(0);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     if (lockTimer > 0) {
@@ -27,12 +30,23 @@ export default function LoginPage() {
     if (lockTimer === 0 && locked) setLocked(false);
   }, [lockTimer, locked]);
 
+  useEffect(() => {
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  }, [email]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (locked) return;
+    if (locked || loading) return;
     setError("");
+    setLoading(true);
 
     const { error: authError } = await signIn(email, password);
+    setLoading(false);
+
     if (authError) {
       setAttempts((a) => {
         const next = a + 1;
@@ -44,9 +58,24 @@ export default function LoginPage() {
       });
       setError(authError.message);
     } else {
+      // Store remember me preference
+      if (rememberMe) {
+        localStorage.setItem("tradevault_remember_email", email);
+      } else {
+        localStorage.removeItem("tradevault_remember_email");
+      }
       router.push("/marketplace");
     }
   };
+
+  // Load remembered email on mount
+  useEffect(() => {
+    const remembered = localStorage.getItem("tradevault_remember_email");
+    if (remembered) {
+      setEmail(remembered);
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <>
@@ -114,10 +143,11 @@ export default function LoginPage() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-muted border-border"
+                className={`bg-muted border-border ${emailError ? "border-foreground" : ""}`}
                 disabled={locked}
                 required
               />
+              {emailError && <p className="text-xs text-foreground mt-1">{emailError}</p>}
             </div>
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
@@ -147,9 +177,29 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={locked}>
-              <Lock className="h-4 w-4 mr-2" />
-              Sign In
+            <div className="flex items-center gap-2 mb-4">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded border-border bg-muted accent-primary"
+              />
+              <label htmlFor="remember" className="text-xs text-muted-foreground">Remember my email</label>
+            </div>
+
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={locked || loading}>
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Signing in...
+                </span>
+              ) : (
+                <>
+                  <Lock className="h-4 w-4 mr-2" />
+                  Sign In
+                </>
+              )}
             </Button>
           </form>
 

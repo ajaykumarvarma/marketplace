@@ -14,6 +14,14 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { checkFraudRisk, recordFraudScore, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
 
+function formatCardNumber(value: string): string {
+  return value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim().slice(0, 19);
+}
+
+function formatExpiry(value: string): string {
+  return value.replace(/\D/g, "").replace(/^(\d{2})/, "$1/").slice(0, 5);
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -23,6 +31,11 @@ export default function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [fraudResult, setFraudResult] = useState<{ riskScore: number; flags: string[]; blocked: boolean } | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvc, setCvc] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMounted(true);
@@ -30,6 +43,18 @@ export default function CheckoutPage() {
       router.push("/auth/login?redirect=/checkout");
     }
   }, [user, router]);
+
+  const validatePayment = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    if (paymentMethod === "card") {
+      if (!cardName.trim()) newErrors.cardName = "Name is required";
+      if (cardNumber.replace(/\s/g, "").length < 16) newErrors.cardNumber = "Valid card number required";
+      if (expiry.length < 5) newErrors.expiry = "Valid expiry required";
+      if (cvc.length < 3) newErrors.cvc = "Valid CVC required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   if (!mounted) {
     return (
@@ -74,6 +99,11 @@ export default function CheckoutPage() {
   }
 
   async function handlePlaceOrder() {
+    if (!validatePayment()) {
+      toast({ title: "Please fix payment errors", description: "Review the form and correct any issues.", variant: "destructive" });
+      return;
+    }
+
     if (!user) {
       toast({ title: "Sign in required", description: "Please sign in to complete your purchase.", variant: "destructive" });
       return;
@@ -125,6 +155,8 @@ export default function CheckoutPage() {
       delivery_method: "digital",
       payment_method: paymentMethod,
       status: riskScore >= 40 ? "processing" : "pending",
+      device_fingerprint: deviceFingerprint,
+      ip_address: ipAddress,
     } as any).select().single();
 
     if (orderData) {
@@ -189,20 +221,24 @@ export default function CheckoutPage() {
                 <div>
                   <div className="mb-4">
                     <Label htmlFor="cardName" className="mb-2 block">Name on Card</Label>
-                    <Input id="cardName" placeholder="John Doe" className="bg-muted border-border" />
+                    <Input id="cardName" placeholder="John Doe" className={`bg-muted border-border ${errors.cardName ? "border-foreground" : ""}`} value={cardName} onChange={(e) => setCardName(e.target.value)} />
+                    {errors.cardName && <p className="text-xs text-foreground mt-1">{errors.cardName}</p>}
                   </div>
                   <div className="mb-4">
                     <Label htmlFor="cardNumber" className="mb-2 block">Card Number</Label>
-                    <Input id="cardNumber" placeholder="4242 4242 4242 4242" className="bg-muted border-border font-mono" />
+                    <Input id="cardNumber" placeholder="4242 4242 4242 4242" className={`bg-muted border-border font-mono ${errors.cardNumber ? "border-foreground" : ""}`} value={cardNumber} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} maxLength={19} />
+                    {errors.cardNumber && <p className="text-xs text-foreground mt-1">{errors.cardNumber}</p>}
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <Label htmlFor="expiry" className="mb-2 block">Expiry</Label>
-                      <Input id="expiry" placeholder="MM/YY" className="bg-muted border-border font-mono" />
+                      <Input id="expiry" placeholder="MM/YY" className={`bg-muted border-border font-mono ${errors.expiry ? "border-foreground" : ""}`} value={expiry} onChange={(e) => setExpiry(formatExpiry(e.target.value))} maxLength={5} />
+                      {errors.expiry && <p className="text-xs text-foreground mt-1">{errors.expiry}</p>}
                     </div>
                     <div>
                       <Label htmlFor="cvc" className="mb-2 block">CVC</Label>
-                      <Input id="cvc" placeholder="123" className="bg-muted border-border font-mono" />
+                      <Input id="cvc" placeholder="123" className={`bg-muted border-border font-mono ${errors.cvc ? "border-foreground" : ""}`} value={cvc} onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))} maxLength={4} />
+                      {errors.cvc && <p className="text-xs text-foreground mt-1">{errors.cvc}</p>}
                     </div>
                   </div>
                 </div>

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Shield, AlertTriangle, Users, ShoppingCart, DollarSign, Ban, Eye, CheckCircle, XCircle, TrendingUp, Activity, Loader2, Database } from "lucide-react";
+import { Shield, AlertTriangle, Users, ShoppingCart, DollarSign, Ban, Eye, CheckCircle, TrendingUp, Activity, Loader2, Database, Search, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,6 +26,7 @@ interface UserProfile {
   role: string;
   verification_tier: string;
   created_at: string;
+  email?: string;
 }
 
 interface OrderStats {
@@ -42,9 +44,13 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [fraudLogs, setFraudLogs] = useState<FraudLog[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
+  const [userSearch, setUserSearch] = useState("");
   const [stats, setStats] = useState<OrderStats>({ total_orders: 0, total_revenue: 0, active_orders: 0 });
   const [loading, setLoading] = useState(true);
   const [liveOrders, setLiveOrders] = useState(0);
+  const [usersPage, setUsersPage] = useState(1);
+  const usersPerPage = 10;
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -62,16 +68,29 @@ export default function AdminDashboardPage() {
     };
   }, [isAdmin]);
 
+  useEffect(() => {
+    const filtered = users.filter((u) => 
+      (u.full_name?.toLowerCase() || "").includes(userSearch.toLowerCase()) ||
+      u.id.toLowerCase().includes(userSearch.toLowerCase()) ||
+      (u.email?.toLowerCase() || "").includes(userSearch.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+    setUsersPage(1);
+  }, [userSearch, users]);
+
   async function loadDashboard() {
     setLoading(true);
     const [fraudRes, usersRes, ordersRes] = await Promise.all([
       supabase.from("fraud_logs").select("*").order("created_at", { ascending: false }).limit(50),
-      supabase.from("profiles").select("id, full_name, role, verification_tier, created_at").order("created_at", { ascending: false }).limit(100),
+      supabase.from("profiles").select("id, full_name, role, verification_tier, created_at, email").order("created_at", { ascending: false }).limit(200),
       supabase.from("orders").select("status, total_amount"),
     ]);
 
     if (fraudRes.data) setFraudLogs(fraudRes.data as FraudLog[]);
-    if (usersRes.data) setUsers(usersRes.data as UserProfile[]);
+    if (usersRes.data) {
+      setUsers(usersRes.data as UserProfile[]);
+      setFilteredUsers(usersRes.data as UserProfile[]);
+    }
     
     if (ordersRes.data) {
       const totalRevenue = ordersRes.data.reduce((s, o) => s + Number(o.total_amount || 0), 0);
@@ -91,6 +110,9 @@ export default function AdminDashboardPage() {
     await supabase.from("fraud_logs").update({ reviewed_at: new Date().toISOString() }).eq("id", logId);
     loadDashboard();
   }
+
+  const paginatedUsers = filteredUsers.slice((usersPage - 1) * usersPerPage, usersPage * usersPerPage);
+  const totalUserPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   if (!isAdmin) {
     return (
@@ -178,7 +200,7 @@ export default function AdminDashboardPage() {
                   <div>
                     {fraudLogs.slice(0, 5).map((log) => (
                       <div key={log.id} className="flex items-start gap-3 text-sm mb-3">
-                        <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.risk_score >= 70 ? "bg-destructive" : log.risk_score >= 40 ? "bg-warning" : "bg-success"}`} />
+                        <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.risk_score >= 70 ? "bg-foreground" : log.risk_score >= 40 ? "bg-muted-foreground" : "bg-muted"}`} />
                         <div className="flex-1">
                           <p className="text-foreground">{log.event_type.toUpperCase()} — Risk: {log.risk_score}</p>
                           <p className="text-muted-foreground text-xs">{log.reason.slice(0, 80)}...</p>
@@ -223,59 +245,76 @@ export default function AdminDashboardPage() {
           </TabsContent>
 
           <TabsContent value="fraud" className="mt-4">
-            <div className="bg-card border border-border rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted">
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Risk</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Reason</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {fraudLogs.map((log) => (
-                      <tr key={log.id} className="border-b border-border hover:bg-muted transition-colors">
-                        <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
-                            {log.risk_score}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.reason}</td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs ${log.reviewed_at ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
-                            {log.reviewed_at ? "Resolved" : "Open"}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-1">
-                            {!log.reviewed_at && (
-                              <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Resolve" aria-label="Resolve alert">
-                                <CheckCircle className="h-4 w-4" />
-                              </button>
-                            )}
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Block User" aria-label="Block user">
-                              <Ban className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                    {fraudLogs.length === 0 && (
-                      <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No fraud alerts recorded</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+            {fraudLogs.length === 0 && !loading ? (
+              <div className="bg-card border border-border rounded-lg p-12 text-center">
+                <Inbox className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="font-display text-lg font-medium text-foreground mb-2">No fraud alerts</h3>
+                <p className="text-sm text-muted-foreground mb-4">The fraud detection system is active and monitoring transactions.</p>
+                <Button variant="outline" className="border-border" onClick={loadDashboard}>
+                  Refresh Data
+                </Button>
               </div>
-            </div>
+            ) : (
+              <div className="bg-card border border-border rounded-lg overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border bg-muted">
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Risk</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Reason</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {fraudLogs.map((log) => (
+                        <tr key={log.id} className="border-b border-border hover:bg-muted transition-colors">
+                          <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
+                          <td className="px-4 py-3">
+                            <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
+                              {log.risk_score}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.reason}</td>
+                          <td className="px-4 py-3">
+                            <Badge variant="outline" className={`text-xs ${log.reviewed_at ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
+                              {log.reviewed_at ? "Resolved" : "Open"}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1">
+                              {!log.reviewed_at && (
+                                <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Resolve" aria-label="Resolve alert">
+                                  <CheckCircle className="h-4 w-4" />
+                                </button>
+                              )}
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Block User" aria-label="Block user">
+                                <Ban className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="users" className="mt-4">
+            <div className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search users by name, ID, or email..."
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  className="pl-9 bg-muted border-border"
+                />
+              </div>
+            </div>
             <div className="bg-card border border-border rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -289,7 +328,7 @@ export default function AdminDashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user) => (
+                    {paginatedUsers.map((user) => (
                       <tr key={user.id} className="border-b border-border hover:bg-muted transition-colors">
                         <td className="px-4 py-3">
                           <div>
@@ -320,7 +359,7 @@ export default function AdminDashboardPage() {
                         </td>
                       </tr>
                     ))}
-                    {users.length === 0 && (
+                    {paginatedUsers.length === 0 && (
                       <tr>
                         <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No users found</td>
                       </tr>
@@ -328,6 +367,31 @@ export default function AdminDashboardPage() {
                   </tbody>
                 </table>
               </div>
+              {totalUserPages > 1 && (
+                <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={usersPage === 1}
+                    onClick={() => setUsersPage(p => p - 1)}
+                    className="border-border"
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Page {usersPage} of {totalUserPages} ({filteredUsers.length} total)
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={usersPage === totalUserPages}
+                    onClick={() => setUsersPage(p => p + 1)}
+                    className="border-border"
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
             </div>
           </TabsContent>
 

@@ -1,17 +1,38 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Shield, Package } from "lucide-react";
+import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Shield, Package, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
+  const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [updatingItem, setUpdatingItem] = useState<string | null>(null);
+  const [removingItem, setRemovingItem] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleQuantityChange = async (itemId: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+    setUpdatingItem(itemId);
+    updateQuantity(itemId, newQuantity);
+    // Small delay to show loading state
+    setTimeout(() => setUpdatingItem(null), 200);
+  };
+
+  const handleRemoveItem = async (itemId: string, itemTitle: string) => {
+    setRemovingItem(itemId);
+    setTimeout(() => {
+      removeItem(itemId);
+      setRemovingItem(null);
+      toast({ title: "Item removed", description: `${itemTitle} removed from your cart.` });
+    }, 200);
+  };
 
   if (!mounted) {
     return (
@@ -53,7 +74,7 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2">
                 {items.map((item) => (
-                  <div key={item.id} className="bg-card border border-border rounded-lg p-4 flex items-center gap-4 mb-4">
+                  <div key={item.id} className={`bg-card border border-border rounded-lg p-4 flex items-center gap-4 mb-4 ${removingItem === item.id ? "opacity-50" : ""}`}>
                     <div className="h-16 w-16 bg-muted rounded-md flex items-center justify-center shrink-0">
                       <Package className="h-6 w-6 text-muted-foreground" />
                     </div>
@@ -64,27 +85,30 @@ export default function CartPage() {
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border"
+                        onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                        disabled={updatingItem === item.id || item.quantity <= 1}
+                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border disabled:opacity-50"
                         aria-label="Decrease quantity"
                       >
-                        <Minus className="h-3 w-3" />
+                        {updatingItem === item.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Minus className="h-3 w-3" />}
                       </button>
                       <span className="font-mono text-sm w-8 text-center">{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border hover:border-border"
+                        onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                        disabled={updatingItem === item.id}
+                        className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-md border border-border disabled:opacity-50"
                         aria-label="Increase quantity"
                       >
-                        <Plus className="h-3 w-3" />
+                        {updatingItem === item.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
                       </button>
                     </div>
                     <button
-                      onClick={() => removeItem(item.id)}
-                      className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground"
+                      onClick={() => handleRemoveItem(item.id, item.title)}
+                      disabled={removingItem === item.id}
+                      className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground disabled:opacity-50"
                       aria-label="Remove item"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      {removingItem === item.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
                     </button>
                   </div>
                 ))}
