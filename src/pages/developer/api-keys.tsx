@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Key, Copy, Trash2, Plus, Loader2, AlertTriangle, Clock } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Key, Copy, Trash2, Plus, Loader2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -27,25 +27,26 @@ export default function ApiKeysPage() {
   const [newKeyName, setNewKeyName] = useState("");
   const [newKeyValue, setNewKeyValue] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user) return;
-    fetchKeys();
-  }, [user]);
-
-  async function fetchKeys() {
+  const fetchKeys = useCallback(async () => {
+    if (!user?.id) return;
     setLoading(true);
     const { data } = await supabase
       .from("api_keys")
       .select("id, name, key_prefix, permissions, rate_limit, last_used_at, created_at")
-      .eq("user_id", user!.id)
+      .eq("user_id", user.id)
       .eq("active", true)
       .order("created_at", { ascending: false });
     setKeys((data as ApiKey[]) || []);
     setLoading(false);
-  }
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchKeys();
+  }, [user, fetchKeys]);
 
   async function createKey() {
-    if (!newKeyName.trim()) return;
+    if (!newKeyName.trim() || !user?.id) return;
     const prefix = `tv_live_${Math.random().toString(36).substring(2, 6)}`;
     const secret = `${prefix}_${Math.random().toString(36).substring(2, 34)}`;
     const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(secret));
@@ -53,7 +54,7 @@ export default function ApiKeysPage() {
     const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
     const { data, error } = await supabase.from("api_keys").insert({
-      user_id: user!.id,
+      user_id: user.id,
       name: newKeyName,
       key_hash: hashHex,
       key_prefix: prefix,

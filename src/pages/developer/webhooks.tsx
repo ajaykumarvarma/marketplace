@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Webhook, Plus, Trash2, Check, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,26 +38,27 @@ export default function WebhooksPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newWebhook, setNewWebhook] = useState({ name: "", url: "", events: [] as string[] });
 
-  useEffect(() => {
-    if (!user) return;
-    fetchWebhooks();
-  }, [user]);
-
-  async function fetchWebhooks() {
+  const fetchWebhooks = useCallback(async () => {
+    if (!user?.id) return;
     setLoading(true);
     const { data } = await supabase
       .from("webhooks")
       .select("*")
-      .eq("user_id", user!.id)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     setWebhooks((data as WebhookConfig[]) || []);
     setLoading(false);
-  }
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchWebhooks();
+  }, [user, fetchWebhooks]);
 
   async function createWebhook() {
-    if (!newWebhook.name.trim() || !newWebhook.url.trim()) return;
+    if (!newWebhook.name.trim() || !newWebhook.url.trim() || !user?.id) return;
     const { data, error } = await supabase.from("webhooks").insert({
-      user_id: user!.id,
+      user_id: user.id,
       name: newWebhook.name,
       url: newWebhook.url,
       secret: `whsec_${Math.random().toString(36).substring(2, 18)}`,

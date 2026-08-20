@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Keyboard, X } from "lucide-react";
+import { Keyboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useKeyboardShortcuts, getShortcutLabel, type Shortcut } from "@/hooks/useKeyboardShortcuts";
-import { useRouter } from "next/router";
 
 const shortcuts: Shortcut[] = [
   {
@@ -54,7 +53,6 @@ const navShortcuts = [
 
 export function KeyboardShortcutsHelp() {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   const allShortcuts: Shortcut[] = [
     ...shortcuts,

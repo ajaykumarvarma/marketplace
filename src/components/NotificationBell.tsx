@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { getNotifications, markNotificationRead, getUnreadCount } from "@/services/notificationService";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,7 +37,7 @@ export function NotificationBell() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
         (payload) => {
-          setNotifications((prev) => [payload.new as any, ...prev]);
+          setNotifications((prev) => [payload.new as Notification, ...prev]);
           setUnread((prev) => prev + 1);
         }
       )

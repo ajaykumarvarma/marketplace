@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Star, TrendingUp, Shield, ArrowRight, Loader2 } from "lucide-react";
+import { Shield, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,11 +25,7 @@ export function TopSellersSection() {
   const [products, setProducts] = useState<FeaturedProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     const [sellersRes, productsRes] = await Promise.all([
       supabase.from("profiles").select("id, full_name, verification_tier, role").eq("role", "seller").order("created_at", { ascending: false }).limit(4),
       supabase.from("products").select("id, title, price, original_price, category, seller:seller_id(full_name, verification_tier)").eq("status", "active").order("created_at", { ascending: false }).limit(4),
@@ -38,7 +34,11 @@ export function TopSellersSection() {
     if (sellersRes.data) setSellers(sellersRes.data as unknown as TopSeller[]);
     if (productsRes.data) setProducts(productsRes.data as unknown as FeaturedProduct[]);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const tierBadge = (tier: string | null) => {
     switch (tier) {
