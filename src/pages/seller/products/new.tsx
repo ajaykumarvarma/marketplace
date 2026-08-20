@@ -66,9 +66,9 @@ export default function NewProductPage() {
       stock: parseInt(formData.stock),
       delivery_time: formData.deliveryTime,
       delivery_content: formData.deliveryContent || null,
-      tags: tags.length > 0 ? (tags as any) : null,
-      images: images.length > 0 ? (images as any) : null,
-    } as any);
+      tags: tags.length > 0 ? tags : null,
+      images: images.length > 0 ? images : null,
+    });
 
     setLoading(false);
     if (error) {

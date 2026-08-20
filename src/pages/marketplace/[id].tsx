@@ -125,7 +125,7 @@ export default function ProductDetailPage() {
       seller_id: orderData.seller_id,
       rating: reviewRating,
       comment: reviewText.trim(),
-    } as any);
+    });
 
     setSubmittingReview(false);
     if (error) {

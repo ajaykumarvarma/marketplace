@@ -46,7 +46,7 @@ export default function DisputePage() {
       return;
     }
 
-    const { error } = await (supabase.from("disputes") as any).insert({
+    const { error } = await supabase.from("disputes").insert({
       order_id: orderId.trim(),
       buyer_id: user.id,
       seller_id: orderData.seller_id,

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -38,19 +38,14 @@ interface SellerStats {
 export default function SellerProfilePage() {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useAuth();
   const [seller, setSeller] = useState<SellerProfile | null>(null);
   const [products, setProducts] = useState<SellerProduct[]>([]);
   const [stats, setStats] = useState<SellerStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("products");
 
-  useEffect(() => {
+  const fetchSellerData = useCallback(async () => {
     if (!id) return;
-    fetchSellerData();
-  }, [id]);
-
-  async function fetchSellerData() {
     setLoading(true);
     const [sellerRes, productsRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", id as string).maybeSingle(),
@@ -65,7 +60,6 @@ export default function SellerProfilePage() {
       setProducts(productsRes.data as SellerProduct[]);
     }
 
-    // Calculate stats
     setStats({
       productCount: productsRes.data?.length || 0,
       totalSales: 0,
@@ -74,7 +68,12 @@ export default function SellerProfilePage() {
     });
 
     setLoading(false);
-  }
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    fetchSellerData();
+  }, [id, fetchSellerData]);
 
   if (loading) {
     return (

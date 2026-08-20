@@ -1,10 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { User, Session } from "@supabase/supabase-js";
+import type { Session } from "@supabase/supabase-js";
 
 export interface AuthUser {
   id: string;
   email: string;
-  user_metadata?: any;
+  user_metadata?: Record<string, unknown>;
   created_at?: string;
 }
 
@@ -17,21 +17,21 @@ export interface AuthError {
 const getURL = () => {
   let url = process?.env?.NEXT_PUBLIC_VERCEL_URL ?? 
            process?.env?.NEXT_PUBLIC_SITE_URL ?? 
-           'http://localhost:3000'
+           "http://localhost:3000";
   
   // Handle undefined or null url
   if (!url) {
-    url = 'http://localhost:3000';
+    url = "http://localhost:3000";
   }
   
   // Ensure url has protocol
-  url = url.startsWith('http') ? url : `https://${url}`
+  url = url.startsWith("http") ? url : `https://${url}`;
   
   // Ensure url ends with slash
-  url = url.endsWith('/') ? url : `${url}/`
+  url = url.endsWith("/") ? url : `${url}/`;
   
-  return url
-}
+  return url;
+};
 
 export const authService = {
   // Get current user
@@ -74,7 +74,7 @@ export const authService = {
       } : null;
 
       return { user: authUser, error: null };
-    } catch (error) {
+    } catch (_err) {
       return { 
         user: null, 
         error: { message: "An unexpected error occurred during sign up" } 
@@ -102,7 +102,7 @@ export const authService = {
       } : null;
 
       return { user: authUser, error: null };
-    } catch (error) {
+    } catch (_err) {
       return { 
         user: null, 
         error: { message: "An unexpected error occurred during sign in" } 
@@ -120,7 +120,7 @@ export const authService = {
       }
 
       return { error: null };
-    } catch (error) {
+    } catch (_err) {
       return { 
         error: { message: "An unexpected error occurred during sign out" } 
       };
@@ -139,7 +139,7 @@ export const authService = {
       }
 
       return { error: null };
-    } catch (error) {
+    } catch (_err) {
       return { 
         error: { message: "An unexpected error occurred during password reset" } 
       };
@@ -147,7 +147,7 @@ export const authService = {
   },
 
   // Confirm email (REQUIRED)
-  async confirmEmail(token: string, type: 'signup' | 'recovery' | 'email_change' = 'signup'): Promise<{ user: AuthUser | null; error: AuthError | null }> {
+  async confirmEmail(token: string, type: "signup" | "recovery" | "email_change" = "signup"): Promise<{ user: AuthUser | null; error: AuthError | null }> {
     try {
       const { data, error } = await supabase.auth.verifyOtp({
         token_hash: token,
@@ -166,7 +166,7 @@ export const authService = {
       } : null;
 
       return { user: authUser, error: null };
-    } catch (error) {
+    } catch (_err) {
       return { 
         user: null, 
         error: { message: "An unexpected error occurred during email confirmation" } 
