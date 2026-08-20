@@ -7,7 +7,7 @@ export default function HelpPage() {
       <SEO title="Help Center — TradeVault" description="Get help with buying, selling, and using TradeVault." />
       <div className="container py-12 md:py-20 max-w-3xl mx-auto">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium mb-4">
             <HelpCircle className="h-4 w-4" />
             Support
           </div>
@@ -40,7 +40,7 @@ export default function HelpPage() {
           ].map((item) => (
             <div key={item.title} className="bg-card border border-border rounded-lg p-6">
               <div className="flex items-center gap-3 mb-2">
-                <item.icon className="h-5 w-5 text-primary" />
+                <item.icon className="h-5 w-5 text-muted-foreground" />
                 <h2 className="font-display text-lg font-semibold text-foreground">{item.title}</h2>
               </div>
               <p className="text-muted-foreground">{item.answer}</p>
@@ -51,7 +51,7 @@ export default function HelpPage() {
         <div className="bg-muted border border-border rounded-lg p-8 text-center">
           <h3 className="font-display text-lg font-semibold text-foreground mb-2">Still need help?</h3>
           <p className="text-muted-foreground mb-2">Our support team is available 24/7</p>
-          <p className="font-mono text-primary">support@tradevault.io</p>
+          <p className="font-mono text-foreground">support@tradevault.io</p>
         </div>
       </div>
     </>

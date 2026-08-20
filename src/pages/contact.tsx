@@ -49,8 +49,8 @@ export default function ContactPage() {
       <div className="container py-8 md:py-12">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 mb-4">
-              <MessageSquare className="h-6 w-6 text-primary" />
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-muted border border-border mb-4">
+              <MessageSquare className="h-6 w-6 text-muted-foreground" />
             </div>
             <h1 className="font-display text-3xl font-bold text-foreground mb-2">Contact Support</h1>
             <p className="text-muted-foreground max-w-lg mx-auto">Need help with an order, account, or listing? Our team is here to assist you within 24 hours.</p>
@@ -60,15 +60,15 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               {submitted ? (
                 <div className="bg-card border border-border rounded-lg p-8 text-center">
-                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-success/10 mb-4">
-                    <CheckCircle className="h-8 w-8 text-success" />
+                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
+                    <CheckCircle className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <h2 className="font-display text-xl font-semibold text-foreground mb-2">Ticket Submitted</h2>
                   <p className="text-muted-foreground mb-4">Your support ticket has been received. We will respond within 24 hours.</p>
                   {ticketId && (
                     <div className="bg-muted rounded-lg p-3 mb-4">
                       <p className="text-xs text-muted-foreground">Ticket ID</p>
-                      <p className="font-mono text-sm text-primary">{ticketId}</p>
+                      <p className="font-mono text-sm text-foreground">{ticketId}</p>
                     </div>
                   )}
                   <Button onClick={() => setSubmitted(false)} variant="outline" className="border-border">
@@ -108,17 +108,17 @@ export default function ContactPage() {
                 <h3 className="font-display font-semibold text-foreground mb-3">Quick Links</h3>
                 <div>
                   <Link href="/help" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground mb-3">
-                    <MessageSquare className="h-4 w-4 text-primary" />
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
                     Help Center
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
                   <Link href="/dispute" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground mb-3">
-                    <Shield className="h-4 w-4 text-primary" />
+                    <Shield className="h-4 w-4 text-muted-foreground" />
                     Dispute Resolution
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
                   <Link href="/security" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground">
-                    <Shield className="h-4 w-4 text-primary" />
+                    <Shield className="h-4 w-4 text-muted-foreground" />
                     Security Center
                     <ArrowRight className="h-3 w-3 ml-auto" />
                   </Link>
@@ -129,15 +129,15 @@ export default function ContactPage() {
                 <h3 className="font-display font-semibold text-foreground mb-3">Contact Info</h3>
                 <div className="text-sm">
                   <div className="flex items-center gap-3 text-muted-foreground mb-3">
-                    <Mail className="h-4 w-4 text-primary" />
+                    <Mail className="h-4 w-4 text-muted-foreground" />
                     support@tradevault.io
                   </div>
                   <div className="flex items-center gap-3 text-muted-foreground mb-3">
-                    <Clock className="h-4 w-4 text-primary" />
+                    <Clock className="h-4 w-4 text-muted-foreground" />
                     Response time: ~24 hours
                   </div>
                   <div className="flex items-center gap-3 text-muted-foreground">
-                    <Globe className="h-4 w-4 text-primary" />
+                    <Globe className="h-4 w-4 text-muted-foreground" />
                     Global support, English
                   </div>
                 </div>

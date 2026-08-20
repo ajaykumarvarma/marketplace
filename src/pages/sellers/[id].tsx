@@ -79,7 +79,7 @@ export default function SellerProfilePage() {
   if (loading) {
     return (
       <div className="container py-16 text-center">
-        <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <div className="h-8 w-8 border-2 border-foreground border-t-transparent rounded-full animate-spin mx-auto" />
         <p className="text-muted-foreground mt-4">Loading seller profile...</p>
       </div>
     );
@@ -94,10 +94,10 @@ export default function SellerProfilePage() {
   }
 
   const tierConfig: Record<string, { color: string; label: string }> = {
-    bronze: { color: "bg-amber-700/20 text-amber-500 border-amber-700/30", label: "Bronze Seller" },
-    silver: { color: "bg-slate-400/20 text-slate-300 border-slate-400/30", label: "Silver Seller" },
-    gold: { color: "bg-warning/20 text-warning border-warning/30", label: "Gold Seller" },
-    verified: { color: "bg-success/20 text-success border-success/30", label: "Verified" },
+    bronze: { color: "bg-muted text-foreground border-border", label: "Bronze Seller" },
+    silver: { color: "bg-muted text-foreground border-border", label: "Silver Seller" },
+    gold: { color: "bg-muted text-foreground border-border", label: "Gold Seller" },
+    verified: { color: "bg-muted text-foreground border-border", label: "Verified" },
   };
 
   const tier = tierConfig[seller.verification_tier] || tierConfig.bronze;
@@ -124,7 +124,7 @@ export default function SellerProfilePage() {
                 <p className="text-sm text-muted-foreground mb-3">Member since {new Date(seller.created_at).toLocaleDateString()}</p>
                 <div className="flex flex-wrap items-center gap-4 text-sm">
                   <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 text-warning fill-warning" />
+                    <Star className="h-4 w-4 text-muted-foreground fill-muted-foreground" />
                     <span className="text-foreground font-medium">{stats?.rating || 0}</span>
                     <span className="text-muted-foreground">rating</span>
                   </div>
@@ -161,7 +161,7 @@ export default function SellerProfilePage() {
               { icon: TrendingUp, label: "Sales", value: "—" },
             ].map((stat, i) => (
               <div key={i} className="bg-card border border-border rounded-lg p-4 text-center">
-                <stat.icon className="h-5 w-5 text-primary mx-auto mb-2" />
+                <stat.icon className="h-5 w-5 text-muted-foreground mx-auto mb-2" />
                 <p className="font-mono text-xl font-bold text-foreground">{stat.value}</p>
                 <p className="text-xs text-muted-foreground">{stat.label}</p>
               </div>
@@ -191,7 +191,7 @@ export default function SellerProfilePage() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {products.map((product) => (
-                    <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30">
+                    <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden hover:border-border">
                       <div className="aspect-[4/3] bg-muted relative">
                         {product.image_url ? (
                           <Image
@@ -237,11 +237,11 @@ export default function SellerProfilePage() {
                 <p className="text-sm text-muted-foreground mb-4">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
                 <div>
                   <div className="flex items-center gap-2 text-sm mb-2">
-                    <Shield className="h-4 w-4 text-success" />
+                    <Shield className="h-4 w-4 text-muted-foreground" />
                     <span className="text-foreground">Identity verified</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Store className="h-4 w-4 text-success" />
+                    <Store className="h-4 w-4 text-muted-foreground" />
                     <span className="text-foreground">Active seller</span>
                   </div>
                 </div>

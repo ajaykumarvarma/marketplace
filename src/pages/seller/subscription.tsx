@@ -79,7 +79,7 @@ export default function SubscriptionPage() {
   if (!profile) {
     return (
       <div className="container py-12 text-center">
-        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         <p>Loading...</p>
       </div>
     );
@@ -106,31 +106,31 @@ export default function SubscriptionPage() {
           <p className="text-muted-foreground">Choose the plan that fits your business</p>
           <div className="flex justify-center gap-2 mt-4">
             <Button variant={billingCycle === "monthly" ? "default" : "outline"} size="sm" onClick={() => setBillingCycle("monthly")}>Monthly</Button>
-            <Button variant={billingCycle === "yearly" ? "default" : "outline"} size="sm" onClick={() => setBillingCycle("yearly")}>Yearly <Badge className="ml-1 bg-accent text-accent-foreground">Save 20%</Badge></Button>
+            <Button variant={billingCycle === "yearly" ? "default" : "outline"} size="sm" onClick={() => setBillingCycle("yearly")}>Yearly <Badge className="ml-1 bg-muted text-foreground border-border">Save 20%</Badge></Button>
           </div>
         </div>
 
         {currentPlan && (
-          <div className="mb-6 p-4 border border-primary/20 rounded-lg bg-primary/5 text-center">
+          <div className="mb-6 p-4 border border-border rounded-lg bg-muted text-center">
             <p className="text-sm text-muted-foreground">Current Plan: <span className="font-semibold text-foreground">{currentPlan.name}</span></p>
             {subscription?.cancel_at_period_end && (
-              <p className="text-xs text-destructive mt-1">Cancels on {new Date(subscription.current_period_end!).toLocaleDateString()}</p>
+              <p className="text-xs text-foreground mt-1">Cancels on {new Date(subscription.current_period_end!).toLocaleDateString()}</p>
             )}
           </div>
         )}
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {plans.map((plan) => (
-              <div key={plan.id} className={`border rounded-lg p-6 ${currentPlan?.id === plan.id ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
+              <div key={plan.id} className={`border rounded-lg p-6 ${currentPlan?.id === plan.id ? "border-border bg-muted" : "border-border bg-card"}`}>
                 <div className="flex items-center gap-2 mb-2">
                   {plan.slug === "free" && <Star className="h-5 w-5 text-muted-foreground" />}
-                  {plan.slug === "basic" && <Zap className="h-5 w-5 text-primary" />}
-                  {plan.slug === "pro" && <Crown className="h-5 w-5 text-accent" />}
+                  {plan.slug === "basic" && <Zap className="h-5 w-5 text-muted-foreground" />}
+                  {plan.slug === "pro" && <Crown className="h-5 w-5 text-muted-foreground" />}
                   <h3 className="font-display text-lg font-semibold">{plan.name}</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
@@ -166,7 +166,7 @@ export default function SubscriptionPage() {
 function Feature({ included, text }: { included: boolean; text: string }) {
   return (
     <div className="flex items-center gap-2 text-sm">
-      {included ? <Check className="h-4 w-4 text-success" /> : <X className="h-4 w-4 text-muted-foreground/60" />}
+      {included ? <Check className="h-4 w-4 text-muted-foreground" /> : <X className="h-4 w-4 text-muted-foreground/60" />}
       <span className={included ? "text-foreground" : "text-muted-foreground"}>{text}</span>
     </div>
   );

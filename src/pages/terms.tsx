@@ -7,7 +7,7 @@ export default function TermsPage() {
       <SEO title="Terms of Service — TradeVault" description="TradeVault terms of service and user agreement." />
       <div className="container py-12 md:py-20 max-w-3xl mx-auto">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium mb-4">
             <Scale className="h-4 w-4" />
             Legal
           </div>
@@ -18,7 +18,7 @@ export default function TermsPage() {
         <div className="prose prose-invert max-w-none text-muted-foreground">
           <section className="mb-8">
             <h2 className="font-display text-xl font-semibold text-foreground flex items-center gap-2 mb-3">
-              <FileText className="h-5 w-5 text-primary" />
+              <FileText className="h-5 w-5 text-muted-foreground" />
               Acceptance of Terms
             </h2>
             <p>By accessing or using TradeVault, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use the platform.</p>
@@ -26,7 +26,7 @@ export default function TermsPage() {
 
           <section className="mb-8">
             <h2 className="font-display text-xl font-semibold text-foreground flex items-center gap-2 mb-3">
-              <Shield className="h-5 w-5 text-primary" />
+              <Shield className="h-5 w-5 text-muted-foreground" />
               Seller Obligations
             </h2>
             <p>Sellers must deliver products as described within the stated delivery time. All listings must be accurate and not infringe on intellectual property rights. TradeVault reserves the right to remove listings that violate these terms.</p>
@@ -34,7 +34,7 @@ export default function TermsPage() {
 
           <section className="mb-8">
             <h2 className="font-display text-xl font-semibold text-foreground flex items-center gap-2 mb-3">
-              <Gavel className="h-5 w-5 text-primary" />
+              <Gavel className="h-5 w-5 text-muted-foreground" />
               Dispute Resolution
             </h2>
             <p>Disputes are handled through our escrow-mediated resolution process. Both parties must cooperate with TradeVault's investigation. Decisions are final and binding.</p>
