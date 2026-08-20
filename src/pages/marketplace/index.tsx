@@ -1,9 +1,8 @@
-import { useState, useEffect, useDeferredValue, useCallback } from "react";
+import { useState, useEffect, useDeferredValue } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, SlidersHorizontal, Star, ArrowUpDown, Loader2, Shield, Clock, ShoppingCart, X } from "lucide-react";
+import { Search, Shield, Clock, ShoppingCart, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";

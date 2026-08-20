@@ -11,15 +11,6 @@ function generateSignature(payload: string, secret: string): string {
   return crypto.createHmac("sha256", secret).update(payload).digest("hex");
 }
 
-function verifySignature(payload: string, signature: string, secret: string): boolean {
-  const expected = generateSignature(payload, secret);
-  try {
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-  } catch {
-    return false;
-  }
-}
-
 async function deliverWebhook(hook: { id: string; url: string; secret: string }, event: string, payload: unknown, attempt: number = 1): Promise<{ success: boolean; status: number; error?: string }> {
   const maxRetries = 3;
   const baseDelay = 1000;
