@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { NextIntlClientProvider } from "next-intl";
 import { useRouter } from "next/router";
 import * as Sentry from "@sentry/nextjs";
@@ -27,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-8">
         <h1 className="font-display text-2xl font-bold mb-4">Something went wrong</h1>
         <p className="text-muted-foreground mb-6 max-w-md text-center">
-          We've been notified and are working on a fix. Try refreshing the page.
+          We&apos;ve been notified and are working on a fix. Try refreshing the page.
         </p>
         <button
           onClick={resetError}
@@ -42,7 +43,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <NextIntlClientProvider messages={messages} locale={locale}>
             <CartProvider>
               <Layout>
-                <Component {...pageProps} />
+                <ErrorBoundary>
+                  <Component {...pageProps} />
+                </ErrorBoundary>
                 <Toaster />
               </Layout>
             </CartProvider>
