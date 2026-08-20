@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { Check, X, Zap, Crown, Star, Loader2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,34 +40,34 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(true);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
-    fetchData();
-  }, [user]);
-
-  async function fetchData() {
     setLoading(true);
     const { data: plansData } = await supabase.from("subscription_plans").select("*").eq("active", true).order("price_monthly");
     const { data: subData } = await supabase
       .from("seller_subscriptions")
       .select("*")
-      .eq("seller_id", user!.id)
+      .eq("seller_id", user.id)
       .eq("status", "active")
       .maybeSingle();
     setPlans(plansData || []);
     setSubscription(subData);
     setLoading(false);
-  }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchData();
+  }, [user, fetchData]);
 
   async function subscribe(planId: string) {
-    // In production, this would redirect to Stripe Checkout
+    if (!user) return;
     toast({
       title: "Redirecting to checkout...",
       description: "Stripe integration would initialize here.",
     });
-    // Mock successful subscription for demo
     await supabase.from("seller_subscriptions").upsert({
-      seller_id: user!.id,
+      seller_id: user.id,
       plan_id: planId,
       status: "active",
       current_period_start: new Date().toISOString(),

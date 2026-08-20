@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Package, Truck, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2 } from "lucide-react";
+import { Package, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
@@ -39,12 +39,8 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
 
-  useEffect(() => {
+  const fetchOrder = useCallback(async () => {
     if (!id || !user) return;
-    fetchOrder();
-  }, [id, user]);
-
-  async function fetchOrder() {
     setLoading(true);
     const { data, error } = await supabase
       .from("orders")
@@ -53,13 +49,13 @@ export default function OrderDetailPage() {
         product:product_id(title, delivery_content)
       `)
       .eq("id", id as string)
-      .eq("buyer_id", user!.id)
+      .eq("buyer_id", user.id)
       .maybeSingle();
 
     if (error || !data) {
       setOrder(null);
     } else {
-      setOrder(data as any);
+      setOrder(data as unknown as Order);
       const { data: profile } = await supabase
         .from("profiles")
         .select("full_name")
@@ -74,7 +70,12 @@ export default function OrderDetailPage() {
       setOrderFiles(files || []);
     }
     setLoading(false);
-  }
+  }, [id, user]);
+
+  useEffect(() => {
+    if (!id || !user) return;
+    fetchOrder();
+  }, [id, user, fetchOrder]);
 
   async function confirmDelivery() {
     if (!order || !user) return;

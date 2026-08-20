@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bell, Mail, Smartphone, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SEO } from "@/components/SEO";
@@ -39,24 +38,18 @@ export default function NotificationSettings() {
   const { toast } = useToast();
   const [prefs, setPrefs] = useState<Preference[]>([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
+  const fetchPrefs = useCallback(async () => {
     if (!user) return;
-    fetchPrefs();
-  }, [user]);
-
-  async function fetchPrefs() {
     setLoading(true);
     const { data } = await supabase
       .from("notification_preferences")
       .select("*")
-      .eq("user_id", user!.id);
+      .eq("user_id", user.id);
 
     if (data && data.length > 0) {
       setPrefs(data as Preference[]);
     } else {
-      // Create defaults
       const defaults: Omit<Preference, "id">[] = [];
       for (const cat of CATEGORIES) {
         for (const ch of CHANNELS) {
@@ -70,26 +63,27 @@ export default function NotificationSettings() {
       }
       const { data: created } = await supabase
         .from("notification_preferences")
-        .insert(defaults.map((d) => ({ ...d, user_id: user!.id })))
+        .insert(defaults.map((d) => ({ ...d, user_id: user.id })))
         .select();
       setPrefs((created as Preference[]) || []);
     }
     setLoading(false);
-  }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchPrefs();
+  }, [user, fetchPrefs]);
 
   async function updatePref(id: string, enabled: boolean) {
-    setSaving(true);
     await supabase.from("notification_preferences").update({ enabled }).eq("id", id);
     setPrefs((prev) => prev.map((p) => (p.id === id ? { ...p, enabled } : p)));
-    setSaving(false);
     toast({ title: "Preference updated" });
   }
 
   async function updateFrequency(id: string, frequency: Frequency) {
-    setSaving(true);
     await supabase.from("notification_preferences").update({ frequency }).eq("id", id);
     setPrefs((prev) => prev.map((p) => (p.id === id ? { ...p, frequency } : p)));
-    setSaving(false);
   }
 
   const getPref = (category: Category, channel: Channel) =>

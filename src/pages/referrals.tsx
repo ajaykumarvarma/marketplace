@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Copy, Users, DollarSign, Link2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,25 +31,20 @@ export default function ReferralsPage() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
-    fetchData();
-  }, [user]);
-
-  async function fetchData() {
     setLoading(true);
     const { data: codeData } = await supabase
       .from("referral_codes")
       .select("*")
-      .eq("user_id", user!.id)
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (!codeData) {
-      // Generate code
       const newCode = `TV${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       const { data: created } = await supabase
         .from("referral_codes")
-        .insert({ user_id: user!.id, code: newCode })
+        .insert({ user_id: user.id, code: newCode })
         .select()
         .single();
       setReferralCode(created);
@@ -60,12 +55,17 @@ export default function ReferralsPage() {
     const { data: tracking } = await supabase
       .from("referral_tracking")
       .select("*")
-      .eq("referrer_id", user!.id)
+      .eq("referrer_id", user.id)
       .order("created_at", { ascending: false });
 
     setReferrals(tracking || []);
     setLoading(false);
-  }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchData();
+  }, [user, fetchData]);
 
   function copyLink() {
     if (!referralCode) return;
@@ -75,8 +75,6 @@ export default function ReferralsPage() {
     toast({ title: "Referral link copied!" });
     setTimeout(() => setCopied(false), 2000);
   }
-
-  const totalCommission = referrals.reduce((sum, r) => sum + r.commission_amount, 0);
 
   return (
     <>

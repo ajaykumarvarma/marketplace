@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Store, TrendingUp, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus } from "lucide-react";
+import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,17 +32,13 @@ export default function SellerDashboardPage() {
   const paginatedOrders = orders.slice((ordersPage - 1) * ordersPerPage, ordersPage * ordersPerPage);
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
 
-  useEffect(() => {
+  const fetchDashboard = useCallback(async () => {
     if (!user) return;
-    fetchDashboard();
-  }, [user]);
-
-  async function fetchDashboard() {
     setLoading(true);
     const [ordersRes, productsRes, revenueRes] = await Promise.all([
-      supabase.from("orders").select("id, status, created_at, total_amount, product:product_id(title)").eq("seller_id", user!.id).order("created_at", { ascending: false }).limit(20),
-      supabase.from("products").select("id, title, price, stock, status").eq("seller_id", user!.id).order("created_at", { ascending: false }),
-      supabase.from("orders").select("total_amount").eq("seller_id", user!.id).eq("status", "completed"),
+      supabase.from("orders").select("id, status, created_at, total_amount, product:product_id(title)").eq("seller_id", user.id).order("created_at", { ascending: false }).limit(20),
+      supabase.from("products").select("id, title, price, stock, status").eq("seller_id", user.id).order("created_at", { ascending: false }),
+      supabase.from("orders").select("total_amount").eq("seller_id", user.id).eq("status", "completed"),
     ]);
 
     if (ordersRes.data) setOrders(ordersRes.data as unknown as Order[]);
@@ -58,7 +54,12 @@ export default function SellerDashboardPage() {
       });
     }
     setLoading(false);
-  }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    fetchDashboard();
+  }, [user, fetchDashboard]);
 
   const statusBadge = (status: string) => {
     const map: Record<string, string> = {
