@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { NotificationBell } from "@/components/NotificationBell";
-import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -58,7 +57,7 @@ export function Navigation() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
                 <Link href="/cart" className="relative">
@@ -78,7 +77,6 @@ export function Navigation() {
             )}
             <KeyboardShortcutsHelp />
             <LocaleSwitcher />
-            <ThemeSwitch />
           </div>
 
           {user ? (
@@ -139,7 +137,7 @@ export function Navigation() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive cursor-pointer">
+                <DropdownMenuItem onClick={signOut} className="text-foreground focus:text-foreground cursor-pointer">
                   <LogOut className="h-4 w-4 mr-2" />
                   {t("signOut")}
                 </DropdownMenuItem>
@@ -207,7 +205,7 @@ export function Navigation() {
 
             <div className="pt-3 border-t border-border flex flex-col gap-2">
               {user ? (
-                <Button variant="outline" className="w-full justify-start gap-2 text-destructive" onClick={signOut}>
+                <Button variant="outline" className="w-full justify-start gap-2 text-foreground" onClick={signOut}>
                   <LogOut className="h-4 w-4" />
                   {t("signOut")}
                 </Button>
