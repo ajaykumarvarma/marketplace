@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { SearchFilters } from "@/components/marketplace/SearchFilters";
 import { useToast } from "@/hooks/use-toast";
+import { MarketplaceSkeleton } from "@/components/MarketplaceSkeleton";
 
 interface Product {
   id: string;
@@ -146,13 +147,8 @@ export default function MarketplacePage() {
           resultCount={sorted.length}
         />
 
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : (
+        {loading && <MarketplaceSkeleton />}
+        {loading && sorted.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sorted.map((product) => (
               <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden">
