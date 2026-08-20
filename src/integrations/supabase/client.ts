@@ -5,10 +5,13 @@ import type { Database } from "./types";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+let client: ReturnType<typeof createClient<Database>>;
+
 if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
   console.error("Missing Supabase environment variables. Please check your .env.local file.");
-  // Provide dummy client to prevent build crashes; runtime will fail gracefully
-  export const supabase = createClient<Database>("http://localhost:54321", "dummy-key");
+  client = createClient<Database>("http://localhost:54321", "dummy-key");
 } else {
-  export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  client = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 }
+
+export const supabase = client;
