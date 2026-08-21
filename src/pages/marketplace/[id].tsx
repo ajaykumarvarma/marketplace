@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send } from "lucide-react";
+import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,6 +42,8 @@ export default function ProductDetailPage() {
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewVotes, setReviewVotes] = useState<Record<string, "up" | "down" | null>>({});
+  const [voteLoading, setVoteLoading] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -96,6 +98,50 @@ export default function ProductDetailPage() {
   const avgRating = product.reviews?.length
     ? (product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length).toFixed(1)
     : "0.0";
+
+  async function handleVote(reviewId: string, voteType: "up" | "down") {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please sign in to vote on reviews.", variant: "destructive" });
+      return;
+    }
+
+    const currentVote = reviewVotes[reviewId];
+    const isRemoving = currentVote === voteType;
+
+    setVoteLoading(reviewId);
+    try {
+      const res = await fetch("/api/reviews/vote", {
+        method: isRemoving ? "DELETE" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reviewId,
+          userId: user.id,
+          voteType,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast({ title: "Vote failed", description: data.error, variant: "destructive" });
+      } else {
+        setReviewVotes((prev) => ({
+          ...prev,
+          [reviewId]: isRemoving ? null : voteType,
+        }));
+        // Refresh product to get updated counts
+        const { data: refreshed } = await supabase
+          .from("products")
+          .select("*, seller:seller_id(id, full_name, role), category:category_id(name), reviews(*)")
+          .eq("id", id as string)
+          .maybeSingle();
+        if (refreshed) setProduct(refreshed as ProductDetail);
+      }
+    } catch {
+      toast({ title: "Vote failed", description: "Please try again.", variant: "destructive" });
+    }
+    setVoteLoading(null);
+  }
 
   async function submitReview() {
     if (!user || !product) return;
@@ -255,25 +301,49 @@ export default function ProductDetailPage() {
                     <p className="text-xs text-muted-foreground">You can only review products you have purchased and received.</p>
                   </div>
                 )}
-                {product.reviews?.map((review, i) => (
-                  <div key={i} className="bg-card border border-border rounded-lg p-4 mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                          {review.reviewer_id[0]?.toUpperCase() || "U"}
+                {product.reviews?.filter((r) => (r as Record<string, unknown>).approved !== false).map((review, i) => {
+                  const reviewId = (review as Record<string, unknown>).id as string || String(i);
+                  const helpfulCount = (review as Record<string, unknown>).helpful_count as number || 0;
+                  const unhelpfulCount = (review as Record<string, unknown>).unhelpful_count as number || 0;
+                  const userVote = reviewVotes[reviewId];
+                  return (
+                    <div key={reviewId} className="bg-card border border-border rounded-lg p-4 mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
+                            {((review as Record<string, unknown>).reviewer_id as string)?.[0]?.toUpperCase() || "U"}
+                          </div>
+                          <span className="font-medium text-foreground">Buyer</span>
                         </div>
-                        <span className="font-medium text-foreground">Buyer</span>
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: 5 }).map((_, j) => (
+                            <Star key={j} className={`h-4 w-4 ${j < (review as Record<string, unknown>).rating as number ? "fill-foreground text-foreground" : "text-muted"}`} />
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, j) => (
-                          <Star key={j} className={`h-4 w-4 ${j < review.rating ? "fill-foreground text-foreground" : "text-muted"}`} />
-                        ))}
+                      <p className="text-sm text-muted-foreground mb-3">{(review as Record<string, unknown>).comment as string}</p>
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => handleVote(reviewId, "up")}
+                          disabled={voteLoading === reviewId}
+                          className={`flex items-center gap-1.5 text-xs ${userVote === "up" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                        >
+                          <ThumbsUp className="h-3.5 w-3.5" />
+                          Helpful ({helpfulCount})
+                        </button>
+                        <button
+                          onClick={() => handleVote(reviewId, "down")}
+                          disabled={voteLoading === reviewId}
+                          className={`flex items-center gap-1.5 text-xs ${userVote === "down" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                        >
+                          <ThumbsDown className="h-3.5 w-3.5" />
+                          Not helpful ({unhelpfulCount})
+                        </button>
+                        <span className="text-xs text-muted-foreground ml-auto">{new Date((review as Record<string, unknown>).created_at as string).toLocaleDateString()}</span>
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-2">{review.comment}</p>
-                    <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
-                  </div>
-                ))}
+                  );
+                })}
                 {(!product.reviews || product.reviews.length === 0) && (
                   <p className="text-muted-foreground text-sm">No reviews yet. Be the first to review!</p>
                 )}

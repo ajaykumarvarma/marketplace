@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus } from "lucide-react";
+import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,6 +28,8 @@ export default function SellerDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [ordersPage, setOrdersPage] = useState(1);
   const ordersPerPage = 10;
+  const [reviews, setReviews] = useState<Array<Record<string, unknown>>>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
 
   const paginatedOrders = orders.slice((ordersPage - 1) * ordersPerPage, ordersPage * ordersPerPage);
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
@@ -56,10 +58,38 @@ export default function SellerDashboardPage() {
     setLoading(false);
   }, [user]);
 
+  const fetchReviews = useCallback(async () => {
+    if (!user) return;
+    setReviewsLoading(true);
+    const { data } = await supabase
+      .from("reviews")
+      .select("id, rating, comment, created_at, approved, helpful_count, unhelpful_count, product:product_id(title), reviewer:reviewer_id(full_name)")
+      .eq("seller_id", user.id)
+      .order("created_at", { ascending: false });
+    setReviews((data as Array<Record<string, unknown>>) || []);
+    setReviewsLoading(false);
+  }, [user]);
+
   useEffect(() => {
     if (!user) return;
     fetchDashboard();
-  }, [user, fetchDashboard]);
+    fetchReviews();
+  }, [user, fetchDashboard, fetchReviews]);
+
+  async function toggleReviewApproval(reviewId: string, currentApproved: boolean) {
+    const { error } = await supabase
+      .from("reviews")
+      .update({ approved: !currentApproved })
+      .eq("id", reviewId)
+      .eq("seller_id", user?.id || "");
+
+    if (error) {
+      toast({ title: "Failed to update review", variant: "destructive" });
+    } else {
+      toast({ title: currentApproved ? "Review hidden" : "Review approved" });
+      fetchReviews();
+    }
+  }
 
   const statusBadge = (status: string) => {
     const map: Record<string, string> = {
@@ -125,6 +155,7 @@ export default function SellerDashboardPage() {
             <TabsList className="bg-muted border border-border">
               <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({orders.length})</TabsTrigger>
               <TabsTrigger value="products" className="data-[state=active]:bg-card">Products ({products.length})</TabsTrigger>
+              <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({reviews.length})</TabsTrigger>
               <TabsTrigger value="analytics" className="data-[state=active]:bg-card">Analytics</TabsTrigger>
             </TabsList>
 
@@ -242,6 +273,82 @@ export default function SellerDashboardPage() {
                                   <BarChart3 className="h-4 w-4" />
                                 </button>
                               </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-4">
+              {reviews.length === 0 && !reviewsLoading ? (
+                <div className="bg-card border border-border rounded-lg p-12 text-center">
+                  <Star className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No reviews yet</h3>
+                  <p className="text-sm text-muted-foreground">When buyers review your products, they will appear here.</p>
+                </div>
+              ) : (
+                <div className="bg-card border border-border rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border bg-muted">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Review</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Rating</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Helpful</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {reviews.map((review) => (
+                          <tr key={String(review.id)} className="border-b border-border hover:bg-muted transition-colors">
+                            <td className="px-4 py-3">
+                              <p className="text-foreground text-sm line-clamp-2">{String(review.comment)}</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {((review.product as Record<string, unknown>)?.title as string) || "Product"} — {new Date(String(review.created_at)).toLocaleDateString()}
+                              </p>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-0.5">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star key={i} className={`h-3.5 w-3.5 ${i < Number(review.rating) ? "fill-foreground text-foreground" : "text-muted"}`} />
+                                ))}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              <div className="flex items-center gap-2">
+                                <ThumbsUp className="h-3.5 w-3.5 text-muted-foreground" />
+                                {Number(review.helpful_count || 0)}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <Badge variant="outline" className={`text-xs ${review.approved !== false ? "bg-muted text-foreground border-border" : "bg-muted text-muted-foreground"}`}>
+                                {review.approved !== false ? "Public" : "Hidden"}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => toggleReviewApproval(String(review.id), review.approved !== false)}
+                                className="gap-1.5 border-border text-xs"
+                              >
+                                {review.approved !== false ? (
+                                  <>
+                                    <EyeOff className="h-3.5 w-3.5" />
+                                    Hide
+                                  </>
+                                ) : (
+                                  <>
+                                    <Eye className="h-3.5 w-3.5" />
+                                    Approve
+                                  </>
+                                )}
+                              </Button>
                             </td>
                           </tr>
                         ))}

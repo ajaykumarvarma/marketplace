@@ -2,12 +2,13 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag, Loader2, Calendar } from "lucide-react";
+import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag, Loader2, Calendar, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SellerProfile {
   id: string;
@@ -56,6 +57,30 @@ export default function SellerProfilePage() {
   const [stats, setStats] = useState<SellerStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("products");
+  const [reviewVotes, setReviewVotes] = useState<Record<string, "up" | "down" | null>>({});
+  const [voteLoading, setVoteLoading] = useState<string | null>(null);
+  const { user } = useAuth();
+
+  async function handleVote(reviewId: string, voteType: "up" | "down") {
+    try {
+      const res = await fetch("/api/reviews/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviewId, voteType }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setReviewVotes((prev) => ({ ...prev, [reviewId]: data.user_vote }));
+        // Refresh counts
+        const updated = reviews.map((r) =>
+          r.id === reviewId ? { ...r, helpful_count: data.helpful_count, unhelpful_count: data.unhelpful_count } : r
+        );
+        setReviews(updated);
+      }
+    } catch {
+      // silent fail
+    }
+  }
 
   const fetchSellerData = useCallback(async () => {
     if (!id) return;
@@ -277,35 +302,59 @@ export default function SellerProfilePage() {
             </TabsContent>
 
             <TabsContent value="reviews" className="mt-6">
-              {reviews.length === 0 ? (
+              {reviews.filter((r) => (r as unknown as Record<string, unknown>).approved !== false).length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">No reviews yet</div>
               ) : (
                 <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <div key={review.id} className="bg-card border border-border rounded-lg p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                            {review.reviewer_name[0]?.toUpperCase() || "U"}
+                  {reviews.filter((r) => (r as unknown as Record<string, unknown>).approved !== false).map((review) => {
+                    const reviewId = review.id;
+                    const helpfulCount = (review as unknown as Record<string, unknown>).helpful_count as number || 0;
+                    const unhelpfulCount = (review as unknown as Record<string, unknown>).unhelpful_count as number || 0;
+                    const userVote = reviewVotes[reviewId];
+                    return (
+                      <div key={review.id} className="bg-card border border-border rounded-lg p-5">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
+                              {review.reviewer_name[0]?.toUpperCase() || "U"}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-foreground">{review.reviewer_name}</p>
+                              <p className="text-xs text-muted-foreground">{review.product_title}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">{review.reviewer_name}</p>
-                            <p className="text-xs text-muted-foreground">{review.product_title}</p>
+                          <div className="flex items-center gap-1">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${i < review.rating ? "fill-foreground text-foreground" : "text-muted"}`}
+                              />
+                            ))}
                           </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${i < review.rating ? "fill-foreground text-foreground" : "text-muted"}`}
-                            />
-                          ))}
+                        <p className="text-sm text-foreground mb-3">{review.comment}</p>
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={() => handleVote(reviewId, "up")}
+                            disabled={voteLoading === reviewId}
+                            className={`flex items-center gap-1.5 text-xs ${userVote === "up" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                          >
+                            <ThumbsUp className="h-3.5 w-3.5" />
+                            Helpful ({helpfulCount})
+                          </button>
+                          <button
+                            onClick={() => handleVote(reviewId, "down")}
+                            disabled={voteLoading === reviewId}
+                            className={`flex items-center gap-1.5 text-xs ${userVote === "down" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                          >
+                            <ThumbsDown className="h-3.5 w-3.5" />
+                            Not helpful ({unhelpfulCount})
+                          </button>
+                          <span className="text-xs text-muted-foreground ml-auto">{new Date(review.created_at).toLocaleDateString()}</span>
                         </div>
                       </div>
-                      <p className="text-sm text-foreground mb-2">{review.comment}</p>
-                      <p className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>
