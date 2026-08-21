@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { SalesChart } from "@/components/analytics/SalesChart";
 import { TopProductsChart } from "@/components/analytics/TopProductsChart";
 import { RevenueStats } from "@/components/analytics/RevenueStats";
@@ -16,6 +17,7 @@ type Product = { id: string; title: string; price: number; stock: number; status
 
 export default function SellerDashboardPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("orders");
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);

@@ -305,6 +305,7 @@ export default function ProductDetailPage() {
                   const reviewId = (review as Record<string, unknown>).id as string || String(i);
                   const helpfulCount = (review as Record<string, unknown>).helpful_count as number || 0;
                   const unhelpfulCount = (review as Record<string, unknown>).unhelpful_count as number || 0;
+                  const reviewRating = Number((review as Record<string, unknown>).rating || 0);
                   const userVote = reviewVotes[reviewId];
                   return (
                     <div key={reviewId} className="bg-card border border-border rounded-lg p-4 mb-4">
@@ -317,7 +318,7 @@ export default function ProductDetailPage() {
                         </div>
                         <div className="flex items-center gap-1">
                           {Array.from({ length: 5 }).map((_, j) => (
-                            <Star key={j} className={`h-4 w-4 ${j < (review as Record<string, unknown>).rating as number ? "fill-foreground text-foreground" : "text-muted"}`} />
+                            <Star key={j} className={`h-4 w-4 ${j < reviewRating ? "fill-foreground text-foreground" : "text-muted"}`} />
                           ))}
                         </div>
                       </div>
