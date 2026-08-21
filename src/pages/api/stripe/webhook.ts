@@ -33,6 +33,18 @@ async function sendEmail(to: string, subject: string, html: string) {
   }
 }
 
+async function sendTemplateEmail(to: string, template: string, props: Record<string, string>) {
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/send-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to, template, props }),
+    });
+  } catch (err) {
+    console.error("Failed to send email:", err);
+  }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -94,42 +106,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Send order confirmation to buyer
         if (buyerProfile?.email) {
           const productTitle = (orderData.product as { title?: string })?.title || "your order";
-          await sendEmail(
+          await sendTemplateEmail(
             buyerProfile.email,
-            `Payment Confirmed — Order #${orderData.id.slice(0, 8)}`,
-            `
-            <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#E8ECF1;background:#0B0F14;border:1px solid #232D3B;border-radius:8px;">
-              <h2 style="color:#5B8EC8;margin:0 0 16px;">Payment Confirmed</h2>
-              <p>Hi ${buyerProfile.full_name || "there"},</p>
-              <p>Your payment for <strong>${productTitle}</strong> has been received and is now in escrow.</p>
-              <div style="background:#111820;padding:16px;border-radius:6px;margin:16px 0;">
-                <p style="margin:4px 0;"><strong>Order:</strong> #${orderData.id.slice(0, 8)}</p>
-                <p style="margin:4px 0;"><strong>Amount:</strong> $${(orderData.total_amount || 0).toFixed(2)}</p>
-              </div>
-              <p>The seller has been notified and will deliver your order shortly.</p>
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/orders/${orderData.id}" style="display:inline-block;background:#5B8EC8;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;margin-top:16px;">View Order</a>
-            </div>
-            `
+            "order_confirmation",
+            {
+              buyerName: buyerProfile.full_name || "there",
+              orderId: orderData.id.slice(0, 8),
+              productTitle,
+              amount: `$${(orderData.total_amount || 0).toFixed(2)}`,
+              orderUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/orders/${orderData.id}`,
+            }
           );
         }
 
         // Send notification to seller
         if (sellerProfile?.email) {
-          await sendEmail(
+          await sendTemplateEmail(
             sellerProfile.email,
-            `New Order — #${orderData.id.slice(0, 8)}`,
-            `
-            <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#E8ECF1;background:#0B0F14;border:1px solid #232D3B;border-radius:8px;">
-              <h2 style="color:#3DD6D0;margin:0 0 16px;">New Order Received</h2>
-              <p>Hi ${sellerProfile.full_name || "there"},</p>
-              <p>You have a new order to fulfill.</p>
-              <div style="background:#111820;padding:16px;border-radius:6px;margin:16px 0;">
-                <p style="margin:4px 0;"><strong>Order:</strong> #${orderData.id.slice(0, 8)}</p>
-                <p style="margin:4px 0;"><strong>Amount:</strong> $${(orderData.total_amount || 0).toFixed(2)}</p>
-              </div>
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/seller/dashboard" style="display:inline-block;background:#3DD6D0;color:#0B0F14;padding:12px 24px;text-decoration:none;border-radius:6px;margin-top:16px;">Go to Dashboard</a>
-            </div>
-            `
+            "seller_notification",
+            {
+              sellerName: sellerProfile.full_name || "there",
+              orderId: orderData.id.slice(0, 8),
+              productTitle: (orderData.product as { title?: string })?.title || "your product",
+              amount: `$${(orderData.total_amount || 0).toFixed(2)}`,
+              dashboardUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/seller/dashboard`,
+            }
           );
         }
       }

@@ -1,14 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Resend } from "resend";
+import { render } from "@react-email/render";
 import { rateLimitByIP } from "@/services/rateLimiter";
+import { OrderConfirmation } from "@/emails/OrderConfirmation";
+import { SellerNotification } from "@/emails/SellerNotification";
+import { DeliveryConfirmation } from "@/emails/DeliveryConfirmation";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-interface EmailRequest {
+type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation";
+
+interface TemplateEmailRequest {
+  to: string;
+  template: EmailTemplate;
+  props: Record<string, string>;
+}
+
+interface RawEmailRequest {
   to: string;
   subject: string;
   html: string;
-  from?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,7 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Rate limiting
   const clientIP = req.headers["x-forwarded-for"]?.toString().split(",")[0] || req.socket.remoteAddress || "unknown";
   const rateLimit = await rateLimitByIP(clientIP);
   if (!rateLimit.allowed) {
@@ -24,21 +34,67 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { to, subject, html, from } = req.body as EmailRequest;
+    const body = req.body as TemplateEmailRequest | RawEmailRequest;
 
-    if (!to || !subject || !html) {
-      return res.status(400).json({ error: "Missing required fields: to, subject, html" });
+    if (!body.to) {
+      return res.status(400).json({ error: "Missing required field: to" });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(to)) {
+    if (!emailRegex.test(body.to)) {
       return res.status(400).json({ error: "Invalid email address" });
     }
 
+    let subject: string;
+    let html: string;
+
+    // Template-based email
+    if ("template" in body) {
+      switch (body.template) {
+        case "order_confirmation":
+          subject = `Payment Confirmed — Order #${body.props.orderId || "00000000"}`;
+          html = render(OrderConfirmation({
+            buyerName: body.props.buyerName || "there",
+            orderId: body.props.orderId || "00000000",
+            productTitle: body.props.productTitle || "your order",
+            amount: body.props.amount || "$0.00",
+            orderUrl: body.props.orderUrl || "https://tradevault.io/orders",
+          }));
+          break;
+        case "seller_notification":
+          subject = `New Order — #${body.props.orderId || "00000000"}`;
+          html = render(SellerNotification({
+            sellerName: body.props.sellerName || "there",
+            orderId: body.props.orderId || "00000000",
+            productTitle: body.props.productTitle || "your product",
+            amount: body.props.amount || "$0.00",
+            dashboardUrl: body.props.dashboardUrl || "https://tradevault.io/seller/dashboard",
+          }));
+          break;
+        case "delivery_confirmation":
+          subject = `Order Delivered — #${body.props.orderId || "00000000"}`;
+          html = render(DeliveryConfirmation({
+            buyerName: body.props.buyerName || "there",
+            orderId: body.props.orderId || "00000000",
+            productTitle: body.props.productTitle || "your order",
+            orderUrl: body.props.orderUrl || "https://tradevault.io/orders",
+          }));
+          break;
+        default:
+          return res.status(400).json({ error: "Unknown template" });
+      }
+    } else {
+      // Raw HTML email
+      if (!body.subject || !body.html) {
+        return res.status(400).json({ error: "Missing required fields: subject, html" });
+      }
+      subject = body.subject;
+      html = body.html;
+    }
+
     const { data, error } = await resend.emails.send({
-      from: from || "TradeVault <noreply@tradevault.io>",
-      to,
+      from: "TradeVault <noreply@tradevault.io>",
+      to: body.to,
       subject,
       html,
     });

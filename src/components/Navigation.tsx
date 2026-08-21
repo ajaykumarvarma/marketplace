@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
-import { Shield, Menu, X, ShoppingCart, Store, LayoutDashboard, ChevronDown, LogOut, User, Bell } from "lucide-react";
+import { Shield, Menu, X, ShoppingCart, Store, LayoutDashboard, ChevronDown, LogOut, User, Bell, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
@@ -99,6 +99,12 @@ export function Navigation() {
                   <Link href="/orders" className="flex items-center gap-2 cursor-pointer">
                     <LayoutDashboard className="h-4 w-4" />
                     {t("myOrders")}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/wishlist" className="flex items-center gap-2 cursor-pointer">
+                    <Heart className="h-4 w-4" />
+                    Wishlist
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
