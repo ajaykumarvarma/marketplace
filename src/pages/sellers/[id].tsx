@@ -117,6 +117,9 @@ export default function SellerProfilePage() {
           created_at: String(row.created_at),
           reviewer_name: ((row.reviewer as Record<string, unknown>)?.full_name as string) || "Anonymous",
           product_title: ((row.product as Record<string, unknown>)?.title as string) || "Product",
+          helpful_count: Number(row.helpful_count || 0),
+          unhelpful_count: Number(row.unhelpful_count || 0),
+          approved: row.approved !== false,
         };
       });
       setReviews(mapped);
