@@ -16,7 +16,7 @@ import { TopProductsChart } from "@/components/analytics/TopProductsChart";
 import { RevenueStats } from "@/components/analytics/RevenueStats";
 import { FileUploader } from "@/components/delivery/FileUploader";
 
-type Order = { id: string; status: string; created_at: string; total_amount: number | null; product: { title: string } | null };
+type Order = { id: string; status: string; created_at: string; total_amount: number | null; product_id: string; product: { title: string } | null };
 type Product = { id: string; title: string; price: number; stock: number; status: string };
 
 export default function SellerDashboardPage() {
@@ -49,7 +49,7 @@ export default function SellerDashboardPage() {
     if (!user) return;
     setLoading(true);
     const [ordersRes, productsRes, revenueRes] = await Promise.all([
-      supabase.from("orders").select("id, status, created_at, total_amount, product:product_id(title)").eq("seller_id", user.id).order("created_at", { ascending: false }).limit(20),
+      supabase.from("orders").select("id, status, created_at, total_amount, product_id, product:product_id(title)").eq("seller_id", user.id).order("created_at", { ascending: false }).limit(20),
       supabase.from("products").select("id, title, price, stock, status").eq("seller_id", user.id).order("created_at", { ascending: false }),
       supabase.from("orders").select("total_amount").eq("seller_id", user.id).eq("status", "completed"),
     ]);
@@ -138,6 +138,7 @@ export default function SellerDashboardPage() {
     if (uploadedFiles.length > 0) {
       const fileInserts = uploadedFiles.map((file) => ({
         order_id: fulfillOrder.id,
+        product_id: fulfillOrder.product_id,
         file_name: file.name,
         file_path: file.path,
         file_size: file.size,
