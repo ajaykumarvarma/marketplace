@@ -12,6 +12,7 @@ import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { createNotification } from "@/services/notificationService";
 import { WishlistButton } from "@/components/WishlistButton";
 
 interface ProductDetail {
