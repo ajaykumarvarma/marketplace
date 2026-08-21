@@ -21,7 +21,6 @@ export function TestimonialsSection() {
       const { data } = await supabase
         .from("reviews")
         .select("id, rating, comment, created_at, product:product_id(title), reviewer:reviewer_id(full_name)")
-        .eq("approved", true)
         .order("created_at", { ascending: false })
         .limit(12);
 

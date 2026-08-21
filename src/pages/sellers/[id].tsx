@@ -14,8 +14,6 @@ interface SellerProfile {
   full_name: string | null;
   verification_tier: string;
   avatar_url: string | null;
-  bio: string | null;
-  location: string | null;
   created_at: string;
 }
 
@@ -66,7 +64,7 @@ export default function SellerProfilePage() {
     const [sellerRes, productsRes, reviewsRes, ordersRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", id as string).maybeSingle(),
       supabase.from("products").select("*, category:category_id(name)").eq("seller_id", id as string).eq("status", "active").order("created_at", { ascending: false }),
-      supabase.from("reviews").select("id, rating, comment, created_at, product:product_id(title), reviewer:reviewer_id(full_name)").eq("seller_id", id as string).eq("approved", true).order("created_at", { ascending: false }).limit(20),
+      supabase.from("reviews").select("id, rating, comment, created_at, product:product_id(title), reviewer:reviewer_id(full_name)").eq("seller_id", id as string).order("created_at", { ascending: false }).limit(20),
       supabase.from("orders").select("total_amount, status").eq("seller_id", id as string),
     ]);
 
@@ -163,9 +161,6 @@ export default function SellerProfilePage() {
                     {tier.label}
                   </Badge>
                 </div>
-                {seller.bio && (
-                  <p className="text-sm text-muted-foreground mb-3 max-w-xl">{seller.bio}</p>
-                )}
                 <div className="flex flex-wrap items-center gap-4 text-sm">
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 text-muted-foreground fill-muted-foreground" />
@@ -182,12 +177,6 @@ export default function SellerProfilePage() {
                     <span className="text-foreground font-medium">{stats?.totalSales || 0}</span>
                     <span className="text-muted-foreground">sales</span>
                   </div>
-                  {seller.location && (
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">{seller.location}</span>
-                    </div>
-                  )}
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-muted-foreground">Since {new Date(seller.created_at).getFullYear()}</span>
@@ -324,11 +313,6 @@ export default function SellerProfilePage() {
             <TabsContent value="about" className="mt-6">
               <div className="bg-card border border-border rounded-lg p-6">
                 <h3 className="font-display font-semibold text-foreground mb-3">About this Seller</h3>
-                {seller.bio ? (
-                  <p className="text-sm text-muted-foreground mb-4">{seller.bio}</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground mb-4">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
-                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center gap-2 text-sm">
                     <Shield className="h-4 w-4 text-muted-foreground" />
@@ -347,6 +331,11 @@ export default function SellerProfilePage() {
                     <span className="text-foreground">{stats?.totalSales || 0} completed sales</span>
                   </div>
                 </div>
+                {seller.bio ? (
+                  <p className="text-sm text-muted-foreground mb-4">{seller.bio}</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground mb-4">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
+                )}
               </div>
             </TabsContent>
           </Tabs>
