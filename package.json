@@ -66,6 +66,7 @@
     "react-qr-code": "^2.2.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "^3.10.1",
+    "resend": "^6.21.0",
     "speakeasy": "^2.0.0",
     "stripe": "^17.7.0",
     "tailwind-merge": "^2.6.0",
