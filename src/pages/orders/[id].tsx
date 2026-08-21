@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Package, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2 } from "lucide-react";
+import { Package, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2, Star, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +18,7 @@ type Order = {
   delivery_method: string | null;
   escrow_released: boolean;
   seller_id: string;
+  product_id: string;
   product: { title: string; delivery_content: string | null } | null;
 };
 
@@ -38,6 +40,11 @@ export default function OrderDetailPage() {
   const [orderFiles, setOrderFiles] = useState<OrderFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
+  const [productRating, setProductRating] = useState(5);
+  const [sellerRating, setSellerRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   const fetchOrder = useCallback(async () => {
     if (!id || !user) return;
@@ -45,7 +52,7 @@ export default function OrderDetailPage() {
     const { data, error } = await supabase
       .from("orders")
       .select(`
-        id, status, created_at, delivery_method, escrow_released, seller_id,
+        id, status, created_at, delivery_method, escrow_released, seller_id, product_id,
         product:product_id(title, delivery_content)
       `)
       .eq("id", id as string)
@@ -68,6 +75,15 @@ export default function OrderDetailPage() {
         .select("id, file_name, file_path, file_size, content_type")
         .eq("order_id", data.id);
       setOrderFiles(files || []);
+
+      // Check if already reviewed
+      const { data: existingReview } = await supabase
+        .from("reviews")
+        .select("id")
+        .eq("order_id", data.id)
+        .eq("reviewer_id", user.id)
+        .maybeSingle();
+      setHasReviewed(!!existingReview);
     }
     setLoading(false);
   }, [id, user]);
@@ -92,6 +108,35 @@ export default function OrderDetailPage() {
     } else {
       toast({ title: "Delivery confirmed", description: "Escrow released to seller." });
       setOrder({ ...order, status: "completed" });
+    }
+  }
+
+  async function submitReview() {
+    if (!order || !user) return;
+    if (!reviewComment.trim()) {
+      toast({ title: "Review required", description: "Please write a comment.", variant: "destructive" });
+      return;
+    }
+
+    setSubmittingReview(true);
+    const { error } = await supabase.from("reviews").insert({
+      order_id: order.id,
+      product_id: order.product_id,
+      reviewer_id: user.id,
+      seller_id: order.seller_id,
+      rating: productRating,
+      comment: reviewComment.trim(),
+    });
+
+    setSubmittingReview(false);
+    if (error) {
+      toast({ title: "Error submitting review", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Review submitted!", description: "Thank you for your feedback." });
+      setHasReviewed(true);
+      setReviewComment("");
+      setProductRating(5);
+      setSellerRating(5);
     }
   }
 
@@ -250,6 +295,88 @@ export default function OrderDetailPage() {
                 {order.product?.delivery_content || "Your order has been delivered. Contact the seller for access details."}
               </div>
               <p className="text-xs text-muted-foreground">Save this information securely. It will not be shown again.</p>
+            </div>
+          )}
+
+          {/* Post-Purchase Feedback */}
+          {order.status === "completed" && !hasReviewed && (
+            <div className="bg-card border border-border rounded-lg p-6 mb-8">
+              <h2 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Star className="h-5 w-5 text-muted-foreground" />
+                Rate Your Experience
+              </h2>
+              <p className="text-sm text-muted-foreground mb-6">
+                Your order is complete. Please take a moment to rate the product and seller service.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-muted rounded-lg p-4">
+                  <p className="text-sm font-medium text-foreground mb-3">Product Quality</p>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setProductRating(star)}
+                        className="p-1 hover:scale-110 transition-transform"
+                      >
+                        <Star
+                          className={`h-6 w-6 ${star <= productRating ? "fill-foreground text-foreground" : "text-muted"}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-muted rounded-lg p-4">
+                  <p className="text-sm font-medium text-foreground mb-3">Seller Service</p>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setSellerRating(star)}
+                        className="p-1 hover:scale-110 transition-transform"
+                      >
+                        <Star
+                          className={`h-6 w-6 ${star <= sellerRating ? "fill-foreground text-foreground" : "text-muted"}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <Textarea
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                placeholder="How was your experience? Was the product as described? How was the delivery speed?"
+                className="bg-muted border-border min-h-[100px] mb-4"
+              />
+
+              <Button
+                onClick={submitReview}
+                disabled={submittingReview}
+                className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                {submittingReview ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Submit Review
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {order.status === "completed" && hasReviewed && (
+            <div className="bg-muted border border-border rounded-lg p-4 mb-8 text-center">
+              <CheckCircle className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
+              <p className="text-sm font-medium text-foreground">Thanks for your feedback!</p>
+              <p className="text-xs text-muted-foreground">Your review helps other buyers make informed decisions.</p>
             </div>
           )}
 
