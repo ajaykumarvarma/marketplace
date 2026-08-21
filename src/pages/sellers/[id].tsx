@@ -37,6 +37,9 @@ interface SellerReview {
   created_at: string;
   reviewer_name: string;
   product_title: string;
+  helpful_count: number;
+  unhelpful_count: number;
+  approved: boolean;
 }
 
 interface SellerStats {
@@ -62,16 +65,19 @@ export default function SellerProfilePage() {
   const { user } = useAuth();
 
   async function handleVote(reviewId: string, voteType: "up" | "down") {
+    if (!user) return;
+    const currentVote = reviewVotes[reviewId];
+    const isRemoving = currentVote === voteType;
+
     try {
       const res = await fetch("/api/reviews/vote", {
-        method: "POST",
+        method: isRemoving ? "DELETE" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reviewId, voteType }),
+        body: JSON.stringify({ reviewId, userId: user.id, voteType }),
       });
       const data = await res.json();
       if (res.ok) {
-        setReviewVotes((prev) => ({ ...prev, [reviewId]: data.user_vote }));
-        // Refresh counts
+        setReviewVotes((prev) => ({ ...prev, [reviewId]: isRemoving ? null : voteType }));
         const updated = reviews.map((r) =>
           r.id === reviewId ? { ...r, helpful_count: data.helpful_count, unhelpful_count: data.unhelpful_count } : r
         );

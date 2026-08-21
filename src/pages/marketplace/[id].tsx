@@ -28,7 +28,7 @@ interface ProductDetail {
   created_at: string;
   seller: { id: string; full_name: string | null; role: string } | null;
   category: { name: string } | null;
-  reviews: { reviewer_id: string; rating: number; comment: string; created_at: string }[] | null;
+  reviews: { id: string; reviewer_id: string; rating: number; comment: string; created_at: string; helpful_count: number; unhelpful_count: number; approved: boolean }[] | null;
 }
 
 export default function ProductDetailPage() {
@@ -301,18 +301,18 @@ export default function ProductDetailPage() {
                     <p className="text-xs text-muted-foreground">You can only review products you have purchased and received.</p>
                   </div>
                 )}
-                {product.reviews?.filter((r) => (r as Record<string, unknown>).approved !== false).map((review, i) => {
-                  const reviewId = (review as Record<string, unknown>).id as string || String(i);
-                  const helpfulCount = (review as Record<string, unknown>).helpful_count as number || 0;
-                  const unhelpfulCount = (review as Record<string, unknown>).unhelpful_count as number || 0;
-                  const reviewRating = Number((review as Record<string, unknown>).rating || 0);
+                {product.reviews?.filter((r) => r.approved !== false).map((review) => {
+                  const reviewId = review.id;
+                  const helpfulCount = review.helpful_count || 0;
+                  const unhelpfulCount = review.unhelpful_count || 0;
+                  const reviewRating = review.rating || 0;
                   const userVote = reviewVotes[reviewId];
                   return (
                     <div key={reviewId} className="bg-card border border-border rounded-lg p-4 mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                            {((review as Record<string, unknown>).reviewer_id as string)?.[0]?.toUpperCase() || "U"}
+                            {review.reviewer_id?.[0]?.toUpperCase() || "U"}
                           </div>
                           <span className="font-medium text-foreground">Buyer</span>
                         </div>
@@ -322,7 +322,7 @@ export default function ProductDetailPage() {
                           ))}
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">{(review as Record<string, unknown>).comment as string}</p>
+                      <p className="text-sm text-muted-foreground mb-3">{review.comment}</p>
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => handleVote(reviewId, "up")}
@@ -340,7 +340,7 @@ export default function ProductDetailPage() {
                           <ThumbsDown className="h-3.5 w-3.5" />
                           Not helpful ({unhelpfulCount})
                         </button>
-                        <span className="text-xs text-muted-foreground ml-auto">{new Date((review as Record<string, unknown>).created_at as string).toLocaleDateString()}</span>
+                        <span className="text-xs text-muted-foreground ml-auto">{new Date(review.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
                   );
