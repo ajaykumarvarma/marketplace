@@ -1,0 +1,3 @@
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS approved boolean DEFAULT true;
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS helpful_count int DEFAULT 0;
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS unhelpful_count int DEFAULT 0;

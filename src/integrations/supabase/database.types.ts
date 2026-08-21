@@ -555,11 +555,13 @@ export type Database = {
           buyer_id: string
           coupon_id: string | null
           created_at: string | null
+          delivered_at: string | null
           delivery_email: string | null
           delivery_method: string | null
           device_fingerprint: string | null
           discount_amount: number
           escrow_released: boolean
+          followup_sent: boolean | null
           id: string
           ip_address: string | null
           payment_method: string | null
@@ -576,11 +578,13 @@ export type Database = {
           buyer_id: string
           coupon_id?: string | null
           created_at?: string | null
+          delivered_at?: string | null
           delivery_email?: string | null
           delivery_method?: string | null
           device_fingerprint?: string | null
           discount_amount?: number
           escrow_released?: boolean
+          followup_sent?: boolean | null
           id?: string
           ip_address?: string | null
           payment_method?: string | null
@@ -597,11 +601,13 @@ export type Database = {
           buyer_id?: string
           coupon_id?: string | null
           created_at?: string | null
+          delivered_at?: string | null
           delivery_email?: string | null
           delivery_method?: string | null
           device_fingerprint?: string | null
           discount_amount?: number
           escrow_released?: boolean
+          followup_sent?: boolean | null
           id?: string
           ip_address?: string | null
           payment_method?: string | null
@@ -890,36 +896,77 @@ export type Database = {
           },
         ]
       }
+      review_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          review_id: string
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          review_id: string
+          user_id: string
+          vote_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          review_id?: string
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_votes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
+          approved: boolean | null
           comment: string | null
           created_at: string | null
+          helpful_count: number | null
           id: string
           order_id: string
           product_id: string
           rating: number
           reviewer_id: string
           seller_id: string
+          unhelpful_count: number | null
         }
         Insert: {
+          approved?: boolean | null
           comment?: string | null
           created_at?: string | null
+          helpful_count?: number | null
           id?: string
           order_id: string
           product_id: string
           rating: number
           reviewer_id: string
           seller_id: string
+          unhelpful_count?: number | null
         }
         Update: {
+          approved?: boolean | null
           comment?: string | null
           created_at?: string | null
+          helpful_count?: number | null
           id?: string
           order_id?: string
           product_id?: string
           rating?: number
           reviewer_id?: string
           seller_id?: string
+          unhelpful_count?: number | null
         }
         Relationships: [
           {
@@ -1220,7 +1267,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_coupon_usage: {
+        Args: { coupon_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
