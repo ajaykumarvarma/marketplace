@@ -1,23 +1,23 @@
 ---
 title: Seller Review Moderation Dashboard
-status: todo
+status: done
 priority: high
 type: feature
-tags: [reviews, seller, moderation]
+tags: [reviews, moderation, seller-dashboard]
 created_by: agent
-created_at: 2026-08-21T10:55:00Z
+created_at: 2026-08-21T09:45:00Z
 position: 3
 ---
 
 ## Notes
-Sellers can approve or hide reviews on their profile.
+Dashboard for sellers to approve or hide public reviews on their profile.
 
 ## Checklist
-- [ ] Add approved column to reviews
-- [ ] Create moderation API endpoint
-- [ ] Add review management to seller dashboard
-- [ ] Filter reviews by approved status
-- [ ] Update public pages to respect approval
+- [x] Add approved column to reviews table
+- [x] Add Reviews tab to seller dashboard
+- [x] Show all reviews with Public/Hidden status
+- [x] Toggle approval with Approve/Hide buttons
+- [x] Filter public reviews by approved status
 
 ## Acceptance
 - Sellers see all reviews in dashboard

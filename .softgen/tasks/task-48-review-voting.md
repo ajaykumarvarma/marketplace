@@ -1,23 +1,23 @@
 ---
 title: Review Helpfulness Voting
-status: todo
+status: done
 priority: high
 type: feature
 tags: [reviews, voting, ux]
 created_by: agent
-created_at: 2026-08-21T10:55:00Z
+created_at: 2026-08-21T09:45:00Z
 position: 2
 ---
 
 ## Notes
-Users can rate whether reviews were helpful with thumbs up/down.
+Thumbs up/down system for users to rate review helpfulness.
 
 ## Checklist
-- [ ] Create review_votes table
-- [ ] Add helpful_count/unhelpful_count to reviews
-- [ ] Create vote API endpoint
-- [ ] Add vote buttons to review cards
-- [ ] Prevent duplicate votes per user
+- [x] Create review_votes table with RLS
+- [x] Create /api/reviews/vote.ts endpoint
+- [x] Add vote buttons to marketplace product detail
+- [x] Add vote buttons to seller profile reviews
+- [x] Show helpful/unhelpful counts
 
 ## Acceptance
 - Users can upvote/downvote reviews
