@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, Shield, Bitcoin, Loader2, Lock, AlertTriangle } from "lucide-react";
+import { ArrowLeft, CreditCard, Shield, Bitcoin, Loader2, Lock, AlertTriangle, Tag, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { checkFraudRisk, recordFraudScore, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
+import { checkFraudRisk, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -18,6 +19,10 @@ export default function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [fraudResult, setFraudResult] = useState<{ riskScore: number; flags: string[]; blocked: boolean } | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ id: string; code: string; discount_percent: number } | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -66,6 +71,42 @@ export default function CheckoutPage() {
         </div>
       </>
     );
+  }
+
+  const discountAmount = appliedCoupon ? (totalPrice * appliedCoupon.discount_percent) / 100 : 0;
+  const finalTotal = (totalPrice - discountAmount) * 1.02;
+
+  async function applyPromoCode() {
+    if (!promoCode.trim() || !user) return;
+    setPromoLoading(true);
+    setPromoError(null);
+
+    try {
+      const res = await fetch("/api/validate-promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode.trim(), userId: user.id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPromoError(data.error || "Invalid promo code");
+      } else {
+        setAppliedCoupon(data.coupon);
+        toast({ title: "Promo code applied", description: `${data.coupon.discount_percent}% off` });
+      }
+    } catch {
+      setPromoError("Failed to validate promo code");
+    }
+
+    setPromoLoading(false);
+  }
+
+  function removePromo() {
+    setAppliedCoupon(null);
+    setPromoCode("");
+    setPromoError(null);
   }
 
   async function handleStripeCheckout() {
@@ -117,6 +158,8 @@ export default function CheckoutPage() {
           email: user.email,
           deviceFingerprint,
           ipAddress,
+          couponId: appliedCoupon?.id,
+          discountPercent: appliedCoupon?.discount_percent,
         }),
       });
 
@@ -177,6 +220,48 @@ export default function CheckoutPage() {
               </div>
             </div>
 
+            {/* Promo Code Section */}
+            <div className="mb-8">
+              <h2 className="font-display text-lg font-semibold text-foreground mb-3">Promo Code</h2>
+              {!appliedCoupon ? (
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Enter promo code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="pl-9 border-border bg-card"
+                      onKeyDown={(e) => e.key === "Enter" && applyPromoCode()}
+                    />
+                  </div>
+                  <Button
+                    onClick={applyPromoCode}
+                    disabled={promoLoading || !promoCode.trim()}
+                    variant="outline"
+                    className="border-border"
+                  >
+                    {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted border border-border">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">
+                      {appliedCoupon.code} — {appliedCoupon.discount_percent}% off
+                    </p>
+                  </div>
+                  <button onClick={removePromo} className="text-muted-foreground hover:text-foreground">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+              {promoError && (
+                <p className="text-sm text-red-500 mt-2">{promoError}</p>
+              )}
+            </div>
+
             <div className="mb-4">
               {paymentMethod === "card" && (
                 <div className="bg-card border border-border rounded-lg p-6 mb-4">
@@ -218,7 +303,7 @@ export default function CheckoutPage() {
                     Processing...
                   </>
                 ) : (
-                  `Pay $${(totalPrice * 1.02).toFixed(2)}`
+                  `Pay $${finalTotal.toFixed(2)}`
                 )}
               </Button>
             </div>
@@ -258,13 +343,19 @@ export default function CheckoutPage() {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span className="font-mono text-foreground">${totalPrice.toFixed(2)}</span>
                 </div>
+                {appliedCoupon && (
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-muted-foreground">Discount ({appliedCoupon.discount_percent}%)</span>
+                    <span className="font-mono text-green-500">-${discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Platform Fee</span>
-                  <span className="font-mono text-foreground">${(totalPrice * 0.02).toFixed(2)}</span>
+                  <span className="font-mono text-foreground">${((totalPrice - discountAmount) * 0.02).toFixed(2)}</span>
                 </div>
                 <div className="border-t border-border pt-2 flex items-center justify-between">
                   <span className="font-medium text-foreground">Total</span>
-                  <span className="font-mono text-lg font-bold text-foreground">${(totalPrice * 1.02).toFixed(2)}</span>
+                  <span className="font-mono text-lg font-bold text-foreground">${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>

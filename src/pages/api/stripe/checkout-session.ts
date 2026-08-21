@@ -25,13 +25,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { items, userId, email, deviceFingerprint, ipAddress } = req.body;
+    const { items, userId, email, deviceFingerprint, ipAddress, couponId, discountPercent } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0 || !userId) {
       return res.status(400).json({ error: "Invalid request body" });
     }
 
     // Calculate totals
+    const subtotal = items.reduce((sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity, 0);
+    const discountAmount = discountPercent ? (subtotal * discountPercent) / 100 : 0;
+    const discountedSubtotal = subtotal - discountAmount;
+    const platformFee = Math.round(discountedSubtotal * 0.02 * 100); // 2% fee in cents
+
+    // Build line items
     const lineItems = items.map((item: { title: string; price: number; quantity: number }) => ({
       price_data: {
         currency: "usd",
@@ -43,8 +49,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       quantity: item.quantity,
     }));
 
-    const subtotal = items.reduce((sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity, 0);
-    const platformFee = Math.round(subtotal * 0.02 * 100); // 2% fee in cents
+    // Apply coupon discount as a separate line item if applicable
+    if (discountAmount > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: `Discount (${discountPercent}%)`,
+          },
+          unit_amount: -Math.round(discountAmount * 100), // negative for discount
+        },
+        quantity: 1,
+      });
+    }
 
     // Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
@@ -59,11 +76,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         deviceFingerprint: deviceFingerprint || "",
         ipAddress: ipAddress || "",
         itemCount: String(items.length),
+        couponId: couponId || "",
       },
       payment_intent_data: {
         metadata: {
           userId,
           platformFee: String(platformFee),
+          couponId: couponId || "",
         },
       },
     });
@@ -73,13 +92,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       buyer_id: userId,
       product_id: item.id,
       quantity: item.quantity,
-      total_amount: item.price * item.quantity * 1.02,
+      total_amount: item.price * item.quantity * (1 - (discountPercent || 0) / 100) * 1.02,
       delivery_method: "digital",
       payment_method: "card",
       status: "pending",
       device_fingerprint: deviceFingerprint || null,
       ip_address: ipAddress || null,
       stripe_session_id: session.id,
+      coupon_id: couponId || null,
+      discount_amount: discountAmount || 0,
     }));
 
     const { error: orderError } = await supabaseAdmin.from("orders").insert(orderInserts);
@@ -87,6 +108,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (orderError) {
       console.error("Failed to create pending orders:", orderError);
       // Don't fail the checkout — Stripe session is already created
+    }
+
+    // Increment coupon used_count if applicable
+    if (couponId) {
+      await supabaseAdmin.rpc("increment_coupon_usage", { coupon_id: couponId });
     }
 
     return res.status(200).json({ sessionId: session.id, url: session.url });
