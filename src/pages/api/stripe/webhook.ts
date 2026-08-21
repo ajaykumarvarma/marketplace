@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { buffer } from "micro";
+import { createNotification } from "@/services/notificationService";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2025-02-24.acacia",
@@ -133,6 +134,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
           );
         }
+
+        // Create in-app notifications
+        await createNotification(
+          orderData.buyer_id,
+          "order",
+          "Payment Confirmed",
+          `Your order #${orderData.id.slice(0, 8)} has been paid and is being processed.`,
+          { orderId: orderData.id, amount: orderData.total_amount }
+        );
+
+        await createNotification(
+          orderData.seller_id,
+          "order",
+          "New Order Received",
+          `You have a new order #${orderData.id.slice(0, 8)} for $${(orderData.total_amount || 0).toFixed(2)}.`,
+          { orderId: orderData.id, amount: orderData.total_amount }
+        );
       }
 
       break;

@@ -9,6 +9,7 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { createNotification } from "@/services/notificationService";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 
 type Order = {
@@ -113,6 +114,15 @@ export default function OrderDetailPage() {
     } else {
       toast({ title: "Delivery confirmed", description: "Escrow released to seller." });
       setOrder({ ...order, status: "completed" });
+
+      // Notify seller
+      await createNotification(
+        order.seller_id,
+        "order",
+        "Delivery Confirmed",
+        `Buyer confirmed delivery for order #${order.id.slice(0, 8)}. Escrow released.`,
+        { orderId: order.id }
+      );
     }
   }
 
@@ -142,6 +152,15 @@ export default function OrderDetailPage() {
       setReviewComment("");
       setProductRating(5);
       setSellerRating(5);
+
+      // Notify seller
+      await createNotification(
+        order.seller_id,
+        "order",
+        "New Review Received",
+        `You received a ${productRating}-star review for order #${order.id.slice(0, 8)}.`,
+        { orderId: order.id, rating: productRating }
+      );
     }
   }
 
