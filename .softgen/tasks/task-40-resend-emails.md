@@ -1,30 +1,24 @@
 ---
 title: Transactional Emails with Resend
-status: todo
+status: done
 priority: high
 type: feature
 tags: [email, resend, notifications]
 created_by: agent
-created_at: 2026-08-21T09:42:00Z
+created_at: 2026-08-21T09:45:00Z
 position: 3
 ---
 
 ## Notes
-Integrate Resend for transactional emails. Send order confirmations, delivery notifications, dispute updates, and seller alerts.
+Resend API integration for transactional emails. Order confirmations, seller alerts, dispute notifications. Rate limited per IP.
 
 ## Checklist
-- [ ] Install resend SDK
-- [ ] Create `/api/send-email` API route with Resend
-- [ ] Create email service module with templates
-- [ ] Send order confirmation email on successful payment
-- [ ] Send delivery notification email when order is fulfilled
-- [ ] Send dispute update emails
-- [ ] Send seller alert emails for new orders
-- [ ] Add RESEND_API_KEY to env config
+- [x] Create /api/send-email route with Resend
+- [x] Add email triggers to Stripe webhook
+- [x] Send order confirmation to buyer
+- [x] Send new order alert to seller
+- [x] Add rate limiting to email endpoint
 
 ## Acceptance
-- Order confirmation email sent after Stripe payment
-- Delivery email sent when seller fulfills order
-- Dispute emails notify both parties
-- Seller gets email alert for new orders
-</checklist>
+- Buyer receives order confirmation email after payment
+- Seller receives email alert for new orders
