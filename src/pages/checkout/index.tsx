@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, Shield, Bitcoin, Loader2, Lock } from "lucide-react";
+import { ArrowLeft, CreditCard, Shield, Bitcoin, Loader2, Lock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
