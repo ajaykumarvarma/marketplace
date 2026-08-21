@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag, Loader2, MapPin, Calendar } from "lucide-react";
+import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag, Loader2, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -331,11 +331,7 @@ export default function SellerProfilePage() {
                     <span className="text-foreground">{stats?.totalSales || 0} completed sales</span>
                   </div>
                 </div>
-                {seller.bio ? (
-                  <p className="text-sm text-muted-foreground mb-4">{seller.bio}</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground mb-4">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
-                )}
+                <p className="text-sm text-muted-foreground mt-4">This seller has been a member of TradeVault since {new Date(seller.created_at).toLocaleDateString()}.</p>
               </div>
             </TabsContent>
           </Tabs>
