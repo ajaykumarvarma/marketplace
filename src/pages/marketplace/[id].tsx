@@ -12,7 +12,6 @@ import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { createNotification } from "@/services/notificationService";
 import { WishlistButton } from "@/components/WishlistButton";
 
 interface ProductDetail {
@@ -187,6 +186,17 @@ export default function ProductDetailPage() {
         .eq("id", id as string)
         .maybeSingle();
       if (data) setProduct(data as ProductDetail);
+
+      // Notify seller
+      if (orderData) {
+        await createNotification(
+          orderData.seller_id,
+          "order",
+          "New Review Received",
+          `You received a ${reviewRating}-star review for your product.`,
+          { orderId: orderData.id, rating: reviewRating }
+        );
+      }
     }
   }
 
