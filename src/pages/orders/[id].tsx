@@ -98,7 +98,12 @@ export default function OrderDetailPage() {
     setConfirming(true);
     const { error } = await supabase
       .from("orders")
-      .update({ status: "completed", escrow_released: true })
+      .update({
+        status: "completed",
+        escrow_released: true,
+        delivered_at: new Date().toISOString(),
+        followup_sent: false,
+      })
       .eq("id", order.id)
       .eq("buyer_id", user.id);
 

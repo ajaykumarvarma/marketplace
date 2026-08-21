@@ -5,10 +5,11 @@ import { rateLimitByIP } from "@/services/rateLimiter";
 import { OrderConfirmation } from "@/emails/OrderConfirmation";
 import { SellerNotification } from "@/emails/SellerNotification";
 import { DeliveryConfirmation } from "@/emails/DeliveryConfirmation";
+import { FollowUpEmail } from "@/emails/FollowUpEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation";
+type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation" | "follow_up";
 
 interface TemplateEmailRequest {
   to: string;
@@ -78,6 +79,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             orderId: body.props.orderId || "00000000",
             productTitle: body.props.productTitle || "your order",
             orderUrl: body.props.orderUrl || "https://tradevault.io/orders",
+          }));
+          break;
+        case "follow_up":
+          subject = `How was your ${body.props.productTitle || "order"}?`;
+          html = await render(FollowUpEmail({
+            buyerName: body.props.buyerName || "there",
+            orderId: body.props.orderId || "00000000",
+            productTitle: body.props.productTitle || "your order",
+            reviewUrl: body.props.reviewUrl || "https://tradevault.io/orders",
           }));
           break;
         default:
