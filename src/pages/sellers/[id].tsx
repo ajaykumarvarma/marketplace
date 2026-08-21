@@ -13,7 +13,6 @@ import { useAuth } from "@/contexts/AuthContext";
 interface SellerProfile {
   id: string;
   full_name: string | null;
-  verification_tier: string;
   avatar_url: string | null;
   created_at: string;
 }
@@ -95,7 +94,7 @@ export default function SellerProfilePage() {
     const [sellerRes, productsRes, reviewsRes, ordersRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", id as string).maybeSingle(),
       supabase.from("products").select("*, category:category_id(name)").eq("seller_id", id as string).eq("status", "active").order("created_at", { ascending: false }),
-      supabase.from("reviews").select("id, rating, comment, created_at, product:product_id(title), reviewer:reviewer_id(full_name)").eq("seller_id", id as string).order("created_at", { ascending: false }).limit(20),
+      supabase.from("reviews").select("id, rating, comment, created_at, helpful_count, unhelpful_count, approved, product:product_id(title), reviewer:reviewer_id(full_name)").eq("seller_id", id as string).order("created_at", { ascending: false }).limit(20),
       supabase.from("orders").select("total_amount, status").eq("seller_id", id as string),
     ]);
 
@@ -167,14 +166,7 @@ export default function SellerProfilePage() {
     );
   }
 
-  const tierConfig: Record<string, { color: string; label: string }> = {
-    bronze: { color: "bg-muted text-foreground border-border", label: "Bronze Seller" },
-    silver: { color: "bg-muted text-foreground border-border", label: "Silver Seller" },
-    gold: { color: "bg-muted text-foreground border-border", label: "Gold Seller" },
-    verified: { color: "bg-muted text-foreground border-border", label: "Verified" },
-  };
-
-  const tier = tierConfig[seller.verification_tier] || tierConfig.bronze;
+  const tierLabel = (stats?.totalSales || 0) >= 100 ? "Gold Seller" : (stats?.totalSales || 0) >= 10 ? "Silver Seller" : "Bronze Seller";
 
   return (
     <>
@@ -190,9 +182,9 @@ export default function SellerProfilePage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2 flex-wrap">
                   <h1 className="font-display text-2xl font-bold text-foreground">{seller.full_name || "Seller"}</h1>
-                  <Badge variant="outline" className={`${tier.color}`}>
+                  <Badge variant="outline" className="bg-muted text-foreground border-border">
                     <Shield className="h-3 w-3 mr-1" />
-                    {tier.label}
+                    {tierLabel}
                   </Badge>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm">
@@ -311,14 +303,14 @@ export default function SellerProfilePage() {
             </TabsContent>
 
             <TabsContent value="reviews" className="mt-6">
-              {reviews.filter((r) => (r as unknown as Record<string, unknown>).approved !== false).length === 0 ? (
+              {reviews.filter((r) => r.approved !== false).length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">No reviews yet</div>
               ) : (
                 <div className="space-y-4">
-                  {reviews.filter((r) => (r as unknown as Record<string, unknown>).approved !== false).map((review) => {
+                  {reviews.filter((r) => r.approved !== false).map((review) => {
                     const reviewId = review.id;
-                    const helpfulCount = (review as unknown as Record<string, unknown>).helpful_count as number || 0;
-                    const unhelpfulCount = (review as unknown as Record<string, unknown>).unhelpful_count as number || 0;
+                    const helpfulCount = review.helpful_count || 0;
+                    const unhelpfulCount = review.unhelpful_count || 0;
                     const userVote = reviewVotes[reviewId];
                     return (
                       <div key={review.id} className="bg-card border border-border rounded-lg p-5">
