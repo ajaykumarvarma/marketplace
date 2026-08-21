@@ -1,23 +1,23 @@
 ---
 title: Full Wishlist Feature
-status: todo
+status: done
 priority: high
 type: feature
-tags: [wishlist, profile, products]
+tags: [wishlist, ux]
 created_by: agent
-created_at: 2026-08-21T10:00:00Z
+created_at: 2026-08-21T09:45:00Z
 position: 2
 ---
 
 ## Notes
-Expand existing WishlistButton into full wishlist page accessible from user profile. Allow viewing, removing, and moving to cart.
+Full wishlist page with add/remove/move-to-cart functionality.
 
 ## Checklist
-- [ ] Create wishlist page at /wishlist
-- [ ] Add wishlist link to navigation
-- [ ] Show wishlist in user profile
-- [ ] Allow removing items from wishlist
-- [ ] Allow moving wishlist items to cart
+- [x] Create /wishlist page
+- [x] Add Heart icon + link to Navigation dropdown
+- [x] Users can save products to wishlist
+- [x] Users can view their wishlist in profile
+- [x] Items can be removed or moved to cart
 
 ## Acceptance
 - Logged-in users can save products to wishlist
