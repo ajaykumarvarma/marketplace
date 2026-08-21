@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       switch (body.template) {
         case "order_confirmation":
           subject = `Payment Confirmed — Order #${body.props.orderId || "00000000"}`;
-          html = render(OrderConfirmation({
+          html = await render(OrderConfirmation({
             buyerName: body.props.buyerName || "there",
             orderId: body.props.orderId || "00000000",
             productTitle: body.props.productTitle || "your order",
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           break;
         case "seller_notification":
           subject = `New Order — #${body.props.orderId || "00000000"}`;
-          html = render(SellerNotification({
+          html = await render(SellerNotification({
             sellerName: body.props.sellerName || "there",
             orderId: body.props.orderId || "00000000",
             productTitle: body.props.productTitle || "your product",
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           break;
         case "delivery_confirmation":
           subject = `Order Delivered — #${body.props.orderId || "00000000"}`;
-          html = render(DeliveryConfirmation({
+          html = await render(DeliveryConfirmation({
             buyerName: body.props.buyerName || "there",
             orderId: body.props.orderId || "00000000",
             productTitle: body.props.productTitle || "your order",
