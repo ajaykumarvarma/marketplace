@@ -1,24 +1,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, Shield, Bitcoin, AlertTriangle, Loader2, Lock } from "lucide-react";
+import { ArrowLeft, CreditCard, Shield, Bitcoin, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { checkFraudRisk, recordFraudScore, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
-
-function formatCardNumber(value: string): string {
-  return value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim().slice(0, 19);
-}
-
-function formatExpiry(value: string): string {
-  return value.replace(/\D/g, "").replace(/^(\d{2})/, "$1/").slice(0, 5);
-}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -29,11 +18,6 @@ export default function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [fraudResult, setFraudResult] = useState<{ riskScore: number; flags: string[]; blocked: boolean } | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMounted(true);
@@ -41,18 +25,6 @@ export default function CheckoutPage() {
       router.push("/auth/login?redirect=/checkout");
     }
   }, [user, router]);
-
-  const validatePayment = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    if (paymentMethod === "card") {
-      if (!cardName.trim()) newErrors.cardName = "Name is required";
-      if (cardNumber.replace(/\s/g, "").length < 16) newErrors.cardNumber = "Valid card number required";
-      if (expiry.length < 5) newErrors.expiry = "Valid expiry required";
-      if (cvc.length < 3) newErrors.cvc = "Valid CVC required";
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   if (!mounted) {
     return (
@@ -96,28 +68,19 @@ export default function CheckoutPage() {
     );
   }
 
-  async function handlePlaceOrder() {
-    if (!validatePayment()) {
-      toast({ title: "Please fix payment errors", description: "Review the form and correct any issues.", variant: "destructive" });
-      return;
-    }
-
-    if (!user) {
+  async function handleStripeCheckout() {
+    if (!user || items.length === 0) {
       toast({ title: "Sign in required", description: "Please sign in to complete your purchase.", variant: "destructive" });
-      return;
-    }
-    if (items.length === 0) {
-      toast({ title: "Cart is empty", description: "Add items before checking out.", variant: "destructive" });
       return;
     }
 
     setProcessing(true);
 
-    const product = items[0];
-    const orderAmount = product.price * product.quantity;
     const deviceFingerprint = await getDeviceFingerprint();
     const ipAddress = await getClientIP();
+    const orderAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+    // Fraud check
     const fraudCheck = await checkFraudRisk(user.id, orderAmount, deviceFingerprint);
     const riskScore = fraudCheck.score;
     const blocked = fraudCheck.decision === "block";
@@ -137,40 +100,40 @@ export default function CheckoutPage() {
       toast({ title: "Transaction on hold", description: "Your order is under review for security. You will be notified shortly.", variant: "default" });
     }
 
-    const total = orderAmount * 1.02;
-    const { data: productData } = await supabase
-      .from("products")
-      .select("seller_id")
-      .eq("id", product.id)
-      .maybeSingle();
+    // Create Stripe Checkout session
+    try {
+      const res = await fetch("/api/stripe/checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            id: item.id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+            seller: item.seller,
+          })),
+          userId: user.id,
+          email: user.email,
+          deviceFingerprint,
+          ipAddress,
+        }),
+      });
 
-    const { data: orderData, error } = await supabase.from("orders").insert({
-      buyer_id: user.id,
-      seller_id: productData?.seller_id || "unknown",
-      product_id: product.id,
-      quantity: product.quantity,
-      total_amount: total,
-      delivery_method: "digital",
-      payment_method: paymentMethod,
-      status: riskScore >= 40 ? "processing" : "pending",
-      device_fingerprint: deviceFingerprint,
-      ip_address: ipAddress,
-    } as any).select().single();
+      const data = await res.json();
 
-    if (orderData) {
-      await recordFraudScore(orderData.id, user.id, fraudCheck);
+      if (!res.ok) {
+        throw new Error(data.error || "Checkout failed");
+      }
+
+      // Clear cart and redirect to Stripe
+      clearCart();
+      window.location.href = data.url;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Checkout failed";
+      toast({ title: "Checkout failed", description: message, variant: "destructive" });
+      setProcessing(false);
     }
-
-    setProcessing(false);
-
-    if (error) {
-      toast({ title: "Checkout failed", description: error.message, variant: "destructive" });
-      return;
-    }
-
-    clearCart();
-    toast({ title: "Order placed!", description: "Your purchase is being processed." });
-    router.push(`/orders/${orderData.id}`);
   }
 
   return (
@@ -216,29 +179,17 @@ export default function CheckoutPage() {
 
             <div className="mb-4">
               {paymentMethod === "card" && (
-                <div>
-                  <div className="mb-4">
-                    <Label htmlFor="cardName" className="mb-2 block">Name on Card</Label>
-                    <Input id="cardName" placeholder="John Doe" className={`bg-muted border-border ${errors.cardName ? "border-foreground" : ""}`} value={cardName} onChange={(e) => setCardName(e.target.value)} />
-                    {errors.cardName && <p className="text-xs text-foreground mt-1">{errors.cardName}</p>}
-                  </div>
-                  <div className="mb-4">
-                    <Label htmlFor="cardNumber" className="mb-2 block">Card Number</Label>
-                    <Input id="cardNumber" placeholder="4242 4242 4242 4242" className={`bg-muted border-border font-mono ${errors.cardNumber ? "border-foreground" : ""}`} value={cardNumber} onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} maxLength={19} />
-                    {errors.cardNumber && <p className="text-xs text-foreground mt-1">{errors.cardNumber}</p>}
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="bg-card border border-border rounded-lg p-6 mb-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Lock className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <Label htmlFor="expiry" className="mb-2 block">Expiry</Label>
-                      <Input id="expiry" placeholder="MM/YY" className={`bg-muted border-border font-mono ${errors.expiry ? "border-foreground" : ""}`} value={expiry} onChange={(e) => setExpiry(formatExpiry(e.target.value))} maxLength={5} />
-                      {errors.expiry && <p className="text-xs text-foreground mt-1">{errors.expiry}</p>}
-                    </div>
-                    <div>
-                      <Label htmlFor="cvc" className="mb-2 block">CVC</Label>
-                      <Input id="cvc" placeholder="123" className={`bg-muted border-border font-mono ${errors.cvc ? "border-foreground" : ""}`} value={cvc} onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))} maxLength={4} />
-                      {errors.cvc && <p className="text-xs text-foreground mt-1">{errors.cvc}</p>}
+                      <p className="text-sm font-medium text-foreground">Secure Payment via Stripe</p>
+                      <p className="text-xs text-muted-foreground">Your card details are never stored on our servers.</p>
                     </div>
                   </div>
+                  <p className="text-sm text-muted-foreground">
+                    You will be redirected to Stripe's secure checkout page to complete your payment.
+                  </p>
                 </div>
               )}
 
@@ -260,7 +211,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <Button onClick={handlePlaceOrder} disabled={processing} className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
+              <Button onClick={handleStripeCheckout} disabled={processing} className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
                 {processing ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
