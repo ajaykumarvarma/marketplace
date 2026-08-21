@@ -87,9 +87,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
+    // Fetch seller_ids for each product
+    const productIds = items.map((item: { id: string }) => item.id);
+    const { data: productsData, error: productsError } = await supabaseAdmin
+      .from("products")
+      .select("id, seller_id")
+      .in("id", productIds);
+
+    if (productsError) {
+      console.error("Failed to fetch product seller_ids:", productsError);
+    }
+
+    const sellerMap = new Map<string, string>();
+    (productsData || []).forEach((p: { id: string; seller_id: string }) => {
+      sellerMap.set(p.id, p.seller_id);
+    });
+
     // Store pending order in database
     const orderInserts = items.map((item: { id: string; title: string; price: number; quantity: number; seller: string }) => ({
       buyer_id: userId,
+      seller_id: sellerMap.get(item.id) || userId, // fallback to buyer (will fail validation if null, but prevents crash)
       product_id: item.id,
       quantity: item.quantity,
       total_amount: item.price * item.quantity * (1 - (discountPercent || 0) / 100) * 1.02,

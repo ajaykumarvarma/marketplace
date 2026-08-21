@@ -2,10 +2,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { rateLimitByIP } from "@/services/rateLimiter";
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SERVICE_KEY) {
+  throw new Error("Missing Supabase environment variables for API route");
+}
+
+const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
 
 // Sanitize search input to prevent SQL injection via special characters
 function sanitizeSearch(input: string): string {
