@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
-import { sendTemplateEmail } from "@/services/notificationService";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -10,6 +9,16 @@ if (!SUPABASE_URL || !SERVICE_KEY) {
 }
 
 const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_KEY);
+
+async function sendEmail(to: string, template: string, props: Record<string, string>) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const res = await fetch(`${siteUrl}/api/send-email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ to, template, props }),
+  });
+  return res.ok;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -39,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (currentPrice <= targetPrice) {
         const user = (alert.user as Array<Record<string, unknown>>)?.[0];
         if (user?.email) {
-          await sendTemplateEmail(
+          await sendEmail(
             String(user.email),
             "price_drop",
             {

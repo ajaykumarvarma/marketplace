@@ -250,25 +250,46 @@ export default function CheckoutPage() {
             <div className="mb-8">
               <h2 className="font-display text-lg font-semibold text-foreground mb-3">Promo Code</h2>
               {!appliedCoupon ? (
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Enter promo code"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
-                      className="pl-9 border-border bg-card"
-                      onKeyDown={(e) => e.key === "Enter" && applyPromoCode()}
-                    />
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Enter promo code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        className="pl-9 border-border bg-card"
+                        onKeyDown={(e) => e.key === "Enter" && applyPromoCode()}
+                      />
+                    </div>
+                    <Button
+                      onClick={applyPromoCode}
+                      disabled={promoLoading || !promoCode.trim()}
+                      variant="outline"
+                      className="border-border"
+                    >
+                      {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                    </Button>
                   </div>
-                  <Button
-                    onClick={applyPromoCode}
-                    disabled={promoLoading || !promoCode.trim()}
-                    variant="outline"
-                    className="border-border"
-                  >
-                    {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
-                  </Button>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Gift className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Referral code (optional)"
+                        value={referralCode}
+                        onChange={(e) => setReferralCode(e.target.value)}
+                        className="pl-9 border-border bg-card"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => validateReferral(referralCode)}
+                      disabled={checkingReferral || !referralCode.trim()}
+                      variant="outline"
+                      className="border-border"
+                    >
+                      {checkingReferral ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted border border-border">

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,6 +50,7 @@ export default function ProductDetailPage() {
   const [alertPrice, setAlertPrice] = useState("");
   const [alertSubmitting, setAlertSubmitting] = useState(false);
   const [alertSet, setAlertSet] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -231,6 +233,20 @@ export default function ProductDetailPage() {
         );
       }
     }
+  }
+
+  async function handleAddToCart() {
+    if (!product) return;
+    setAdding(true);
+    addItem({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      quantity: 1,
+      seller: product.seller?.full_name || "Unknown",
+    });
+    toast({ title: "Added to cart", description: `${product.title} added to your cart.` });
+    setAdding(false);
   }
 
   return (
