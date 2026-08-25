@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff, Upload, CheckCircle, X } from "lucide-react";
+import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff, Upload, CheckCircle, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -41,6 +41,10 @@ export default function SellerDashboardPage() {
   const [deliveryText, setDeliveryText] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; path: string; size: number; type: string }>>([]);
   const [fulfilling, setFulfilling] = useState(false);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [csvText, setCsvText] = useState("");
+  const [bulkParsing, setBulkParsing] = useState(false);
+  const [bulkResults, setBulkResults] = useState<{ success: number; errors: Array<{ row: number; error: string }> } | null>(null);
 
   const paginatedOrders = orders.slice((ordersPage - 1) * ordersPerPage, ordersPage * ordersPerPage);
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
@@ -181,6 +185,102 @@ export default function SellerDashboardPage() {
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
   }
 
+  function downloadTemplate() {
+    const headers = "title,description,price,original_price,category,stock,delivery_time,tags,auto_delivery,keys\n";
+    const example = '"Steam Game Key","Global activation key for Steam",9.99,29.99,Game Keys,100,Instant,"steam,key,global",true,"XXXX-XXXX-XXXX-XXXX\nYYYY-YYYY-YYYY-YYYY"\n';
+    const blob = new Blob([headers + example], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "tradevault-product-template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function parseAndUploadCSV() {
+    if (!csvText.trim() || !user) return;
+    setBulkParsing(true);
+    setBulkResults(null);
+
+    const lines = csvText.trim().split("\n");
+    if (lines.length < 2) {
+      toast({ title: "Invalid CSV", description: "CSV must have a header row and at least one data row.", variant: "destructive" });
+      setBulkParsing(false);
+      return;
+    }
+
+    const headers = lines[0].split(",").map((h) => h.trim().toLowerCase().replace(/^"|"$/g, ""));
+    const required = ["title", "description", "price"];
+    const missing = required.filter((r) => !headers.includes(r));
+    if (missing.length > 0) {
+      toast({ title: "Missing columns", description: `Required: ${missing.join(", ")}`, variant: "destructive" });
+      setBulkParsing(false);
+      return;
+    }
+
+    const getCol = (row: string[], name: string) => {
+      const idx = headers.indexOf(name);
+      return idx >= 0 ? row[idx]?.trim().replace(/^"|"$/g, "") || "" : "";
+    };
+
+    const successRows: Array<Record<string, unknown>> = [];
+    const errorRows: Array<{ row: number; error: string }> = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const row = lines[i].split(",").map((c) => c.trim());
+      const title = getCol(row, "title");
+      const description = getCol(row, "description");
+      const price = parseFloat(getCol(row, "price"));
+      const originalPrice = getCol(row, "original_price") ? parseFloat(getCol(row, "original_price")) : null;
+      const category = getCol(row, "category") || "Other";
+      const stock = parseInt(getCol(row, "stock")) || 0;
+      const deliveryTime = getCol(row, "delivery_time") || "Instant";
+      const tagsRaw = getCol(row, "tags");
+      const autoDelivery = getCol(row, "auto_delivery").toLowerCase() === "true";
+      const keysRaw = getCol(row, "keys");
+
+      if (!title || !description || isNaN(price) || price <= 0) {
+        errorRows.push({ row: i + 1, error: "Missing title, description, or invalid price" });
+        continue;
+      }
+
+      const productData = {
+        title,
+        description,
+        price,
+        original_price: originalPrice,
+        category_id: category,
+        delivery_time: deliveryTime,
+        stock: autoDelivery && keysRaw ? keysRaw.split("\\n").filter((k) => k.trim()).length : stock,
+        tags: tagsRaw.split(",").map((t) => t.trim()).filter(Boolean),
+        seller_id: user.id,
+        status: "active",
+        auto_delivery: autoDelivery,
+      };
+
+      const { data: product, error } = await supabase.from("products").insert(productData).select().single();
+
+      if (error || !product) {
+        errorRows.push({ row: i + 1, error: error?.message || "Insert failed" });
+      } else {
+        successRows.push(product);
+
+        if (autoDelivery && keysRaw) {
+          const keys = keysRaw.split("\\n").map((k) => k.trim()).filter(Boolean);
+          const stockInserts = keys.map((key) => ({ product_id: product.id, key_code: key }));
+          await supabase.from("product_stock").insert(stockInserts);
+        }
+      }
+    }
+
+    setBulkResults({ success: successRows.length, errors: errorRows });
+    if (successRows.length > 0) {
+      toast({ title: "Upload complete", description: `${successRows.length} products created successfully.` });
+      fetchDashboard();
+    }
+    setBulkParsing(false);
+  }
+
   const statusBadge = (status: string) => {
     const map: Record<string, string> = {
       delivered: "bg-muted text-foreground border-border",
@@ -205,12 +305,18 @@ export default function SellerDashboardPage() {
             <h1 className="font-display text-3xl font-bold text-foreground">Seller Dashboard</h1>
             <p className="text-muted-foreground">Manage your shop, track orders, and grow your business</p>
           </div>
-          <Link href="/seller/products/new">
-            <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Store className="h-4 w-4" />
-              Add Product
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={() => setBulkModalOpen(true)} className="gap-2 border-border">
+              <FileText className="h-4 w-4" />
+              Bulk Upload
             </Button>
-          </Link>
+            <Link href="/seller/products/new">
+              <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Store className="h-4 w-4" />
+                Add Product
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -545,6 +651,69 @@ export default function SellerDashboardPage() {
                 </Button>
                 <Button variant="outline" onClick={() => setFulfillModalOpen(false)} className="border-border">
                   Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={bulkModalOpen} onOpenChange={setBulkModalOpen}>
+          <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="font-display text-foreground">Bulk Upload Products</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">Upload multiple products via CSV. One product per row.</p>
+                <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-1.5 border-border text-xs">
+                  <FileText className="h-3.5 w-3.5" />
+                  Download Template
+                </Button>
+              </div>
+
+              <Textarea
+                value={csvText}
+                onChange={(e) => setCsvText(e.target.value)}
+                placeholder={'title,description,price,original_price,category,stock,delivery_time,tags,auto_delivery,keys\n"Steam Key","Global Steam key",9.99,29.99,Game Keys,50,Instant,"steam,global",true,"XXXX-XXXX\nYYYY-YYYY"\n"Netflix Account","1 month premium",4.99,9.99,Accounts,20,Instant,"netflix,streaming",false,'}
+                className="bg-muted border-border min-h-[200px] font-mono text-xs"
+              />
+
+              {bulkResults && (
+                <div className="bg-muted rounded-lg p-4">
+                  <p className="text-sm font-medium text-foreground mb-2">
+                    Results: {bulkResults.success} created, {bulkResults.errors.length} errors
+                  </p>
+                  {bulkResults.errors.length > 0 && (
+                    <div className="space-y-1 max-h-[150px] overflow-y-auto">
+                      {bulkResults.errors.map((err) => (
+                        <p key={err.row} className="text-xs text-foreground">
+                          Row {err.row}: {err.error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={parseAndUploadCSV}
+                  disabled={bulkParsing || !csvText.trim()}
+                  className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  {bulkParsing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4" />
+                      Upload {csvText.trim() ? csvText.trim().split("\n").length - 1 : 0} Products
+                    </>
+                  )}
+                </Button>
+                <Button variant="outline" onClick={() => { setBulkModalOpen(false); setCsvText(""); setBulkResults(null); }} className="border-border">
+                  Close
                 </Button>
               </div>
             </div>
