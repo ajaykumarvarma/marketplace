@@ -1,27 +1,27 @@
 ---
 title: Bulk Product Upload via CSV
-status: todo
+status: in_progress
 priority: urgent
 type: feature
-tags: [bulk-upload, csv, seller-onboarding]
+tags: [bulk-upload, csv, seller-onboarding, scaling]
 created_by: agent
 created_at: 2026-08-25T14:32:00Z
 position: 2
 ---
 
 ## Notes
-Sellers can import hundreds of products via CSV instead of one-by-one creation. Critical for onboarding power sellers.
+Critical for seller acquisition. Sellers with large inventories need CSV import instead of one-by-one creation.
 
 ## Checklist
-- [ ] Create CSV upload UI on seller dashboard
-- [ ] Define CSV template with all product fields
-- [ ] Parse and validate CSV rows
-- [ ] Bulk insert products into database
-- [ ] Show upload progress and errors
-- [ ] Download template button
+- [x] Add "Bulk Upload" button to seller dashboard
+- [x] CSV upload modal with template download
+- [x] Parse and validate CSV rows
+- [x] Batch insert products
+- [x] Show success/error summary
+- [x] Handle auto-delivery stock keys per product
 
 ## Acceptance
-- Seller uploads CSV with product data
-- Products are created in bulk with validation
+- Seller uploads CSV with 50+ products
+- All valid products created in one batch
 - Errors show which rows failed and why
 - Template CSV available for download
