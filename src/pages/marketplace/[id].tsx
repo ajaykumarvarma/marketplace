@@ -450,6 +450,14 @@ export default function ProductDetailPage() {
                 {product.stock <= 5 && product.stock > 0 && (
                   <p className="text-xs text-foreground mb-2">Only {product.stock} left — order soon!</p>
                 )}
+                {(product as Record<string, unknown>).auto_delivery === true && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary">
+                      Instant Delivery
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">Keys delivered instantly after payment</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Delivery</span>
                   <span className="text-foreground">{product.delivery_time}</span>

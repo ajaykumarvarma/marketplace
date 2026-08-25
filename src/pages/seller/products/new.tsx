@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,6 +23,9 @@ export default function NewProductPage() {
   const [tagInput, setTagInput] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [autoDelivery, setAutoDelivery] = useState(false);
+  const [stockKeys, setStockKeys] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -50,34 +54,48 @@ export default function NewProductPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!user) {
-      toast({ title: "Authentication required", description: "Please sign in to list products.", variant: "destructive" });
+    if (!user) return;
+    setSubmitting(true);
+
+    const { data: product, error } = await supabase
+      .from("products")
+      .insert({
+        title,
+        description,
+        price: parseFloat(price),
+        original_price: originalPrice ? parseFloat(originalPrice) : null,
+        category_id: categoryId || null,
+        image_url: imageUrl || null,
+        delivery_time: deliveryTime || "Instant",
+        stock: autoDelivery ? stockKeys.split("\n").filter((k) => k.trim()).length : parseInt(stock) || 0,
+        tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+        seller_id: user.id,
+        status: "active",
+        auto_delivery: autoDelivery,
+        delivery_content: autoDelivery ? null : undefined,
+      })
+      .select()
+      .single();
+
+    if (error || !product) {
+      toast({ title: "Error creating product", description: error?.message, variant: "destructive" });
+      setSubmitting(false);
       return;
     }
 
-    setLoading(true);
-    const productInsert = {
-      seller_id: user.id,
-      title: formData.title,
-      description: formData.description,
-      price: parseFloat(formData.price),
-      original_price: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-      category_id: formData.category,
-      delivery_time: formData.deliveryTime,
-      delivery_content: formData.deliveryContent || null,
-      image_url: images.length > 0 ? images[0] : null,
-      status: "active",
-    };
-
-    const { error } = await supabase.from("products").insert(productInsert as never);
-
-    setLoading(false);
-    if (error) {
-      toast({ title: "Error creating listing", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Product listed!", description: "Your product is now live on the marketplace." });
-      router.push("/seller/dashboard");
+    // Insert stock keys for auto-delivery
+    if (autoDelivery && stockKeys.trim()) {
+      const keys = stockKeys.split("\n").map((k) => k.trim()).filter(Boolean);
+      const stockInserts = keys.map((key) => ({
+        product_id: product.id,
+        key_code: key,
+      }));
+      await supabase.from("product_stock").insert(stockInserts);
     }
+
+    toast({ title: "Product created!", description: "Your product is now live." });
+    router.push("/seller/dashboard");
+    setSubmitting(false);
   }
 
   return (
@@ -182,6 +200,52 @@ export default function NewProductPage() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="stock" className="text-foreground">Stock</Label>
+              <Input
+                id="stock"
+                type="number"
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+                placeholder="100"
+                required={!autoDelivery}
+                disabled={autoDelivery}
+                className="bg-muted border-border"
+              />
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-muted rounded-lg border border-border">
+              <Checkbox
+                id="autoDelivery"
+                checked={autoDelivery}
+                onCheckedChange={(checked) => setAutoDelivery(checked === true)}
+              />
+              <div>
+                <Label htmlFor="autoDelivery" className="text-foreground font-medium cursor-pointer">
+                  Enable Auto-Delivery
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Buyers receive digital keys instantly after payment. No manual fulfillment needed.
+                </p>
+              </div>
+            </div>
+
+            {autoDelivery && (
+              <div className="space-y-2">
+                <Label htmlFor="stockKeys" className="text-foreground">Stock Keys</Label>
+                <Textarea
+                  id="stockKeys"
+                  value={stockKeys}
+                  onChange={(e) => setStockKeys(e.target.value)}
+                  placeholder="Paste your digital keys here, one per line...&#10;XXXX-XXXX-XXXX-XXXX&#10;XXXX-XXXX-XXXX-XXXX"
+                  className="bg-muted border-border min-h-[150px] font-mono text-sm"
+                />
+                <p className="text-xs text-muted-foreground">
+                  {stockKeys.split("\n").filter((k) => k.trim()).length} keys ready for instant delivery
+                </p>
+              </div>
+            )}
+
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
                 <Package className="h-4 w-4 text-muted-foreground" />
@@ -216,6 +280,16 @@ export default function NewProductPage() {
                 <Tag className="h-4 w-4 text-muted-foreground" />
                 Tags
               </h3>
+              <div className="space-y-2">
+                <Label htmlFor="tags" className="text-foreground">Tags</Label>
+                <Input
+                  id="tags"
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                  placeholder="game, key, steam, global"
+                  className="bg-muted border-border"
+                />
+              </div>
               <div className="flex gap-2 mb-4">
                 <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} placeholder="Add a tag and press Enter" className="bg-muted border-border" />
                 <Button type="button" variant="outline" onClick={addTag} className="border-border">Add</Button>
