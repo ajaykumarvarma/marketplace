@@ -45,9 +45,13 @@ export default function SellerDashboardPage() {
   const [csvText, setCsvText] = useState("");
   const [bulkParsing, setBulkParsing] = useState(false);
   const [bulkResults, setBulkResults] = useState<{ success: number; errors: Array<{ row: number; error: string }> } | null>(null);
+  const [productsPage, setProductsPage] = useState(1);
+  const productsPerPage = 10;
 
   const paginatedOrders = orders.slice((ordersPage - 1) * ordersPerPage, ordersPage * ordersPerPage);
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
+  const paginatedProducts = products.slice((productsPage - 1) * productsPerPage, productsPage * productsPerPage);
+  const totalProductPages = Math.ceil(products.length / productsPerPage);
 
   const fetchDashboard = useCallback(async () => {
     if (!user) return;
@@ -523,6 +527,31 @@ export default function SellerDashboardPage() {
                       </tbody>
                     </table>
                   </div>
+                  {totalProductPages > 1 && (
+                    <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={productsPage === 1}
+                        onClick={() => setProductsPage(p => p - 1)}
+                        className="border-border"
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-sm text-muted-foreground">
+                        Page {productsPage} of {totalProductPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={productsPage === totalProductPages}
+                        onClick={() => setProductsPage(p => p + 1)}
+                        className="border-border"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </TabsContent>

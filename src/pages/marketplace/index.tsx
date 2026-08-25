@@ -22,6 +22,7 @@ interface Product {
   stock: number;
   status: string;
   created_at: string;
+  featured?: boolean;
   seller: { full_name: string | null; role: string } | null;
   category: { name: string; slug: string } | null;
 }
