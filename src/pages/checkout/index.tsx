@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, Shield, Bitcoin, Loader2, Lock, AlertTriangle, Tag, CheckCircle, X } from "lucide-react";
+import { ShoppingCart, ArrowLeft, CreditCard, Tag, Percent, Gift, Shield, Bitcoin, Loader2, Lock, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/SEO";
@@ -23,6 +23,10 @@ export default function CheckoutPage() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState<string | null>(null);
   const [appliedCoupon, setAppliedCoupon] = useState<{ id: string; code: string; discount_percent: number } | null>(null);
+  const [referralCode, setReferralCode] = useState("");
+  const [referralValid, setReferralValid] = useState(false);
+  const [referralDiscount, setReferralDiscount] = useState(0);
+  const [checkingReferral, setCheckingReferral] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -107,6 +111,28 @@ export default function CheckoutPage() {
     setAppliedCoupon(null);
     setPromoCode("");
     setPromoError(null);
+  }
+
+  async function validateReferral(code: string) {
+    if (!code.trim()) return;
+    setCheckingReferral(true);
+    const res = await fetch("/api/affiliate/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ referralCode: code.trim(), buyerId: user?.id, orderId: null, amount: null }),
+    });
+    setCheckingReferral(false);
+
+    if (res.ok) {
+      const data = await res.json();
+      setReferralValid(true);
+      setReferralDiscount(data.discountPercent || 0);
+      toast({ title: "Referral applied!", description: `${data.discountPercent || 5}% discount applied.` });
+    } else {
+      setReferralValid(false);
+      setReferralDiscount(0);
+      toast({ title: "Invalid referral code", variant: "destructive" });
+    }
   }
 
   async function handleStripeCheckout() {

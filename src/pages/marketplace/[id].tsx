@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send, ThumbsUp, ThumbsDown, Bell, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -46,6 +46,9 @@ export default function ProductDetailPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [reviewVotes, setReviewVotes] = useState<Record<string, "up" | "down" | null>>({});
   const [voteLoading, setVoteLoading] = useState<string | null>(null);
+  const [alertPrice, setAlertPrice] = useState("");
+  const [alertSubmitting, setAlertSubmitting] = useState(false);
+  const [alertSet, setAlertSet] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -143,6 +146,34 @@ export default function ProductDetailPage() {
       toast({ title: "Vote failed", description: "Please try again.", variant: "destructive" });
     }
     setVoteLoading(null);
+  }
+
+  async function setPriceAlert() {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please sign in to set price alerts.", variant: "destructive" });
+      return;
+    }
+    const target = parseFloat(alertPrice);
+    if (isNaN(target) || target <= 0 || target >= product.price) {
+      toast({ title: "Invalid price", description: "Target price must be lower than current price.", variant: "destructive" });
+      return;
+    }
+
+    setAlertSubmitting(true);
+    const { error } = await supabase.from("price_alerts").insert({
+      user_id: user.id,
+      product_id: product.id,
+      target_price: target,
+    });
+
+    setAlertSubmitting(false);
+    if (error) {
+      toast({ title: "Failed to set alert", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Price alert set!", description: `We'll notify you when the price drops to $${target.toFixed(2)} or lower.` });
+      setAlertSet(true);
+      setAlertPrice("");
+    }
   }
 
   async function submitReview() {
@@ -406,21 +437,49 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
-              <div className="mb-6">
-                <Button
-                  className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground h-12 mb-3"
-                  onClick={() => addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" })}
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
-                </Button>
-                <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 gap-2 border-border h-12">
-                    <MessageSquare className="h-4 w-4" />
-                    Contact Seller
+              <div className="flex flex-col gap-3 pt-4 border-t border-border">
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={adding}
+                    className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  >
+                    {adding ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <ShoppingCart className="h-4 w-4" />
+                    )}
+                    Add to Cart
                   </Button>
                   <WishlistButton productId={product.id} />
                 </div>
+
+                {!alertSet ? (
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={alertPrice}
+                      onChange={(e) => setAlertPrice(e.target.value)}
+                      placeholder="Target price"
+                      className="bg-muted border-border w-32"
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={setPriceAlert}
+                      disabled={alertSubmitting}
+                      className="gap-2 border-border flex-1"
+                    >
+                      <Bell className="h-4 w-4" />
+                      {alertSubmitting ? "Setting..." : "Price Alert"}
+                    </Button>
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3" />
+                    Price alert set. We'll notify you when the price drops.
+                  </p>
+                )}
               </div>
 
               <div className="pt-4 border-t border-border mb-4">

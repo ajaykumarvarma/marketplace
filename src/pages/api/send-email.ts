@@ -6,10 +6,11 @@ import { OrderConfirmation } from "@/emails/OrderConfirmation";
 import { SellerNotification } from "@/emails/SellerNotification";
 import { DeliveryConfirmation } from "@/emails/DeliveryConfirmation";
 import { FollowUpEmail } from "@/emails/FollowUpEmail";
+import { PriceDropEmail } from "@/emails/PriceDropEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation" | "follow_up";
+type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation" | "follow_up" | "price_drop";
 
 interface TemplateEmailRequest {
   to: string;
@@ -88,6 +89,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             orderId: body.props.orderId || "00000000",
             productTitle: body.props.productTitle || "your order",
             reviewUrl: body.props.reviewUrl || "https://tradevault.io/orders",
+          }));
+          break;
+        case "price_drop":
+          subject = `Price Drop Alert: ${body.props.productTitle || "a product"}`;
+          html = await render(PriceDropEmail({
+            buyerName: body.props.buyerName || "there",
+            productTitle: body.props.productTitle || "a product",
+            currentPrice: body.props.currentPrice || "$0.00",
+            targetPrice: body.props.targetPrice || "$0.00",
+            productUrl: body.props.productUrl || "https://tradevault.io/marketplace",
           }));
           break;
         default:
