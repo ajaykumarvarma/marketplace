@@ -92,7 +92,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .maybeSingle();
 
       if (orderData) {
-        const product = orderData.product as Record<string, unknown>;
+        const productArray = orderData.product as unknown as Array<{ title?: string; auto_delivery?: boolean; delivery_content?: string }>;
+        const product = productArray?.[0] || {};
         const isAutoDelivery = product?.auto_delivery === true;
 
         // AUTO-DELIVERY: Fetch unsold stock and assign to order
@@ -142,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Send order confirmation to buyer
         if (buyerProfile?.email) {
-          const productTitle = (orderData.product as { title?: string })?.title || "your order";
+          const productTitle = product?.title || "your order";
           await sendTemplateEmail(
             buyerProfile.email,
             "order_confirmation",
@@ -164,7 +165,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             {
               sellerName: sellerProfile.full_name || "there",
               orderId: orderData.id.slice(0, 8),
-              productTitle: (orderData.product as { title?: string })?.title || "your product",
+              productTitle: product?.title || "your product",
               amount: `$${(orderData.total_amount || 0).toFixed(2)}`,
               dashboardUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/seller/dashboard`,
             }
