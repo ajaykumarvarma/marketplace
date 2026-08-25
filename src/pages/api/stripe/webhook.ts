@@ -84,14 +84,50 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error("Failed to update order status:", updateError);
       }
 
-      // Fetch order details for emails
+      // Fetch order details for emails and auto-delivery
       const { data: orderData } = await supabaseAdmin
         .from("orders")
-        .select("id, buyer_id, seller_id, total_amount, product:product_id(title)")
+        .select("id, buyer_id, seller_id, product_id, total_amount, product:product_id(title, auto_delivery, delivery_content)")
         .eq("stripe_session_id", session.id)
         .maybeSingle();
 
       if (orderData) {
+        const product = orderData.product as Record<string, unknown>;
+        const isAutoDelivery = product?.auto_delivery === true;
+
+        // AUTO-DELIVERY: Fetch unsold stock and assign to order
+        if (isAutoDelivery) {
+          const { data: stockItem } = await supabaseAdmin
+            .from("product_stock")
+            .select("id, key_code")
+            .eq("product_id", orderData.product_id)
+            .eq("sold", false)
+            .order("created_at", { ascending: true })
+            .limit(1)
+            .maybeSingle();
+
+          if (stockItem) {
+            // Mark stock as sold and link to order
+            await supabaseAdmin
+              .from("product_stock")
+              .update({ sold: true, order_id: orderData.id })
+              .eq("id", stockItem.id);
+
+            // Update order to delivered with the key
+            await supabaseAdmin
+              .from("orders")
+              .update({
+                status: "delivered",
+                delivery_method: "digital",
+                delivery_content: stockItem.key_code,
+              })
+              .eq("id", orderData.id);
+
+            // Decrement product stock count
+            await supabaseAdmin.rpc("decrement_product_stock", { p_id: orderData.product_id });
+          }
+        }
+
         const { data: buyerProfile } = await supabaseAdmin
           .from("profiles")
           .select("email, full_name")
@@ -151,6 +187,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           `You have a new order #${orderData.id.slice(0, 8)} for $${(orderData.total_amount || 0).toFixed(2)}.`,
           { orderId: orderData.id, amount: orderData.total_amount }
         );
+
+        // If auto-delivered, notify buyer of instant delivery
+        if (isAutoDelivery) {
+          await createNotification(
+            orderData.buyer_id,
+            "delivery",
+            "Order Delivered Instantly",
+            `Your order #${orderData.id.slice(0, 8)} has been automatically delivered. View it now.`,
+            { orderId: orderData.id }
+          );
+        }
       }
 
       break;

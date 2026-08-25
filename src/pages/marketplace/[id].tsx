@@ -447,6 +447,9 @@ export default function ProductDetailPage() {
                   <span className="text-muted-foreground">Stock</span>
                   <span className="font-mono text-foreground">{product.stock} left</span>
                 </div>
+                {product.stock <= 5 && product.stock > 0 && (
+                  <p className="text-xs text-foreground mb-2">Only {product.stock} left — order soon!</p>
+                )}
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-muted-foreground">Delivery</span>
                   <span className="text-foreground">{product.delivery_time}</span>

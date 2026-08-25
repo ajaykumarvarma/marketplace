@@ -681,6 +681,90 @@ export type Database = {
         }
         Relationships: []
       }
+      price_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          target_price: number
+          triggered: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          target_price: number
+          triggered?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          target_price?: number
+          triggered?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_alerts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "price_alerts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_stock: {
+        Row: {
+          created_at: string
+          id: string
+          key_code: string
+          order_id: string | null
+          product_id: string
+          sold: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_code: string
+          order_id?: string | null
+          product_id: string
+          sold?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_code?: string
+          order_id?: string | null
+          product_id?: string
+          sold?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_stock_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_stock_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           auto_delivery: boolean
@@ -1267,8 +1351,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrement_review_counter: {
+        Args: { counter_field: string; review_id: string }
+        Returns: undefined
+      }
       increment_coupon_usage: {
         Args: { coupon_id: string }
+        Returns: undefined
+      }
+      increment_review_counter: {
+        Args: { counter_field: string; review_id: string }
         Returns: undefined
       }
     }
