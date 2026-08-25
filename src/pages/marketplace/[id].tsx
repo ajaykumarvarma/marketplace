@@ -242,7 +242,6 @@ export default function ProductDetailPage() {
       id: product.id,
       title: product.title,
       price: product.price,
-      quantity: 1,
       seller: product.seller?.full_name || "Unknown",
     });
     toast({ title: "Added to cart", description: `${product.title} added to your cart.` });
