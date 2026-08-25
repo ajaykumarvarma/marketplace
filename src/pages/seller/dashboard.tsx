@@ -281,6 +281,25 @@ export default function SellerDashboardPage() {
     setBulkParsing(false);
   }
 
+  async function toggleFeatured(productId: string, currentFeatured: boolean) {
+    if (!user) return;
+    const { error } = await supabase
+      .from("products")
+      .update({
+        featured: !currentFeatured,
+        featured_until: !currentFeatured ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() : null,
+      })
+      .eq("id", productId)
+      .eq("seller_id", user.id);
+
+    if (error) {
+      toast({ title: "Failed to update product", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: !currentFeatured ? "Product featured!" : "Feature removed" });
+      fetchDashboard();
+    }
+  }
+
   const statusBadge = (status: string) => {
     const map: Record<string, string> = {
       delivered: "bg-muted text-foreground border-border",
@@ -466,27 +485,37 @@ export default function SellerDashboardPage() {
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Featured</th>
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {products.map((product) => (
+                        {paginatedProducts.map((product) => (
                           <tr key={product.id} className="border-b border-border hover:bg-muted transition-colors">
                             <td className="px-4 py-3 text-foreground">{product.title}</td>
                             <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
-                            <td className="px-4 py-3 font-mono text-foreground">{product.stock}</td>
+                            <td className="px-4 py-3 text-foreground">{product.stock}</td>
                             <td className="px-4 py-3">
-                              <Badge variant="outline" className={`text-xs ${statusBadge(product.status)}`}>{product.status.replace("_", " ")}</Badge>
+                              {(product as Record<string, unknown>).featured === true ? (
+                                <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
+                                  <Star className="h-3 w-3 mr-1 fill-amber-400" />
+                                  Featured
+                                </Badge>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
                             </td>
                             <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="View product">
-                                  <Eye className="h-4 w-4" />
-                                </button>
-                                <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" aria-label="Analytics">
-                                  <BarChart3 className="h-4 w-4" />
-                                </button>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => toggleFeatured(product.id, (product as Record<string, unknown>).featured === true)}
+                                  className="gap-1.5 border-border text-xs"
+                                >
+                                  <Star className="h-3.5 w-3.5" />
+                                  {(product as Record<string, unknown>).featured === true ? "Unfeature" : "Feature"}
+                                </Button>
                               </div>
                             </td>
                           </tr>

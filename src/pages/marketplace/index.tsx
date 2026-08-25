@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Search, Shield, Clock, ShoppingCart, X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Search, Shield, Clock, ShoppingCart, X, ChevronLeft, ChevronRight, Loader2, Star, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
@@ -223,6 +223,17 @@ export default function MarketplacePage() {
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.category?.name || "Other"}</span>
                       <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.delivery_time}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Badge variant="outline" className="text-xs border-border text-muted-foreground">
+                        {product.category?.name || "Other"}
+                      </Badge>
+                      {(product as Record<string, unknown>).featured === true && (
+                        <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
+                          <Star className="h-3 w-3 mr-1 fill-amber-400" />
+                          Featured
+                        </Badge>
+                      )}
                     </div>
                     <Button
                       size="sm"

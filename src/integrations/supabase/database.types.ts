@@ -773,6 +773,8 @@ export type Database = {
           delivery_content: string | null
           delivery_time: string
           description: string
+          featured: boolean | null
+          featured_until: string | null
           id: string
           image_url: string | null
           original_price: number | null
@@ -793,6 +795,8 @@ export type Database = {
           delivery_content?: string | null
           delivery_time?: string
           description: string
+          featured?: boolean | null
+          featured_until?: string | null
           id?: string
           image_url?: string | null
           original_price?: number | null
@@ -813,6 +817,8 @@ export type Database = {
           delivery_content?: string | null
           delivery_time?: string
           description?: string
+          featured?: boolean | null
+          featured_until?: string | null
           id?: string
           image_url?: string | null
           original_price?: number | null
@@ -1351,6 +1357,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrement_product_stock: { Args: { p_id: string }; Returns: undefined }
       decrement_review_counter: {
         Args: { counter_field: string; review_id: string }
         Returns: undefined
