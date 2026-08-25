@@ -27,6 +27,7 @@ interface ProductDetail {
   tags: string[];
   status: string;
   created_at: string;
+  auto_delivery?: boolean;
   seller: { id: string; full_name: string | null; role: string } | null;
   category: { name: string } | null;
   reviews: { id: string; reviewer_id: string; rating: number; comment: string; created_at: string; helpful_count: number; unhelpful_count: number; approved: boolean }[] | null;
@@ -450,7 +451,7 @@ export default function ProductDetailPage() {
                 {product.stock <= 5 && product.stock > 0 && (
                   <p className="text-xs text-foreground mb-2">Only {product.stock} left — order soon!</p>
                 )}
-                {(product as Record<string, unknown>).auto_delivery === true && (
+                {product.auto_delivery === true && (
                   <div className="flex items-center gap-2 mb-2">
                     <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary">
                       Instant Delivery

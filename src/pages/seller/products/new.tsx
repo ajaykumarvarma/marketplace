@@ -22,7 +22,6 @@ export default function NewProductPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [autoDelivery, setAutoDelivery] = useState(false);
   const [stockKeys, setStockKeys] = useState("");
@@ -60,19 +59,19 @@ export default function NewProductPage() {
     const { data: product, error } = await supabase
       .from("products")
       .insert({
-        title,
-        description,
-        price: parseFloat(price),
-        original_price: originalPrice ? parseFloat(originalPrice) : null,
-        category_id: categoryId || null,
-        image_url: imageUrl || null,
-        delivery_time: deliveryTime || "Instant",
-        stock: autoDelivery ? stockKeys.split("\n").filter((k) => k.trim()).length : parseInt(stock) || 0,
-        tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+        title: formData.title,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        original_price: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
+        category_id: formData.category || null,
+        image_url: images[0] || null,
+        delivery_time: formData.deliveryTime || "Instant",
+        stock: autoDelivery ? stockKeys.split("\n").filter((k) => k.trim()).length : parseInt(formData.stock) || 0,
+        tags: tags,
         seller_id: user.id,
         status: "active",
         auto_delivery: autoDelivery,
-        delivery_content: autoDelivery ? null : undefined,
+        delivery_content: autoDelivery ? null : formData.deliveryContent || null,
       })
       .select()
       .single();
@@ -163,7 +162,7 @@ export default function NewProductPage() {
                 Pricing
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="mb-4">
+                <div>
                   <Label htmlFor="price" className="mb-2 block">Price (USD)</Label>
                   <Input id="price" type="number" step="0.01" min="0.01" required value={formData.price} onChange={(e) => handleChange("price", e.target.value)} placeholder="19.99" className="bg-muted border-border font-mono" />
                 </div>
@@ -179,8 +178,8 @@ export default function NewProductPage() {
                 <Layers className="h-4 w-4 text-muted-foreground" />
                 Category & Inventory
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
                   <Label htmlFor="category" className="mb-2 block">Category</Label>
                   <select id="category" required value={formData.category} onChange={(e) => handleChange("category", e.target.value)} className="w-full px-3 py-2 rounded-md bg-muted border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="">Select a category</option>
@@ -195,56 +194,42 @@ export default function NewProductPage() {
                 </div>
                 <div>
                   <Label htmlFor="stock" className="mb-2 block">Stock Quantity</Label>
-                  <Input id="stock" type="number" min="1" required value={formData.stock} onChange={(e) => handleChange("stock", e.target.value)} placeholder="50" className="bg-muted border-border font-mono" />
+                  <Input id="stock" type="number" min="1" required={!autoDelivery} disabled={autoDelivery} value={formData.stock} onChange={(e) => handleChange("stock", e.target.value)} placeholder="50" className="bg-muted border-border font-mono" />
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="stock" className="text-foreground">Stock</Label>
-              <Input
-                id="stock"
-                type="number"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                placeholder="100"
-                required={!autoDelivery}
-                disabled={autoDelivery}
-                className="bg-muted border-border"
-              />
-            </div>
-
-            <div className="flex items-center gap-3 p-4 bg-muted rounded-lg border border-border">
-              <Checkbox
-                id="autoDelivery"
-                checked={autoDelivery}
-                onCheckedChange={(checked) => setAutoDelivery(checked === true)}
-              />
-              <div>
-                <Label htmlFor="autoDelivery" className="text-foreground font-medium cursor-pointer">
-                  Enable Auto-Delivery
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  Buyers receive digital keys instantly after payment. No manual fulfillment needed.
-                </p>
-              </div>
-            </div>
-
-            {autoDelivery && (
-              <div className="space-y-2">
-                <Label htmlFor="stockKeys" className="text-foreground">Stock Keys</Label>
-                <Textarea
-                  id="stockKeys"
-                  value={stockKeys}
-                  onChange={(e) => setStockKeys(e.target.value)}
-                  placeholder="Paste your digital keys here, one per line...&#10;XXXX-XXXX-XXXX-XXXX&#10;XXXX-XXXX-XXXX-XXXX"
-                  className="bg-muted border-border min-h-[150px] font-mono text-sm"
+              <div className="flex items-center gap-3 p-4 bg-muted rounded-lg border border-border mb-4">
+                <Checkbox
+                  id="autoDelivery"
+                  checked={autoDelivery}
+                  onCheckedChange={(checked) => setAutoDelivery(checked === true)}
                 />
-                <p className="text-xs text-muted-foreground">
-                  {stockKeys.split("\n").filter((k) => k.trim()).length} keys ready for instant delivery
-                </p>
+                <div>
+                  <Label htmlFor="autoDelivery" className="text-foreground font-medium cursor-pointer">
+                    Enable Auto-Delivery
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Buyers receive digital keys instantly after payment. No manual fulfillment needed.
+                  </p>
+                </div>
               </div>
-            )}
+
+              {autoDelivery && (
+                <div className="space-y-2">
+                  <Label htmlFor="stockKeys" className="text-foreground">Stock Keys</Label>
+                  <Textarea
+                    id="stockKeys"
+                    value={stockKeys}
+                    onChange={(e) => setStockKeys(e.target.value)}
+                    placeholder="Paste your digital keys here, one per line...&#10;XXXX-XXXX-XXXX-XXXX&#10;XXXX-XXXX-XXXX-XXXX"
+                    className="bg-muted border-border min-h-[150px] font-mono text-sm"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {stockKeys.split("\n").filter((k) => k.trim()).length} keys ready for instant delivery
+                  </p>
+                </div>
+              )}
+            </div>
 
             <div className="mb-8">
               <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-4">
@@ -262,17 +247,19 @@ export default function NewProductPage() {
                 }} />
                 <p className="text-xs text-muted-foreground mt-2">Upload files that will be securely delivered to buyers after purchase. Max 100MB per file.</p>
               </div>
-              <div className="mb-4">
-                <Label htmlFor="deliveryContent" className="mb-2 block">Auto-Delivery Content (Optional)</Label>
-                <Textarea
-                  id="deliveryContent"
-                  value={formData.deliveryContent || ""}
-                  onChange={(e) => handleChange("deliveryContent", e.target.value)}
-                  placeholder="Enter digital content that will be automatically delivered to buyers (license keys, download links, account credentials, etc.)..."
-                  className="bg-muted border-border min-h-[100px]"
-                />
-                <p className="text-xs text-muted-foreground mt-2">This content will be shown to buyers immediately after purchase confirmation.</p>
-              </div>
+              {!autoDelivery && (
+                <div className="mb-4">
+                  <Label htmlFor="deliveryContent" className="mb-2 block">Auto-Delivery Content (Optional)</Label>
+                  <Textarea
+                    id="deliveryContent"
+                    value={formData.deliveryContent || ""}
+                    onChange={(e) => handleChange("deliveryContent", e.target.value)}
+                    placeholder="Enter digital content that will be automatically delivered to buyers (license keys, download links, account credentials, etc.)..."
+                    className="bg-muted border-border min-h-[100px]"
+                  />
+                  <p className="text-xs text-muted-foreground mt-2">This content will be shown to buyers immediately after purchase confirmation.</p>
+                </div>
+              )}
             </div>
 
             <div className="mb-8">
@@ -280,16 +267,6 @@ export default function NewProductPage() {
                 <Tag className="h-4 w-4 text-muted-foreground" />
                 Tags
               </h3>
-              <div className="space-y-2">
-                <Label htmlFor="tags" className="text-foreground">Tags</Label>
-                <Input
-                  id="tags"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value)}
-                  placeholder="game, key, steam, global"
-                  className="bg-muted border-border"
-                />
-              </div>
               <div className="flex gap-2 mb-4">
                 <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} placeholder="Add a tag and press Enter" className="bg-muted border-border" />
                 <Button type="button" variant="outline" onClick={addTag} className="border-border">Add</Button>
@@ -305,9 +282,9 @@ export default function NewProductPage() {
             </div>
 
             <div className="pt-4 border-t border-border flex flex-col sm:flex-row gap-3">
-              <Button type="submit" disabled={loading} className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                {loading ? "Publishing..." : "Publish Listing"}
+              <Button type="submit" disabled={submitting} className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                {submitting ? "Publishing..." : "Publish Listing"}
               </Button>
               <Button type="button" variant="outline" className="border-border">Save as Draft</Button>
             </div>
