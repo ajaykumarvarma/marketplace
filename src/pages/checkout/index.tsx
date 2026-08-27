@@ -205,6 +205,52 @@ export default function CheckoutPage() {
     }
   }
 
+  async function createStripeSession() {
+    if (!user || items.length === 0) return;
+
+    // Get seller IDs from cart
+    const sellerIds = [...new Set(items.map((item) => item.sellerId).filter(Boolean))];
+    let totalCommission = 0;
+
+    // Fetch seller subscriptions and calculate commission
+    for (const sellerId of sellerIds) {
+      const { data: sub } = await supabase
+        .from("seller_subscriptions")
+        .select("plan:plan_id(commission_rate)")
+        .eq("seller_id", sellerId)
+        .eq("status", "active")
+        .maybeSingle();
+
+      const commissionRate = (sub as unknown as { plan: { commission_rate: number } })?.plan?.commission_rate || 15;
+      const sellerTotal = items.filter((i) => i.sellerId === sellerId).reduce((s, i) => s + i.price * i.quantity, 0);
+      totalCommission += sellerTotal * (commissionRate / 100);
+    }
+
+    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const discount = appliedCoupon ? (subtotal * appliedCoupon.discount_percent) / 100 : 0;
+    const referralDiscountAmount = referralValid ? (subtotal * referralDiscount) / 100 : 0;
+    const totalAfterDiscounts = subtotal - discount - referralDiscountAmount;
+
+    const res = await fetch("/api/stripe/checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: items,
+        buyerId: user.id,
+        couponCode: appliedCoupon?.code || null,
+        total: totalAfterDiscounts,
+        commission: totalCommission,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      toast({ title: "Checkout failed", description: data.error || "Please try again.", variant: "destructive" });
+    }
+  }
+
   return (
     <>
       <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection for digital goods." />

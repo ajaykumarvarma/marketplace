@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag, Loader2, Calendar, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Star, Shield, Store, Package, Users, TrendingUp, MessageSquare, Flag, Loader2, Calendar, ThumbsUp, ThumbsDown, Crown, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -61,6 +61,7 @@ export default function SellerProfilePage() {
   const [activeTab, setActiveTab] = useState("products");
   const [reviewVotes, setReviewVotes] = useState<Record<string, "up" | "down" | null>>({});
   const [voteLoading, setVoteLoading] = useState<string | null>(null);
+  const [sellerSubscription, setSellerSubscription] = useState<{ plan: { name: string; slug: string } } | null>(null);
   const { user } = useAuth();
 
   async function handleVote(reviewId: string, voteType: "up" | "down") {
@@ -145,9 +146,62 @@ export default function SellerProfilePage() {
   }, [id]);
 
   useEffect(() => {
-    if (!id) return;
-    fetchSellerData();
-  }, [id, fetchSellerData]);
+    async function fetchSeller() {
+      if (!id) return;
+      setLoading(true);
+
+      const [
+        profileRes,
+        productsRes,
+        reviewsRes,
+        salesRes,
+        subscriptionRes,
+      ] = await Promise.all([
+        supabase.from("profiles").select("id, full_name, avatar_url, created_at").eq("id", id as string).maybeSingle(),
+        supabase.from("products").select("id, title, price, stock, status").eq("seller_id", id as string).eq("status", "active"),
+        supabase.from("reviews").select("id, rating, comment, created_at, helpful_count, unhelpful_count, approved, product:product_id(title), reviewer:reviewer_id(full_name)").eq("seller_id", id as string).order("created_at", { ascending: false }).limit(20),
+        supabase.from("orders").select("total_amount").eq("seller_id", id as string).eq("status", "completed"),
+        supabase.from("seller_subscriptions").select("plan:plan_id(name, slug)").eq("seller_id", id as string).eq("status", "active").maybeSingle(),
+      ]);
+
+      if (profileRes.data) {
+        setSeller(profileRes.data as unknown as SellerProfile);
+        setMemberSince(new Date(profileRes.data.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }));
+      }
+      if (productsRes.data) setProducts(productsRes.data);
+      if (salesRes.data) {
+        const totalRevenue = salesRes.data.reduce((sum, o) => sum + (o.total_amount || 0), 0);
+        setStats({
+          totalSales: salesRes.data.length,
+          totalRevenue,
+          productCount: productsRes.data?.length || 0,
+        });
+      }
+      if (reviewsRes.data) {
+        const mapped = reviewsRes.data.map((r: unknown) => {
+          const row = r as Record<string, unknown>;
+          return {
+            id: String(row.id),
+            rating: Number(row.rating),
+            comment: String(row.comment),
+            created_at: String(row.created_at),
+            reviewer_name: ((row.reviewer as Record<string, unknown>)?.full_name as string) || "Anonymous",
+            product_title: ((row.product as Record<string, unknown>)?.title as string) || "Product",
+            helpful_count: Number(row.helpful_count || 0),
+            unhelpful_count: Number(row.unhelpful_count || 0),
+            approved: row.approved !== false,
+          };
+        });
+        setReviews(mapped);
+      }
+      if (subscriptionRes.data) {
+        const sub = subscriptionRes.data as unknown as { plan: { name: string; slug: string } };
+        setSellerSubscription(sub);
+      }
+      setLoading(false);
+    }
+    fetchSeller();
+  }, [id]);
 
   if (loading) {
     return (
@@ -182,10 +236,22 @@ export default function SellerProfilePage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2 flex-wrap">
                   <h1 className="font-display text-2xl font-bold text-foreground">{seller.full_name || "Seller"}</h1>
-                  <Badge variant="outline" className="bg-muted text-foreground border-border">
-                    <Shield className="h-3 w-3 mr-1" />
-                    {tierLabel}
-                  </Badge>
+                  {sellerSubscription?.plan ? (
+                    <Badge variant="outline" className={`text-xs border-border ${
+                      sellerSubscription.plan.slug === "pro" ? "bg-amber-500/10 text-amber-400 border-amber-500/30" :
+                      sellerSubscription.plan.slug === "basic" ? "bg-primary/10 text-primary border-primary/30" :
+                      "bg-muted text-muted-foreground"
+                    }`}>
+                      {sellerSubscription.plan.slug === "pro" && <Crown className="h-3 w-3 mr-1" />}
+                      {sellerSubscription.plan.slug === "basic" && <Zap className="h-3 w-3 mr-1" />}
+                      {sellerSubscription.plan.name}
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-border">
+                      <Star className="h-3 w-3 mr-1" />
+                      Free Seller
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm">
                   <div className="flex items-center gap-1">

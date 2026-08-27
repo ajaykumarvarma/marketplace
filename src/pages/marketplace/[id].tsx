@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +16,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { createNotification } from "@/services/notificationService";
 import { WishlistButton } from "@/components/WishlistButton";
+import { ChatWindow } from "@/components/chat/ChatWindow";
 
 interface ProductDetail {
   id: string;
@@ -51,6 +53,9 @@ export default function ProductDetailPage() {
   const [alertSubmitting, setAlertSubmitting] = useState(false);
   const [alertSet, setAlertSet] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [sendingChat, setSendingChat] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -246,6 +251,40 @@ export default function ProductDetailPage() {
     });
     toast({ title: "Added to cart", description: `${product.title} added to your cart.` });
     setAdding(false);
+  }
+
+  async function sendMessageToSeller() {
+    if (!user || !product?.seller) {
+      toast({ title: "Sign in required", description: "Please sign in to message the seller.", variant: "destructive" });
+      return;
+    }
+    if (!chatMessage.trim()) return;
+
+    setSendingChat(true);
+    const { error } = await supabase.from("messages").insert({
+      sender_id: user.id,
+      receiver_id: product.seller.id,
+      content: chatMessage.trim(),
+      product_id: product.id,
+    });
+
+    setSendingChat(false);
+    if (error) {
+      toast({ title: "Failed to send message", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Message sent!", description: "The seller will be notified." });
+      setChatMessage("");
+      setChatOpen(false);
+
+      // Notify seller
+      await createNotification(
+        product.seller.id,
+        "message",
+        "New Message",
+        `You have a new message about ${product.title}.`,
+        { productId: product.id }
+      );
+    }
   }
 
   return (
@@ -468,6 +507,14 @@ export default function ProductDetailPage() {
                   </Button>
                   <WishlistButton productId={product.id} />
                 </div>
+                <Button
+                  variant="outline"
+                  onClick={() => setChatOpen(true)}
+                  className="gap-2 border-border"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  Message Seller
+                </Button>
 
                 {!alertSet ? (
                   <div className="flex gap-2">
@@ -553,6 +600,42 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+      <Dialog open={chatOpen} onOpenChange={setChatOpen}>
+        <DialogContent className="bg-card border-border max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-display text-foreground">Message Seller</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-muted rounded-lg p-3">
+              <p className="text-sm text-muted-foreground">Product: <span className="text-foreground font-medium">{product?.title}</span></p>
+              <p className="text-sm text-muted-foreground">Seller: <span className="text-foreground">{product?.seller?.full_name || "Unknown"}</span></p>
+            </div>
+            <Textarea
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+              placeholder="Ask the seller a question about this product..."
+              className="bg-muted border-border min-h-[100px]"
+            />
+            <div className="flex gap-3">
+              <Button
+                onClick={sendMessageToSeller}
+                disabled={sendingChat || !chatMessage.trim()}
+                className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                {sendingChat ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+                Send Message
+              </Button>
+              <Button variant="outline" onClick={() => setChatOpen(false)} className="border-border">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

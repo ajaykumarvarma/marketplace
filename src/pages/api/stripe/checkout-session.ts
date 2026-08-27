@@ -12,6 +12,14 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
+interface CheckoutBody {
+  items: CartItem[];
+  buyerId: string;
+  couponCode?: string | null;
+  total?: number;
+  commission?: number;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -25,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { items, userId, email, deviceFingerprint, ipAddress, couponId, discountPercent } = req.body;
+    const { items, userId, email, deviceFingerprint, ipAddress, couponId, discountPercent, commission } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0 || !userId) {
       return res.status(400).json({ error: "Invalid request body" });
@@ -68,15 +76,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${req.headers.origin}/orders?success=true`,
-      cancel_url: `${req.headers.origin}/checkout?canceled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/orders?success=1`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cart?canceled=1`,
       customer_email: email,
       metadata: {
-        userId,
-        deviceFingerprint: deviceFingerprint || "",
-        ipAddress: ipAddress || "",
-        itemCount: String(items.length),
-        couponId: couponId || "",
+        order_id: orderId,
+        buyer_id: body.buyerId,
+        coupon_code: body.couponCode || "",
+        commission: String(body.commission || 0),
       },
       payment_intent_data: {
         metadata: {

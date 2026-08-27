@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { AlertTriangle, MessageSquare, Send, ArrowLeft, Shield, FileText } from "lucide-react";
+import { AlertTriangle, Upload, Clock, CheckCircle, Loader2, MessageSquare, Send, ArrowLeft, Shield, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Link from "next/link";
+import { FileUploader } from "@/components/delivery/FileUploader";
 
 export default function DisputePage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function DisputePage() {
   const [orderId, setOrderId] = useState("");
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
+  const [evidenceFiles, setEvidenceFiles] = useState<Array<{ name: string; path: string }>>([]);
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -53,6 +55,7 @@ export default function DisputePage() {
       reason,
       description: description.trim() || null,
       status: "open",
+      evidence_files: evidenceFiles.map((f) => f.path),
     });
 
     setSubmitting(false);
@@ -61,6 +64,45 @@ export default function DisputePage() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Dispute filed", description: "Our team will review your case within 24 hours." });
+      router.push("/orders");
+    }
+  }
+
+  async function submitDispute() {
+    if (!user || !orderId || !reason.trim()) return;
+
+    setSubmitting(true);
+    const { data: dispute, error } = await supabase
+      .from("disputes")
+      .insert({
+        order_id: orderId,
+        buyer_id: user.id,
+        reason: reason.trim(),
+        status: "open",
+        evidence_files: evidenceFiles.map((f) => f.path),
+      })
+      .select()
+      .single();
+
+    setSubmitting(false);
+    if (error) {
+      toast({ title: "Failed to open dispute", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Dispute opened", description: "The seller has 48 hours to respond." });
+      // Auto-escalate timer: if seller doesn't respond in 48h, auto-refund
+      setTimeout(async () => {
+        const { data: updatedDispute } = await supabase
+          .from("disputes")
+          .select("status, seller_response")
+          .eq("id", dispute.id)
+          .maybeSingle();
+
+        if (updatedDispute && !updatedDispute.seller_response && updatedDispute.status === "open") {
+          await supabase.from("disputes").update({ status: "auto_refunded", resolution: "Seller did not respond within 48 hours. Auto-refund issued." }).eq("id", dispute.id);
+          await supabase.from("orders").update({ status: "refunded" }).eq("id", orderId);
+        }
+      }, 48 * 60 * 60 * 1000); // 48 hours
+
       router.push("/orders");
     }
   }
@@ -138,6 +180,29 @@ export default function DisputePage() {
                 placeholder="Please describe the issue in detail..."
                 className="bg-muted border-border min-h-[120px]"
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Evidence (optional)</label>
+              {evidenceFiles.map((file, i) => (
+                <div key={i} className="flex items-center gap-2 p-2 bg-muted rounded">
+                  <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-foreground flex-1">{file.name}</span>
+                  <Button variant="ghost" size="icon" onClick={() => setEvidenceFiles((prev) => prev.filter((_, idx) => idx !== i))} className="h-6 w-6">
+                    <X className="h-3 w-3 text-muted-foreground" />
+                  </Button>
+                </div>
+              ))}
+              <FileUploader onUpload={(file) => setEvidenceFiles((prev) => [...prev, { name: file.name, path: file.path }])} />
+              <p className="text-xs text-muted-foreground">Upload screenshots, receipts, or other evidence</p>
+            </div>
+
+            <div className="bg-muted rounded-lg p-4 flex items-start gap-3">
+              <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-foreground">Seller Response Timeline</p>
+                <p className="text-xs text-muted-foreground">The seller has 48 hours to respond. If they don't, the dispute will be automatically resolved in your favor with a full refund.</p>
+              </div>
             </div>
 
             <div className="bg-muted border border-border rounded-lg p-4 mb-6">

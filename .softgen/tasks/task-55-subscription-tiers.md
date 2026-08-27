@@ -1,6 +1,6 @@
 ---
 title: Seller Subscription Tiers + Badges
-status: in_progress
+status: done
 priority: medium
 type: feature
 tags: [subscriptions, revenue, seller-tier, badges]
