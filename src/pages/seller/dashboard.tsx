@@ -95,6 +95,31 @@ export default function SellerDashboardPage() {
     fetchReviews();
   }, [user, fetchDashboard, fetchReviews]);
 
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel("seller_orders")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "orders",
+          filter: `seller_id=eq.${user.id}`,
+        },
+        () => {
+          fetchDashboard();
+          toast({ title: "New order received!", description: "Your dashboard has been updated." });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, fetchDashboard, toast]);
+
   async function toggleReviewApproval(reviewId: string, currentApproved: boolean) {
     const { error } = await supabase
       .from("reviews")

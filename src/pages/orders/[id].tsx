@@ -94,6 +94,34 @@ export default function OrderDetailPage() {
     fetchOrder();
   }, [id, user, fetchOrder]);
 
+  useEffect(() => {
+    if (!id) return;
+
+    const channel = supabase
+      .channel(`order_${id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "orders",
+          filter: `id=eq.${id}`,
+        },
+        (payload) => {
+          const updated = payload.new as Record<string, unknown>;
+          setOrder((prev) => prev ? { ...prev, ...updated } as Order : null);
+          if (updated.status === "delivered") {
+            toast({ title: "Order delivered!", description: "Your order has been delivered. Please confirm receipt." });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id]);
+
   async function confirmDelivery() {
     if (!order || !user) return;
     setConfirming(true);

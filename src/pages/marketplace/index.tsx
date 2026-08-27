@@ -10,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { SearchFilters } from "@/components/marketplace/SearchFilters";
 import { MarketplaceSkeleton } from "@/components/MarketplaceSkeleton";
+import { supabase } from "@/lib/supabase";
 
 interface Product {
   id: string;
@@ -100,6 +101,27 @@ export default function MarketplacePage() {
     if (page > 1) query.page = String(page);
     router.push({ pathname: "/marketplace", query }, undefined, { shallow: true, scroll: false });
   }, [activeCategory, sortBy, page, router.isReady]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("marketplace_updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "products",
+        },
+        () => {
+          fetchProducts(1);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchProducts]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
