@@ -68,7 +68,17 @@ export default function EditProductPage() {
     if (!user || !id) return;
     setSaving(true);
 
-    const updates: Record<string, unknown> = {
+    const updates: {
+      title: string;
+      description: string;
+      price: number;
+      original_price: number | null;
+      category_id: string | null;
+      image_url: string | null;
+      delivery_time: string;
+      tags: string[];
+      stock?: number;
+    } = {
       title,
       description,
       price: parseFloat(price),
@@ -76,9 +86,12 @@ export default function EditProductPage() {
       category_id: categoryId || null,
       image_url: imageUrl || null,
       delivery_time: deliveryTime,
-      stock: autoDelivery ? undefined : parseInt(stock) || 0,
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
     };
+
+    if (!autoDelivery) {
+      updates.stock = parseInt(stock) || 0;
+    }
 
     // If auto-delivery and new keys provided, add them
     if (autoDelivery && newStockKeys.trim()) {
@@ -89,7 +102,7 @@ export default function EditProductPage() {
 
     const { error } = await supabase
       .from("products")
-      .update(updates as Record<string, unknown>)
+      .update(updates)
       .eq("id", id as string)
       .eq("seller_id", user.id);
 
