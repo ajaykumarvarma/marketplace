@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send, ThumbsUp, ThumbsDown, Bell, Loader2 } from "lucide-react";
+import { Star, Shield, Clock, ArrowLeft, ShoppingCart, MessageSquare, Flag, CheckCircle, Send, ThumbsUp, ThumbsDown, Bell, Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -183,6 +183,22 @@ export default function ProductDetailPage() {
     }
   }
 
+  function shareOnTwitter() {
+    const url = encodeURIComponent(`https://tradevault.io/marketplace/${product?.id}`);
+    const text = encodeURIComponent(`Check out ${product?.title} on TradeVault for $${product?.price.toFixed(2)}!`);
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank");
+  }
+
+  function shareOnFacebook() {
+    const url = encodeURIComponent(`https://tradevault.io/marketplace/${product?.id}`);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(`https://tradevault.io/marketplace/${product?.id}`);
+    toast({ title: "Link copied!", description: "Product link copied to clipboard." });
+  }
+
   async function submitReview() {
     if (!user || !product) return;
     if (!reviewText.trim()) {
@@ -289,36 +305,30 @@ export default function ProductDetailPage() {
   return (
     <>
       <SEO
-        title={`${product.title} — TradeVault`}
-        description={product.description.slice(0, 155)}
+        title={`${product.title} — TradeVault Marketplace`}
+        description={`${product.description?.slice(0, 150)}... Buy ${product.title} for $${product.price.toFixed(2)} with escrow protection.`}
         image={product.image_url || "https://tradevault.io/og-image.png"}
         url={`https://tradevault.io/marketplace/${product.id}`}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "Product",
           name: product.title,
+          description: product.description,
           image: product.image_url || "https://tradevault.io/og-image.png",
-          description: product.description.slice(0, 255),
-          sku: product.id,
-          brand: {
-            "@type": "Brand",
-            name: product.seller?.full_name || "TradeVault Seller"
-          },
           offers: {
             "@type": "Offer",
-            url: `https://tradevault.io/marketplace/${product.id}`,
+            price: product.price.toFixed(2),
             priceCurrency: "USD",
-            price: product.price.toString(),
             availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             seller: {
               "@type": "Person",
-              name: product.seller?.full_name || "Unknown"
-            }
+              name: product.seller?.full_name || "TradeVault Seller",
+            },
           },
-          aggregateRating: product.reviews && product.reviews.length > 0 ? {
+          aggregateRating: avgRating > 0 ? {
             "@type": "AggregateRating",
-            ratingValue: avgRating,
-            reviewCount: product.reviews.length.toString()
+            ratingValue: avgRating.toFixed(1),
+            reviewCount: String(product.reviews?.length || 0),
           } : undefined
         }}
       />
@@ -541,6 +551,36 @@ export default function ProductDetailPage() {
                     Price alert set. We'll notify you when the price drops.
                   </p>
                 )}
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={shareOnTwitter}
+                  className="flex-1 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  Tweet
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={shareOnFacebook}
+                  className="flex-1 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  Share
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={copyLink}
+                  className="flex-1 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <Share2 className="h-4 w-4" />
+                  Copy Link
+                </Button>
               </div>
 
               <div className="pt-4 border-t border-border mb-4">
