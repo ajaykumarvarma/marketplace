@@ -89,7 +89,7 @@ export default function EditProductPage() {
 
     const { error } = await supabase
       .from("products")
-      .update(updates)
+      .update(updates as Record<string, unknown>)
       .eq("id", id as string)
       .eq("seller_id", user.id);
 

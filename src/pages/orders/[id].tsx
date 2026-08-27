@@ -16,6 +16,8 @@ type Order = {
   id: string;
   status: string;
   created_at: string;
+  paid_at?: string | null;
+  delivered_at?: string | null;
   delivery_method: string | null;
   escrow_released: boolean;
   seller_id: string;
@@ -309,7 +311,8 @@ export default function OrderDetailPage() {
               <h1 className="font-display text-2xl font-bold text-foreground">Order #{order.id.slice(0, 8).toUpperCase()}</h1>
               <p className="text-sm text-muted-foreground">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
             </div>
-            <Badge variant="outline" className={statusColors[order.status] || "bg-muted text-muted-foreground"}>
+            <Badge variant="outline" className={`${config.color} flex items-center gap-1`}>
+              <StatusIcon className="h-3 w-3" />
               {order.status}
             </Badge>
           </div>
