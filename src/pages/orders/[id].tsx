@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Package, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2, Star, Send } from "lucide-react";
+import { Package, Clock, CheckCircle, AlertTriangle, ArrowLeft, MessageSquare, Shield, Download, Loader2, Star, Send, CheckCircle2, Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,6 +30,54 @@ type OrderFile = {
   file_size: number;
   content_type: string;
 };
+
+function OrderTimeline({ status, createdAt, paidAt, deliveredAt }: { status: string; createdAt: string; paidAt?: string | null; deliveredAt?: string | null }) {
+  const steps = [
+    { key: "pending", label: "Order Placed", icon: CheckCircle2, time: createdAt },
+    { key: "paid", label: "Payment Confirmed", icon: CheckCircle2, time: paidAt },
+    { key: "delivered", label: "Delivered", icon: CheckCircle2, time: deliveredAt },
+    { key: "completed", label: "Completed", icon: CheckCircle2, time: deliveredAt },
+  ];
+
+  const statusIndex = ["pending", "paid", "delivered", "completed"].indexOf(status);
+
+  return (
+    <div className="bg-card border border-border rounded-lg p-5 mb-6">
+      <h3 className="font-medium text-foreground mb-4">Order Timeline</h3>
+      <div className="relative">
+        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted" />
+        <div className="space-y-6">
+          {steps.map((step, i) => {
+            const isCompleted = i <= statusIndex;
+            const isCurrent = i === statusIndex;
+            const Icon = isCompleted ? CheckCircle2 : Circle;
+            return (
+              <div key={step.key} className={`relative flex items-start gap-4 ${isCompleted ? "text-foreground" : "text-muted-foreground"}`}>
+                <div className={`relative z-10 flex items-center justify-center h-8 w-8 rounded-full border-2 ${isCurrent ? "border-primary bg-primary/10" : isCompleted ? "border-success bg-success/10" : "border-muted bg-card"}`}>
+                  <Icon className={`h-4 w-4 ${isCurrent ? "text-primary" : isCompleted ? "text-success" : "text-muted-foreground"}`} />
+                </div>
+                <div className="flex-1 pt-0.5">
+                  <p className={`text-sm font-medium ${isCurrent ? "text-primary" : ""}`}>{step.label}</p>
+                  {step.time && (
+                    <p className="text-xs text-muted-foreground">{new Date(step.time).toLocaleString()}</p>
+                  )}
+                  {isCurrent && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {step.key === "pending" && "Waiting for payment confirmation..."}
+                      {step.key === "paid" && "Seller is preparing your order..."}
+                      {step.key === "delivered" && "Please confirm delivery to complete the order."}
+                      {step.key === "completed" && "Order completed successfully!"}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function OrderDetailPage() {
   const router = useRouter();
@@ -255,6 +303,23 @@ export default function OrderDetailPage() {
               <p className="font-mono text-2xl font-bold text-foreground">—</p>
             </div>
           </div>
+
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="font-display text-2xl font-bold text-foreground">Order #{order.id.slice(0, 8).toUpperCase()}</h1>
+              <p className="text-sm text-muted-foreground">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
+            </div>
+            <Badge variant="outline" className={statusColors[order.status] || "bg-muted text-muted-foreground"}>
+              {order.status}
+            </Badge>
+          </div>
+
+          <OrderTimeline
+            status={order.status}
+            createdAt={order.created_at}
+            paidAt={order.paid_at}
+            deliveredAt={order.delivered_at}
+          />
 
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <h2 className="font-display font-semibold text-foreground mb-6">Order Timeline</h2>

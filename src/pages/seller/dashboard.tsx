@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff, Upload, CheckCircle, X, FileText } from "lucide-react";
+import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff, Upload, CheckCircle, X, FileText, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -536,6 +536,16 @@ export default function SellerDashboardPage() {
                             </td>
                             <td className="px-4 py-3">
                               <div className="flex gap-2">
+                                <Link href={`/seller/products/${product.id}/edit`}>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1.5 border-border text-xs"
+                                  >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                    Edit
+                                  </Button>
+                                </Link>
                                 <Button
                                   variant="outline"
                                   size="sm"

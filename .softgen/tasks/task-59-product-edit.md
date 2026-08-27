@@ -1,6 +1,6 @@
 ---
 title: Seller Product Editing
-status: in_progress
+status: done
 priority: urgent
 type: feature
 tags: [seller, products, editing]
@@ -13,11 +13,11 @@ position: 9
 Critical missing feature. Sellers cannot edit products after creation — must delete and recreate.
 
 ## Checklist
-- [ ] Create /seller/products/[id]/edit.tsx page
-- [ ] Pre-fill form with existing product data
-- [ ] Allow editing title, description, price, stock, image, delivery settings
-- [ ] Allow adding more stock keys for auto-delivery products
-- [ ] Add Edit button to seller dashboard products table
+- [x] Create /seller/products/[id]/edit.tsx page
+- [x] Pre-fill form with existing product data
+- [x] Allow editing title, description, price, stock, image, delivery settings
+- [x] Allow adding more stock keys for auto-delivery products
+- [x] Add Edit button to seller dashboard products table
 
 ## Acceptance
 - Seller can edit any of their products

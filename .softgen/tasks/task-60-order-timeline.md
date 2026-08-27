@@ -1,6 +1,6 @@
 ---
 title: Order Timeline / Progress Tracking
-status: in_progress
+status: done
 priority: high
 type: feature
 tags: [orders, buyer-experience, tracking]
@@ -13,11 +13,11 @@ position: 10
 Buyers need visual order progress to build trust and reduce support inquiries.
 
 ## Checklist
-- [ ] Add order status history to order detail page
-- [ ] Show timeline: Created → Paid → Delivered → Completed
-- [ ] Add timestamps for each status change
-- [ ] Show current active step with animation
-- [ ] Add estimated delivery time
+- [x] Add order status history to order detail page
+- [x] Show timeline: Created → Paid → Delivered → Completed
+- [x] Add timestamps for each status change
+- [x] Show current active step with animation
+- [x] Add estimated delivery time
 
 ## Acceptance
 - Buyer sees visual timeline of order progress
