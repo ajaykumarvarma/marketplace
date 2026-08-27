@@ -17,7 +17,7 @@ import { RevenueStats } from "@/components/analytics/RevenueStats";
 import { FileUploader } from "@/components/delivery/FileUploader";
 
 type Order = { id: string; status: string; created_at: string; total_amount: number | null; product_id: string; product: { title: string } | null };
-type Product = { id: string; title: string; price: number; stock: number; status: string };
+type Product = { id: string; title: string; price: number; stock: number; status: string; featured?: boolean; featured_until?: string | null };
 
 export default function SellerDashboardPage() {
   const { user } = useAuth();
@@ -500,7 +500,7 @@ export default function SellerDashboardPage() {
                             <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
                             <td className="px-4 py-3 text-foreground">{product.stock}</td>
                             <td className="px-4 py-3">
-                              {(product as Record<string, unknown>).featured === true ? (
+                              {product.featured === true ? (
                                 <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
                                   <Star className="h-3 w-3 mr-1 fill-amber-400" />
                                   Featured
@@ -514,11 +514,11 @@ export default function SellerDashboardPage() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => toggleFeatured(product.id, (product as Record<string, unknown>).featured === true)}
+                                  onClick={() => toggleFeatured(product.id, product.featured === true)}
                                   className="gap-1.5 border-border text-xs"
                                 >
                                   <Star className="h-3.5 w-3.5" />
-                                  {(product as Record<string, unknown>).featured === true ? "Unfeature" : "Feature"}
+                                  {product.featured === true ? "Unfeature" : "Feature"}
                                 </Button>
                               </div>
                             </td>

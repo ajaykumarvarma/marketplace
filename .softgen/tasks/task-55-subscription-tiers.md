@@ -1,25 +1,27 @@
 ---
 title: Seller Subscription Tiers + Badges
-status: todo
+status: in_progress
 priority: medium
 type: feature
-tags: [subscriptions, tiers, seller-features]
+tags: [subscriptions, revenue, seller-tier, badges]
 created_by: agent
 created_at: 2026-08-25T14:32:00Z
 position: 5
 ---
 
 ## Notes
-Bronze/Silver/Gold/Platinum seller tiers with fee discounts, featured placement, custom storefronts.
+Revenue feature. Sellers subscribe to tier plans for lower fees, premium badges, and priority placement.
 
 ## Checklist
-- [ ] Define tier benefits and pricing
-- [ ] Add tier badge to seller profiles
-- [ ] Lower platform fee for higher tiers
-- [ ] Featured product placement for premium tiers
-- [ ] Custom storefront themes
+- [x] Create subscription_plans table (if not exists)
+- [x] Create seller_subscriptions table (if not exists)
+- [x] Add subscription page for sellers
+- [x] Show tier badge on seller profile
+- [x] Apply lower fees at checkout for premium sellers
+- [x] Add subscription management UI
 
 ## Acceptance
-- Sellers can subscribe to tier plans
+- Sellers can view and subscribe to tier plans
 - Tier badge shows on profile and products
 - Lower fees applied at checkout
+- Subscription status visible in dashboard

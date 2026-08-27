@@ -229,7 +229,7 @@ export default function MarketplacePage() {
                       <Badge variant="outline" className="text-xs border-border text-muted-foreground">
                         {product.category?.name || "Other"}
                       </Badge>
-                      {(product as Record<string, unknown>).featured === true && (
+                      {product.featured === true && (
                         <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
                           <Star className="h-3 w-3 mr-1 fill-amber-400" />
                           Featured
