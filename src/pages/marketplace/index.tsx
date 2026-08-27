@@ -10,7 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { SearchFilters } from "@/components/marketplace/SearchFilters";
 import { MarketplaceSkeleton } from "@/components/MarketplaceSkeleton";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
   id: string;
@@ -113,7 +113,7 @@ export default function MarketplacePage() {
           table: "products",
         },
         () => {
-          fetchProducts(1);
+          fetchProducts();
         }
       )
       .subscribe();
