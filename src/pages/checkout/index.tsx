@@ -8,6 +8,7 @@ import { SEO } from "@/components/SEO";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { checkFraudRisk, logFraudEvent, getDeviceFingerprint, getClientIP } from "@/services/fraudService";
 
 export default function CheckoutPage() {
@@ -209,7 +210,7 @@ export default function CheckoutPage() {
     if (!user || items.length === 0) return;
 
     // Get seller IDs from cart
-    const sellerIds = [...new Set(items.map((item) => item.sellerId).filter(Boolean))];
+    const sellerIds = [...new Set(items.map((item) => item.seller).filter(Boolean))];
     let totalCommission = 0;
 
     // Fetch seller subscriptions and calculate commission
@@ -222,7 +223,7 @@ export default function CheckoutPage() {
         .maybeSingle();
 
       const commissionRate = (sub as unknown as { plan: { commission_rate: number } })?.plan?.commission_rate || 15;
-      const sellerTotal = items.filter((i) => i.sellerId === sellerId).reduce((s, i) => s + i.price * i.quantity, 0);
+      const sellerTotal = items.filter((i) => i.seller === sellerId).reduce((s, i) => s + i.price * i.quantity, 0);
       totalCommission += sellerTotal * (commissionRate / 100);
     }
 

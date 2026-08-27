@@ -48,14 +48,16 @@ export default function DisputePage() {
       return;
     }
 
+    const evidencePaths = evidenceFiles.length > 0 ? `\n\nEvidence files: ${evidenceFiles.map((f) => f.path).join(", ")}` : "";
+    const fullDescription = (description.trim() || "") + evidencePaths;
+
     const { error } = await supabase.from("disputes").insert({
       order_id: orderId.trim(),
       buyer_id: user.id,
       seller_id: orderData.seller_id,
       reason,
-      description: description.trim() || null,
+      description: fullDescription || null,
       status: "open",
-      evidence_files: evidenceFiles.map((f) => f.path),
     });
 
     setSubmitting(false);
@@ -64,45 +66,6 @@ export default function DisputePage() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Dispute filed", description: "Our team will review your case within 24 hours." });
-      router.push("/orders");
-    }
-  }
-
-  async function submitDispute() {
-    if (!user || !orderId || !reason.trim()) return;
-
-    setSubmitting(true);
-    const { data: dispute, error } = await supabase
-      .from("disputes")
-      .insert({
-        order_id: orderId,
-        buyer_id: user.id,
-        reason: reason.trim(),
-        status: "open",
-        evidence_files: evidenceFiles.map((f) => f.path),
-      })
-      .select()
-      .single();
-
-    setSubmitting(false);
-    if (error) {
-      toast({ title: "Failed to open dispute", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Dispute opened", description: "The seller has 48 hours to respond." });
-      // Auto-escalate timer: if seller doesn't respond in 48h, auto-refund
-      setTimeout(async () => {
-        const { data: updatedDispute } = await supabase
-          .from("disputes")
-          .select("status, seller_response")
-          .eq("id", dispute.id)
-          .maybeSingle();
-
-        if (updatedDispute && !updatedDispute.seller_response && updatedDispute.status === "open") {
-          await supabase.from("disputes").update({ status: "auto_refunded", resolution: "Seller did not respond within 48 hours. Auto-refund issued." }).eq("id", dispute.id);
-          await supabase.from("orders").update({ status: "refunded" }).eq("id", orderId);
-        }
-      }, 48 * 60 * 60 * 1000); // 48 hours
-
       router.push("/orders");
     }
   }

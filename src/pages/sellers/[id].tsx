@@ -146,62 +146,8 @@ export default function SellerProfilePage() {
   }, [id]);
 
   useEffect(() => {
-    async function fetchSeller() {
-      if (!id) return;
-      setLoading(true);
-
-      const [
-        profileRes,
-        productsRes,
-        reviewsRes,
-        salesRes,
-        subscriptionRes,
-      ] = await Promise.all([
-        supabase.from("profiles").select("id, full_name, avatar_url, created_at").eq("id", id as string).maybeSingle(),
-        supabase.from("products").select("id, title, price, stock, status").eq("seller_id", id as string).eq("status", "active"),
-        supabase.from("reviews").select("id, rating, comment, created_at, helpful_count, unhelpful_count, approved, product:product_id(title), reviewer:reviewer_id(full_name)").eq("seller_id", id as string).order("created_at", { ascending: false }).limit(20),
-        supabase.from("orders").select("total_amount").eq("seller_id", id as string).eq("status", "completed"),
-        supabase.from("seller_subscriptions").select("plan:plan_id(name, slug)").eq("seller_id", id as string).eq("status", "active").maybeSingle(),
-      ]);
-
-      if (profileRes.data) {
-        setSeller(profileRes.data as unknown as SellerProfile);
-        setMemberSince(new Date(profileRes.data.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }));
-      }
-      if (productsRes.data) setProducts(productsRes.data);
-      if (salesRes.data) {
-        const totalRevenue = salesRes.data.reduce((sum, o) => sum + (o.total_amount || 0), 0);
-        setStats({
-          totalSales: salesRes.data.length,
-          totalRevenue,
-          productCount: productsRes.data?.length || 0,
-        });
-      }
-      if (reviewsRes.data) {
-        const mapped = reviewsRes.data.map((r: unknown) => {
-          const row = r as Record<string, unknown>;
-          return {
-            id: String(row.id),
-            rating: Number(row.rating),
-            comment: String(row.comment),
-            created_at: String(row.created_at),
-            reviewer_name: ((row.reviewer as Record<string, unknown>)?.full_name as string) || "Anonymous",
-            product_title: ((row.product as Record<string, unknown>)?.title as string) || "Product",
-            helpful_count: Number(row.helpful_count || 0),
-            unhelpful_count: Number(row.unhelpful_count || 0),
-            approved: row.approved !== false,
-          };
-        });
-        setReviews(mapped);
-      }
-      if (subscriptionRes.data) {
-        const sub = subscriptionRes.data as unknown as { plan: { name: string; slug: string } };
-        setSellerSubscription(sub);
-      }
-      setLoading(false);
-    }
-    fetchSeller();
-  }, [id]);
+    fetchSellerData();
+  }, [fetchSellerData]);
 
   if (loading) {
     return (
@@ -219,8 +165,6 @@ export default function SellerProfilePage() {
       </div>
     );
   }
-
-  const tierLabel = (stats?.totalSales || 0) >= 100 ? "Gold Seller" : (stats?.totalSales || 0) >= 10 ? "Silver Seller" : "Bronze Seller";
 
   return (
     <>

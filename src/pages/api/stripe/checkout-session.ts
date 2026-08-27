@@ -12,11 +12,23 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
+interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  quantity: number;
+  seller: string;
+}
+
 interface CheckoutBody {
   items: CartItem[];
   buyerId: string;
-  couponCode?: string | null;
-  total?: number;
+  userId: string;
+  email?: string;
+  deviceFingerprint?: string;
+  ipAddress?: string;
+  couponId?: string | null;
+  discountPercent?: number;
   commission?: number;
 }
 
@@ -33,20 +45,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { items, userId, email, deviceFingerprint, ipAddress, couponId, discountPercent, commission } = req.body;
+    const { items, userId, email, deviceFingerprint, ipAddress, couponId, discountPercent, commission } = req.body as CheckoutBody;
 
     if (!items || !Array.isArray(items) || items.length === 0 || !userId) {
       return res.status(400).json({ error: "Invalid request body" });
     }
 
     // Calculate totals
-    const subtotal = items.reduce((sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity, 0);
+    const subtotal = items.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
     const discountAmount = discountPercent ? (subtotal * discountPercent) / 100 : 0;
     const discountedSubtotal = subtotal - discountAmount;
     const platformFee = Math.round(discountedSubtotal * 0.02 * 100); // 2% fee in cents
 
+    // Create a composite order ID for metadata
+    const orderId = `batch_${Date.now()}`;
+
     // Build line items
-    const lineItems = items.map((item: { title: string; price: number; quantity: number }) => ({
+    const lineItems = items.map((item: CartItem) => ({
       price_data: {
         currency: "usd",
         product_data: {
@@ -81,9 +96,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       customer_email: email,
       metadata: {
         order_id: orderId,
-        buyer_id: body.buyerId,
-        coupon_code: body.couponCode || "",
-        commission: String(body.commission || 0),
+        buyer_id: userId,
+        coupon_code: req.body.couponCode || "",
+        commission: String(commission || 0),
       },
       payment_intent_data: {
         metadata: {
