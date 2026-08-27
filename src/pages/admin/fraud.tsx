@@ -13,7 +13,6 @@ interface FraudEvent {
   risk_score: number;
   details: Record<string, unknown>;
   created_at: string;
-  resolved: boolean;
   profiles?: { full_name: string | null; email: string | null };
 }
 
@@ -27,7 +26,7 @@ export default function FraudDashboard() {
     async function fetchFraudEvents() {
       setLoading(true);
       const { data } = await supabase
-        .from("fraud_events")
+        .from("fraud_alerts")
         .select("*, profiles:user_id(full_name, email)")
         .order("created_at", { ascending: false })
         .limit(50);
@@ -38,11 +37,10 @@ export default function FraudDashboard() {
           return {
             id: String(row.id),
             user_id: String(row.user_id),
-            event_type: String(row.event_type),
+            event_type: String(row.alert_type || row.event_type || "unknown"),
             risk_score: Number(row.risk_score || 0),
             details: (row.details as Record<string, unknown>) || {},
             created_at: String(row.created_at),
-            resolved: Boolean(row.resolved),
             profiles: row.profiles as { full_name: string | null; email: string | null } | undefined,
           };
         });
@@ -50,7 +48,7 @@ export default function FraudDashboard() {
         setStats({
           total: typed.length,
           highRisk: typed.filter((e) => e.risk_score >= 80).length,
-          resolved: typed.filter((e) => e.resolved).length,
+          resolved: 0,
           blocked: typed.filter((e) => e.event_type === "user_blocked").length,
         });
       }
@@ -60,17 +58,17 @@ export default function FraudDashboard() {
   }, []);
 
   async function resolveEvent(id: string) {
-    const { error } = await supabase.from("fraud_events").update({ resolved: true }).eq("id", id);
+    const { error } = await supabase.from("fraud_alerts").update({ status: "resolved" }).eq("id", id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Event resolved" });
-      setEvents((prev) => prev.map((e) => (e.id === id ? { ...e, resolved: true } : e)));
+      setEvents((prev) => prev.filter((e) => e.id !== id));
     }
   }
 
   async function blockUser(userId: string) {
-    const { error } = await supabase.from("profiles").update({ status: "blocked" }).eq("id", userId);
+    const { error } = await supabase.from("profiles").update({ role: "blocked" }).eq("id", userId);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
@@ -137,12 +135,10 @@ export default function FraudDashboard() {
                     )}
                   </div>
                   <div className="flex gap-2 ml-4">
-                    {!event.resolved && (
-                      <Button size="sm" variant="outline" onClick={() => resolveEvent(event.id)} className="gap-1 border-border">
-                        <CheckCircle className="h-3.5 w-3.5" />
-                        Resolve
-                      </Button>
-                    )}
+                    <Button size="sm" variant="outline" onClick={() => resolveEvent(event.id)} className="gap-1 border-border">
+                      <CheckCircle className="h-3.5 w-3.5" />
+                      Resolve
+                    </Button>
                     <Button size="sm" variant="outline" onClick={() => blockUser(event.user_id)} className="gap-1 border-destructive text-destructive hover:bg-destructive/10">
                       <Ban className="h-3.5 w-3.5" />
                       Block

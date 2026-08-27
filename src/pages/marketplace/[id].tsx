@@ -108,8 +108,10 @@ export default function ProductDetailPage() {
   }
 
   const avgRating = product.reviews?.length
-    ? (product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length).toFixed(1)
-    : "0.0";
+    ? product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length
+    : 0;
+
+  const avgRatingDisplay = avgRating > 0 ? avgRating.toFixed(1) : "0.0";
 
   async function handleVote(reviewId: string, voteType: "up" | "down") {
     if (!user) {
@@ -596,7 +598,7 @@ export default function ProductDetailPage() {
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <div className="flex items-center gap-0.5">
                         <Star className="h-3 w-3 fill-foreground text-foreground" />
-                        <span>{avgRating}</span>
+                        <span>{avgRatingDisplay}</span>
                       </div>
                     </div>
                   </div>
