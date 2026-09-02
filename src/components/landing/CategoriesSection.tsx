@@ -48,7 +48,7 @@ export function CategoriesSection() {
 
   return (
     <section className="py-16 md:py-24">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <div className="flex items-end justify-between mb-10">
           <div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">

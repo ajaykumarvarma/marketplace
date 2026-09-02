@@ -51,7 +51,7 @@ export function TopSellersSection() {
 
   return (
     <section className="py-16 md:py-24 border-y border-border bg-muted">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-1">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">

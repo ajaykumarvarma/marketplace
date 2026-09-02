@@ -46,7 +46,7 @@ export function TestimonialsSection() {
   if (loading) {
     return (
       <section className="border-t border-border py-16 md:py-20">
-        <div className="container">
+        <div className="container px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
             <div className="h-8 bg-muted rounded w-1/3 mx-auto mb-8" />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -70,7 +70,7 @@ export function TestimonialsSection() {
 
   return (
     <section className="border-t border-border py-16 md:py-20">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium mb-4">
