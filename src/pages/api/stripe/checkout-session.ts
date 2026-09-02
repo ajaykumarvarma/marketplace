@@ -126,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Store pending order in database
-    const orderInserts = items.map((item: { id: string; title: string; price: number; quantity: number; seller: string }) => ({
+    const orderInserts = items.map((item: CartItem) => ({
       buyer_id: userId,
       seller_id: sellerMap.get(item.id) || userId, // fallback to buyer (will fail validation if null, but prevents crash)
       product_id: item.id,
