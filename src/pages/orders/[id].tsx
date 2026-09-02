@@ -282,7 +282,7 @@ export default function OrderDetailPage() {
   return (
     <>
       <SEO title={`Order ${order.id.slice(0, 8)} — TradeVault`} description={`Track your order on TradeVault.`} />
-      <div className="container py-8 md:py-12">
+      <div className="container px-4 sm:px-6 py-8 md:py-12">
         <div className="max-w-3xl mx-auto">
           <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
             <ArrowLeft className="h-4 w-4" />
@@ -304,17 +304,6 @@ export default function OrderDetailPage() {
             <div className="text-right">
               <p className="font-mono text-2xl font-bold text-foreground">—</p>
             </div>
-          </div>
-
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="font-display text-2xl font-bold text-foreground">Order #{order.id.slice(0, 8).toUpperCase()}</h1>
-              <p className="text-sm text-muted-foreground">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
-            </div>
-            <Badge variant="outline" className={`${config.color} flex items-center gap-1`}>
-              <StatusIcon className="h-3 w-3" />
-              {order.status}
-            </Badge>
           </div>
 
           <OrderTimeline

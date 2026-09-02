@@ -175,7 +175,7 @@ export default function MarketplacePage() {
           }
         }}
       />
-      <div className="container py-8 md:py-12 flex flex-col gap-6">
+      <div className="container px-4 sm:px-6 py-8 md:py-12 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl font-bold text-foreground mb-2">Marketplace</h1>
           <p className="text-muted-foreground">Browse verified digital goods from trusted sellers</p>

@@ -179,32 +179,36 @@ export function Navigation() {
 
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-background">
-          <div className="container py-4 flex flex-col gap-3">
-            <Link href="/marketplace" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <div className="container py-4 flex flex-col gap-1">
+            <Link href="/marketplace" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
               {t("marketplace")}
             </Link>
-            <Link href="/categories" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/categories" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
               {t("categories")}
             </Link>
-            <Link href="/sellers" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/sellers" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
               {t("topSellers")}
             </Link>
-            <Link href="/sell" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <Link href="/sell" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
               {t("startSelling")}
             </Link>
 
             {user && (
               <>
-                <Link href="/orders" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                <Link href="/orders" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
                   {t("myOrders")}
                 </Link>
+                <Link href="/cart" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4" />
+                  Cart {totalItems > 0 && `(${totalItems})`}
+                </Link>
                 {isSeller && (
-                  <Link href="/seller/dashboard" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                  <Link href="/seller/dashboard" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
                     {t("sellerDashboard")}
                   </Link>
                 )}
                 {isAdmin && (
-                  <Link href="/admin/dashboard" className="py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                  <Link href="/admin/dashboard" className="py-3 px-2 text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] flex items-center">
                     {t("adminPanel")}
                   </Link>
                 )}
@@ -213,20 +217,20 @@ export function Navigation() {
 
             <div className="pt-3 border-t border-border flex flex-col gap-2">
               {user ? (
-                <Button variant="outline" className="w-full justify-start gap-2 text-foreground" onClick={signOut}>
+                <Button variant="outline" className="w-full justify-start gap-2 text-foreground min-h-[44px]" onClick={signOut}>
                   <LogOut className="h-4 w-4" />
                   {t("signOut")}
                 </Button>
               ) : (
                 <>
                   <Link href="/auth/login">
-                    <Button variant="outline" className="w-full justify-start gap-2">
+                    <Button variant="outline" className="w-full justify-start gap-2 min-h-[44px]">
                       <User className="h-4 w-4" />
                       {t("signIn")}
                     </Button>
                   </Link>
                   <Link href="/auth/register">
-                    <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90">
+                    <Button className="w-full justify-start gap-2 bg-primary hover:bg-primary/90 min-h-[44px]">
                       <Store className="h-4 w-4" />
                       {t("getStarted")}
                     </Button>
