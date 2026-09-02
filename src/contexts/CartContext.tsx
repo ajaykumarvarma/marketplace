@@ -8,6 +8,7 @@ interface CartItem {
   title: string;
   price: number;
   seller: string;
+  sellerId: string;
   quantity: number;
 }
 
@@ -29,6 +30,7 @@ interface SupabaseCartRow {
   products?: {
     title?: string;
     price?: number;
+    seller_id?: string;
     seller?: { full_name?: string } | null;
   } | null;
 }
@@ -53,6 +55,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       title: row.products?.title || "Unknown",
       price: row.products?.price || 0,
       seller: row.products?.seller?.full_name || "Unknown",
+      sellerId: row.products?.seller_id || "",
       quantity: row.quantity,
     }));
 

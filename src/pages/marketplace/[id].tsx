@@ -266,6 +266,7 @@ export default function ProductDetailPage() {
       title: product.title,
       price: product.price,
       seller: product.seller?.full_name || "Unknown",
+      sellerId: product.seller?.id || "",
     });
     toast({ title: "Added to cart", description: `${product.title} added to your cart.` });
     setAdding(false);

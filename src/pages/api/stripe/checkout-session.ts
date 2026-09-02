@@ -22,7 +22,6 @@ interface CartItem {
 
 interface CheckoutBody {
   items: CartItem[];
-  buyerId: string;
   userId: string;
   email?: string;
   deviceFingerprint?: string;

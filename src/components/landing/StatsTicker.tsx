@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { TrendingUp, Users, Package, Shield } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Stat {
   icon: typeof TrendingUp;
