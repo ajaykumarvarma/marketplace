@@ -246,16 +246,11 @@ export default function MarketplacePage() {
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.category?.name || "Other"}</span>
                       <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.delivery_time}</span>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="outline" className="text-xs border-border text-muted-foreground">
-                        {product.category?.name || "Other"}
-                      </Badge>
                       {product.featured === true && (
-                        <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
+                        <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded text-xs flex items-center">
                           <Star className="h-3 w-3 mr-1 fill-amber-400" />
                           Featured
-                        </Badge>
+                        </span>
                       )}
                     </div>
                     <Button

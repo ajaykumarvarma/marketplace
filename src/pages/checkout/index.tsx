@@ -152,9 +152,6 @@ export default function CheckoutPage() {
         return;
       }
 
-      const deviceFingerprint = getDeviceFingerprint();
-      const ipAddress = getClientIP();
-
       // Create Stripe Checkout session
       try {
         // Calculate commission

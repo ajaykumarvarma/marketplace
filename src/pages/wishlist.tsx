@@ -21,6 +21,7 @@ interface WishlistItem {
     delivery_time: string;
     stock: number;
     status: string;
+    seller_id?: string;
     seller: { full_name: string | null } | null;
     category: { name: string } | null;
   } | null;
@@ -38,7 +39,7 @@ export default function WishlistPage() {
     setLoading(true);
     const { data } = await supabase
       .from("wishlists")
-      .select("id, product_id, product:product_id(id, title, price, original_price, image_url, delivery_time, stock, status, seller:seller_id(full_name), category:category_id(name))")
+      .select("id, product_id, product:product_id(id, title, price, original_price, image_url, delivery_time, stock, status, seller_id, seller:seller_id(full_name), category:category_id(name))")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -68,7 +69,7 @@ export default function WishlistPage() {
       title: product.title,
       price: product.price,
       seller: product.seller?.full_name || "Unknown",
-      sellerId: "", // Wishlist product interface doesn't include seller_id
+      sellerId: product.seller_id || "",
     });
     toast({ title: "Added to cart", description: product.title });
   }
