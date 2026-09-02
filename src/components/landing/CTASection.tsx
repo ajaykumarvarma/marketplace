@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export function CTASection() {
   return (
     <section className="py-16 md:py-24 border-t border-border">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-lg bg-card border border-border p-8 md:p-12 lg:p-16">
           <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto gap-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium">

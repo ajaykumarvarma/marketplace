@@ -34,7 +34,7 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden border-b border-border">
-      <div className="container relative pt-20 pb-16 md:pt-28 md:pb-24">
+      <div className="container px-4 sm:px-6 relative pt-20 pb-16 md:pt-28 md:pb-24">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="flex-1 flex flex-col gap-8 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium">
