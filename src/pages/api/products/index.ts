@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     let query = supabaseAdmin
       .from("products")
-      .select("*, seller:seller_id(full_name), category:category_id(name, slug)", { count: "exact" })
+      .select("*, seller:seller_id(id, full_name, role), category:category_id(name, slug)", { count: "exact" })
       .eq("status", "active");
 
     if (category && category !== "all") {

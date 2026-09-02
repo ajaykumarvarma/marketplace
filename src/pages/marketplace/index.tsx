@@ -24,7 +24,7 @@ interface Product {
   status: string;
   created_at: string;
   featured?: boolean;
-  seller: { full_name: string | null; role: string } | null;
+  seller: { id: string; full_name: string | null; role: string } | null;
   category: { name: string; slug: string } | null;
 }
 
@@ -126,7 +126,7 @@ export default function MarketplacePage() {
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   const handleAddToCart = (product: Product) => {
-    addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown" });
+    addItem({ id: product.id, title: product.title, price: product.price, seller: product.seller?.full_name || "Unknown", sellerId: product.seller?.id || "" });
     toast({ title: "Added to cart", description: `${product.title} added to your cart.` });
   };
 

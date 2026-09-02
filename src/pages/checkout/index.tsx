@@ -142,9 +142,11 @@ export default function CheckoutPage() {
 
     try {
       // Fraud checks
-      const riskScore = await checkFraudRisk(items, user.id);
-      if (riskScore > 80) {
-        logFraudEvent(user.id, "high_risk_checkout", { riskScore, itemCount: items.length });
+      const deviceFingerprint = getDeviceFingerprint();
+      const ipAddress = getClientIP();
+      const riskResult = await checkFraudRisk(user.id, totalPrice, deviceFingerprint, ipAddress);
+      if (riskResult.blocked || riskResult.score > 80) {
+        logFraudEvent("high_risk_checkout", { userId: user.id, riskScore: riskResult.score, itemCount: items.length });
         toast({ title: "Transaction blocked", description: "Suspicious activity detected. Contact support.", variant: "destructive" });
         setProcessing(false);
         return;

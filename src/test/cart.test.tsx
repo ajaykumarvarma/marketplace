@@ -12,7 +12,7 @@ function TestComponent() {
       <div data-testid="item-count">{items.length}</div>
       <button
         data-testid="add-item"
-        onClick={() => addItem({ id: "test-1", title: "Test Product", price: 9.99, seller: "TestSeller" })}
+        onClick={() => addItem({ id: "test-1", title: "Test Product", price: 9.99, seller: "TestSeller", sellerId: "test-seller-id" })}
       >
         Add Item
       </button>

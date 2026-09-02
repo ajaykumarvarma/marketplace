@@ -68,6 +68,7 @@ export default function WishlistPage() {
       title: product.title,
       price: product.price,
       seller: product.seller?.full_name || "Unknown",
+      sellerId: "", // Wishlist product interface doesn't include seller_id
     });
     toast({ title: "Added to cart", description: product.title });
   }
