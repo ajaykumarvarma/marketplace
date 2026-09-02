@@ -137,87 +137,76 @@ export default function CheckoutPage() {
   }
 
   async function handleStripeCheckout() {
-    if (!user || items.length === 0) {
-      toast({ title: "Sign in required", description: "Please sign in to complete your purchase.", variant: "destructive" });
-      return;
-    }
-
+    if (!user || items.length === 0) return;
     setProcessing(true);
 
-    const deviceFingerprint = await getDeviceFingerprint();
-    const ipAddress = await getClientIP();
-    const orderAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    // Fraud check
-    const fraudCheck = await checkFraudRisk(user.id, orderAmount, deviceFingerprint);
-    const riskScore = fraudCheck.score;
-    const blocked = fraudCheck.decision === "block";
-    const flags = fraudCheck.factors.map((f) => f.reason);
-
-    setFraudResult({ riskScore, flags, blocked });
-
-    if (blocked) {
-      await logFraudEvent("blocked", { userId: user.id, flags, riskScore, ipAddress, deviceFingerprint });
-      toast({ title: "Transaction blocked", description: "This transaction was flagged as high risk. Contact support if you believe this is an error.", variant: "destructive" });
-      setProcessing(false);
-      return;
-    }
-
-    if (riskScore >= 40) {
-      await logFraudEvent("auto_hold", { userId: user.id, flags, riskScore, ipAddress, deviceFingerprint });
-      toast({ title: "Transaction on hold", description: "Your order is under review for security. You will be notified shortly.", variant: "default" });
-    }
-
-    // Create Stripe Checkout session
     try {
-      // Calculate commission
-      const sellerIds = [...new Set(items.map((item) => item.seller).filter(Boolean))];
-      let totalCommission = 0;
-      for (const sellerId of sellerIds) {
-        const { data: sub } = await supabase
-          .from("seller_subscriptions")
-          .select("plan:plan_id(commission_rate)")
-          .eq("seller_id", sellerId)
-          .eq("status", "active")
-          .maybeSingle();
-        const commissionRate = (sub as unknown as { plan: { commission_rate: number } })?.plan?.commission_rate || 15;
-        const sellerTotal = items.filter((i) => i.seller === sellerId).reduce((s, i) => s + i.price * i.quantity, 0);
-        totalCommission += sellerTotal * (commissionRate / 100);
+      // Fraud checks
+      const riskScore = await checkFraudRisk(items, user.id);
+      if (riskScore > 80) {
+        logFraudEvent(user.id, "high_risk_checkout", { riskScore, itemCount: items.length });
+        toast({ title: "Transaction blocked", description: "Suspicious activity detected. Contact support.", variant: "destructive" });
+        setProcessing(false);
+        return;
       }
 
-      const res = await fetch("/api/stripe/checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            id: item.id,
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-            seller: item.seller,
-          })),
-          userId: user.id,
-          email: user.email,
-          deviceFingerprint,
-          ipAddress,
-          couponId: appliedCoupon?.id,
-          discountPercent: appliedCoupon?.discount_percent,
-          commission: totalCommission,
-        }),
-      });
+      const deviceFingerprint = getDeviceFingerprint();
+      const ipAddress = getClientIP();
 
-      const data = await res.json();
+      // Create Stripe Checkout session
+      try {
+        // Calculate commission
+        const sellerIds = [...new Set(items.map((item) => item.sellerId).filter(Boolean))];
+        let totalCommission = 0;
+        for (const sellerId of sellerIds) {
+          const { data: sub } = await supabase
+            .from("seller_subscriptions")
+            .select("plan:plan_id(commission_rate)")
+            .eq("seller_id", sellerId)
+            .eq("status", "active")
+            .maybeSingle();
+          const commissionRate = (sub as unknown as { plan: { commission_rate: number } })?.plan?.commission_rate || 15;
+          const sellerTotal = items.filter((i) => i.sellerId === sellerId).reduce((s, i) => s + i.price * i.quantity, 0);
+          totalCommission += sellerTotal * (commissionRate / 100);
+        }
 
-      if (!res.ok) {
-        throw new Error(data.error || "Checkout failed");
+        const res = await fetch("/api/stripe/checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: items.map((item) => ({
+              id: item.id,
+              title: item.title,
+              price: item.price,
+              quantity: item.quantity,
+              seller_id: item.sellerId,
+            })),
+            userId: user.id,
+            email: user.email,
+            deviceFingerprint,
+            ipAddress,
+            couponId: appliedCoupon?.id,
+            discountPercent: appliedCoupon?.discount_percent,
+            commission: totalCommission,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Checkout failed");
+        }
+
+        // Clear cart and redirect to Stripe
+        clearCart();
+        window.location.href = data.url;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Checkout failed";
+        toast({ title: "Checkout failed", description: message, variant: "destructive" });
+        setProcessing(false);
       }
-
-      // Clear cart and redirect to Stripe
-      clearCart();
-      window.location.href = data.url;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Checkout failed";
-      toast({ title: "Checkout failed", description: message, variant: "destructive" });
+    } catch {
+      toast({ title: "Checkout failed", description: "An unexpected error occurred.", variant: "destructive" });
       setProcessing(false);
     }
   }

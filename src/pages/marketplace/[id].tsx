@@ -283,6 +283,7 @@ export default function ProductDetailPage() {
       sender_id: user.id,
       receiver_id: product.seller.id,
       content: chatMessage.trim(),
+      product_id: product.id,
     });
 
     setSendingChat(false);

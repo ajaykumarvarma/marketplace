@@ -1,5 +1,6 @@
 import { SEO } from "@/components/SEO";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { StatsTicker } from "@/components/landing/StatsTicker";
 import { TrustSignalsSection } from "@/components/landing/TrustSignalsSection";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { CategoriesSection } from "@/components/landing/CategoriesSection";
@@ -29,6 +30,7 @@ export default function Home() {
         }}
       />
       <HeroSection />
+      <StatsTicker />
       <TrustSignalsSection />
       <TestimonialsSection />
       <CategoriesSection />

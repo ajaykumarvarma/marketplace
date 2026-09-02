@@ -17,7 +17,7 @@ interface CartItem {
   title: string;
   price: number;
   quantity: number;
-  seller: string;
+  seller_id: string;
 }
 
 interface CheckoutBody {
