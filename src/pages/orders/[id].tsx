@@ -275,10 +275,6 @@ export default function OrderDetailPage() {
   const config = statusConfig[order.status] || statusConfig.pending;
   const StatusIcon = config.icon;
 
-  const steps = ["Order Placed", "Payment Confirmed", "Processing", "Shipped/Delivered", "Completed"];
-  const stepIndex = ["pending", "processing", "shipped", "delivered", "completed"].indexOf(order.status);
-  const currentStep = stepIndex >= 0 ? stepIndex : 0;
-
   return (
     <>
       <SEO title={`Order ${order.id.slice(0, 8)} — TradeVault`} description={`Track your order on TradeVault.`} />
@@ -312,23 +308,6 @@ export default function OrderDetailPage() {
             paidAt={order.paid_at}
             deliveredAt={order.delivered_at}
           />
-
-          <div className="bg-card border border-border rounded-lg p-6 mb-8">
-            <h2 className="font-display font-semibold text-foreground mb-6">Order Timeline</h2>
-            <div>
-              {steps.map((step, i) => (
-                <div key={i} className="flex items-start gap-4 mb-4">
-                  <div className={`mt-0.5 h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${i <= currentStep ? "bg-muted" : "bg-muted"}`}>
-                    {i <= currentStep ? <CheckCircle className="h-4 w-4 text-foreground" /> : <Clock className="h-4 w-4 text-muted-foreground" />}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">{step}</p>
-                    <p className="text-xs text-muted-foreground">{i <= currentStep ? "Completed" : "Pending"}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <div className="flex items-center gap-2 mb-4">
