@@ -129,7 +129,7 @@ export default function AdminDashboardPage() {
   return (
     <>
       <SEO title="Admin Dashboard — TradeVault" description="Platform administration, fraud detection, and moderation." />
-      <div className="container py-8 md:py-12">
+      <div className="container px-4 sm:px-6 py-8 md:py-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">
