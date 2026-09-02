@@ -142,8 +142,8 @@ export default function CheckoutPage() {
 
     try {
       // Fraud checks
-      const deviceFingerprint = getDeviceFingerprint();
-      const ipAddress = getClientIP();
+      const deviceFingerprint = await getDeviceFingerprint();
+      const ipAddress = await getClientIP();
       const riskResult = await checkFraudRisk(user.id, totalPrice, deviceFingerprint, ipAddress);
       if (riskResult.blocked || riskResult.score > 80) {
         logFraudEvent("high_risk_checkout", { userId: user.id, riskScore: riskResult.score, itemCount: items.length });
