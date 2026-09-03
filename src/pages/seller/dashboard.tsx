@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff, Upload, CheckCircle, X, FileText, Pencil } from "lucide-react";
+import { Store, Package, DollarSign, Star, ArrowUpRight, ArrowDownRight, Eye, ShoppingCart, BarChart3, Loader2, Inbox, Plus, ThumbsUp, EyeOff, Upload, CheckCircle, X, FileText, Pencil, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -521,7 +521,22 @@ export default function SellerDashboardPage() {
                       <tbody>
                         {paginatedProducts.map((product) => (
                           <tr key={product.id} className="border-b border-border hover:bg-muted transition-colors">
-                            <td className="px-4 py-3 text-foreground">{product.title}</td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-foreground">{product.title}</span>
+                                {product.stock <= 5 && product.stock > 0 && (
+                                  <Badge variant="outline" className="text-xs bg-destructive/10 text-destructive border-destructive/30">
+                                    <AlertTriangle className="h-3 w-3 mr-1" />
+                                    Low Stock ({product.stock})
+                                  </Badge>
+                                )}
+                                {product.stock === 0 && (
+                                  <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-border">
+                                    Out of Stock
+                                  </Badge>
+                                )}
+                              </div>
+                            </td>
                             <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
                             <td className="px-4 py-3 text-foreground">{product.stock}</td>
                             <td className="px-4 py-3">

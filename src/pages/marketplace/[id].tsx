@@ -34,6 +34,7 @@ interface ProductDetail {
   auto_delivery?: boolean;
   seller: { id: string; full_name: string | null; role: string } | null;
   category: { name: string } | null;
+  category_id: string | null;
   reviews: { id: string; reviewer_id: string; rating: number; comment: string; created_at: string; helpful_count: number; unhelpful_count: number; approved: boolean }[] | null;
 }
 
@@ -89,6 +90,7 @@ export default function ProductDetailPage() {
         status: string;
         created_at: string;
         auto_delivery?: boolean;
+        category_id: string | null;
         category: { name: string; slug: string } | null;
         seller: { id: string; full_name: string | null; role: string; avatar_url: string | null } | null;
         reviews: Array<{ id: string; reviewer_id: string; rating: number; comment: string; created_at: string; helpful_count: number; unhelpful_count: number; approved: boolean }> | null;
@@ -110,12 +112,12 @@ export default function ProductDetailPage() {
   }, [id, addToRecentlyViewed]);
 
   useEffect(() => {
-    if (!product?.category?.name) return;
+    if (!product?.category_id) return;
     async function fetchRelated() {
       const { data } = await supabase
         .from("products")
         .select("id, title, price, image_url")
-        .eq("category_id", product.category?.name || "")
+        .eq("category_id", product.category_id)
         .neq("id", product.id)
         .eq("status", "active")
         .order("created_at", { ascending: false })
@@ -126,7 +128,7 @@ export default function ProductDetailPage() {
       }
     }
     fetchRelated();
-  }, [product?.category?.name, product?.id]);
+  }, [product?.category_id, product?.id]);
 
   if (loading) {
     return (
