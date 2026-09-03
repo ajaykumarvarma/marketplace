@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { createNotification } from "@/services/notificationService";
 import { WishlistButton } from "@/components/WishlistButton";
 import { ChatWindow } from "@/components/chat/ChatWindow";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 
 interface ProductDetail {
   id: string;
@@ -56,21 +57,76 @@ export default function ProductDetailPage() {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
   const [sendingChat, setSendingChat] = useState(false);
+  const { addToRecentlyViewed } = useRecentlyViewed();
+  const [relatedProducts, setRelatedProducts] = useState<Array<{ id: string; title: string; price: number; image_url: string | null }>>([]);
 
   useEffect(() => {
     if (!id) return;
-    async function load() {
+    async function fetchProduct() {
       setLoading(true);
       const { data } = await supabase
         .from("products")
-        .select("*, seller:seller_id(id, full_name, role), category:category_id(name), reviews(*)")
+        .select("*, category:category_id(name, slug), seller:seller_id(id, full_name, role, avatar_url), reviews:reviews(id, reviewer_id, rating, comment, created_at, helpful_count, unhelpful_count, approved)")
         .eq("id", id as string)
         .maybeSingle();
-      if (data) setProduct(data as ProductDetail);
+
+      if (!data) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+
+      const typed = data as unknown as {
+        id: string;
+        title: string;
+        description: string;
+        price: number;
+        original_price: number | null;
+        image_url: string | null;
+        delivery_time: string;
+        stock: number;
+        tags: string[];
+        status: string;
+        created_at: string;
+        auto_delivery?: boolean;
+        category: { name: string; slug: string } | null;
+        seller: { id: string; full_name: string | null; role: string; avatar_url: string | null } | null;
+        reviews: Array<{ id: string; reviewer_id: string; rating: number; comment: string; created_at: string; helpful_count: number; unhelpful_count: number; approved: boolean }> | null;
+      };
+
+      setProduct(typed);
       setLoading(false);
+
+      // Track in recently viewed
+      addToRecentlyViewed({
+        id: typed.id,
+        title: typed.title,
+        price: typed.price,
+        image_url: typed.image_url,
+        category: typed.category?.name || null,
+      });
     }
-    load();
-  }, [id]);
+    fetchProduct();
+  }, [id, addToRecentlyViewed]);
+
+  useEffect(() => {
+    if (!product?.category?.name) return;
+    async function fetchRelated() {
+      const { data } = await supabase
+        .from("products")
+        .select("id, title, price, image_url")
+        .eq("category_id", product.category?.name || "")
+        .neq("id", product.id)
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(4);
+
+      if (data) {
+        setRelatedProducts(data as Array<{ id: string; title: string; price: number; image_url: string | null }>);
+      }
+    }
+    fetchRelated();
+  }, [product?.category?.name, product?.id]);
 
   if (loading) {
     return (
@@ -642,6 +698,34 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
+        {relatedProducts.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-border">
+            <h2 className="font-display text-lg font-semibold text-foreground mb-4">You May Also Like</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {relatedProducts.map((rp) => (
+                <Link
+                  key={rp.id}
+                  href={`/marketplace/${rp.id}`}
+                  className="bg-card border border-border rounded-lg overflow-hidden hover:border-foreground/30 transition-colors"
+                >
+                  <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                    <Image
+                      src={rp.image_url || "/generated/hero-product.png"}
+                      alt={rp.title}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <p className="text-sm font-medium text-foreground truncate">{rp.title}</p>
+                    <p className="text-sm font-mono text-muted-foreground">${rp.price.toFixed(2)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <Dialog open={chatOpen} onOpenChange={setChatOpen}>
         <DialogContent className="bg-card border-border max-w-lg">

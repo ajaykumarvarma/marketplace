@@ -145,6 +145,7 @@ export default function CheckoutPage() {
       const deviceFingerprint = await getDeviceFingerprint();
       const ipAddress = await getClientIP();
       const riskResult = await checkFraudRisk(user.id, totalPrice, deviceFingerprint, ipAddress);
+      setFraudResult({ riskScore: riskResult.score, flags: riskResult.flags, blocked: riskResult.blocked });
       if (riskResult.blocked || riskResult.score > 80) {
         logFraudEvent("high_risk_checkout", { userId: user.id, riskScore: riskResult.score, itemCount: items.length });
         toast({ title: "Transaction blocked", description: "Suspicious activity detected. Contact support.", variant: "destructive" });

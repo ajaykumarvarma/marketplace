@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SearchFilters } from "@/components/marketplace/SearchFilters";
 import { MarketplaceSkeleton } from "@/components/MarketplaceSkeleton";
 import { supabase } from "@/integrations/supabase/client";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 
 interface Product {
   id: string;
@@ -45,6 +46,7 @@ export default function MarketplacePage() {
   const [loading, setLoading] = useState(true);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [page, setPage] = useState(1);
+  const { recentlyViewed } = useRecentlyViewed();
 
   // Sync URL params to state on mount
   useEffect(() => {
@@ -192,6 +194,35 @@ export default function MarketplacePage() {
           onPriceChange={(range) => { setPriceRange(range); setPage(1); }}
           resultCount={total}
         />
+
+        {recentlyViewed.length > 0 && (
+          <div className="mb-6">
+            <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Recently Viewed</h2>
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
+              {recentlyViewed.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/marketplace/${product.id}`}
+                  className="flex-shrink-0 w-40 bg-card border border-border rounded-lg overflow-hidden hover:border-foreground/30 transition-colors"
+                >
+                  <div className="aspect-square bg-muted relative overflow-hidden">
+                    <Image
+                      src={product.image_url || "/generated/hero-product.png"}
+                      alt={product.title}
+                      fill
+                      sizes="160px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-2">
+                    <p className="text-xs font-medium text-foreground truncate">{product.title}</p>
+                    <p className="text-xs font-mono text-muted-foreground">${product.price.toFixed(2)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {loading && <MarketplaceSkeleton />}
 

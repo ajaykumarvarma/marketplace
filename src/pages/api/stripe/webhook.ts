@@ -198,6 +198,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             `Your order #${orderData.id.slice(0, 8)} has been automatically delivered. View it now.`,
             { orderId: orderData.id }
           );
+
+          // Check for low stock alert
+          const { data: remainingStock } = await supabaseAdmin
+            .from("product_stock")
+            .select("id", { count: "exact", head: true })
+            .eq("product_id", orderData.product_id)
+            .eq("sold", false);
+
+          const stockCount = remainingStock ?? 0;
+          if (stockCount <= 5) {
+            // Send low stock email to seller
+            if (sellerProfile?.email) {
+              await sendEmail(
+                sellerProfile.email,
+                "low_stock",
+                {
+                  sellerName: sellerProfile.full_name || "there",
+                  productTitle: product?.title || "your product",
+                  stockCount: String(stockCount),
+                  restockUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/seller/products/${orderData.product_id}/edit`,
+                }
+              );
+            }
+
+            // Create in-app notification
+            await createNotification(
+              orderData.seller_id,
+              "inventory",
+              "Low Stock Alert",
+              `Your product "${product?.title || "Unknown"}" only has ${stockCount} keys remaining.`,
+              { productId: orderData.product_id, stockCount }
+            );
+          }
         }
       }
 

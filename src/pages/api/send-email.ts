@@ -10,7 +10,7 @@ import { PriceDropEmail } from "@/emails/PriceDropEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation" | "follow_up" | "price_drop";
+type EmailTemplate = "order_confirmation" | "seller_notification" | "delivery_confirmation" | "follow_up" | "price_drop" | "low_stock";
 
 interface TemplateEmailRequest {
   to: string;
@@ -100,6 +100,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             targetPrice: body.props.targetPrice || "$0.00",
             productUrl: body.props.productUrl || "https://tradevault.io/marketplace",
           }));
+          break;
+        case "low_stock":
+          subject = `Low Stock Alert: ${body.props.productTitle || "your product"}`;
+          html = `<html><body style="font-family:system-ui,sans-serif;background:#0B0F14;color:#E8ECF1;padding:24px;"><div style="max-width:480px;margin:0 auto;background:#111820;border:1px solid #232D3B;border-radius:8px;padding:24px;"><h1 style="font-size:18px;margin-bottom:8px;">Low Stock Warning</h1><p>Hi ${body.props.sellerName || "there"},</p><p>Your product <strong>${body.props.productTitle || "your product"}</strong> only has <strong style="color:#E05D5D;">${body.props.stockCount || "0"}</strong> keys remaining.</p><p style="margin-top:16px;"><a href="${body.props.restockUrl || "#"}" style="display:inline-block;background:#5B8EC8;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;">Restock Now</a></p><p style="margin-top:16px;font-size:12px;color:#8899AA;">— TradeVault Team</p></div></body></html>`;
           break;
         default:
           return res.status(400).json({ error: "Unknown template" });
