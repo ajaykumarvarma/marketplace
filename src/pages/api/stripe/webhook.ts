@@ -200,17 +200,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           );
 
           // Check for low stock alert
-          const { data: remainingStock } = await supabaseAdmin
+          const { count: remainingStock } = await supabaseAdmin
             .from("product_stock")
             .select("id", { count: "exact", head: true })
             .eq("product_id", orderData.product_id)
             .eq("sold", false);
 
-          const stockCount = remainingStock ?? 0;
+          const stockCount = typeof remainingStock === "number" ? remainingStock : 0;
           if (stockCount <= 5) {
             // Send low stock email to seller
             if (sellerProfile?.email) {
-              await sendEmail(
+              await sendTemplateEmail(
                 sellerProfile.email,
                 "low_stock",
                 {
@@ -225,10 +225,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Create in-app notification
             await createNotification(
               orderData.seller_id,
-              "inventory",
+              "system",
               "Low Stock Alert",
               `Your product "${product?.title || "Unknown"}" only has ${stockCount} keys remaining.`,
-              { productId: orderData.product_id, stockCount }
+              { productId: orderData.product_id, stockCount: String(stockCount) }
             );
           }
         }

@@ -71,7 +71,7 @@ export default function ProductDetailPage() {
         .maybeSingle();
 
       if (!data) {
-        setNotFound(true);
+        router.push("/404");
         setLoading(false);
         return;
       }
