@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { Package, ArrowRight, Shield, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Order {
@@ -25,8 +27,21 @@ const statusConfig: Record<string, { icon: typeof Package; color: string; label:
 
 export default function OrdersPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (router.query.success === "1") {
+      toast({
+        title: "Payment successful!",
+        description: "Your order has been placed and is being processed.",
+      });
+      // Clean up URL
+      router.replace("/orders", undefined, { shallow: true });
+    }
+  }, [router.query.success, toast, router]);
 
   useEffect(() => {
     if (!user) return;

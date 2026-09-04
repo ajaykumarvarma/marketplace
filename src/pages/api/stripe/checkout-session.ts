@@ -90,8 +90,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/orders?success=1`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cart?canceled=1`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/orders/success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/cart?canceled=1`,
       customer_email: email,
       metadata: {
         order_id: orderId,

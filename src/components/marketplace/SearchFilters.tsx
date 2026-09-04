@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SearchAutocomplete } from "./SearchAutocomplete";
 
 interface SearchFiltersProps {
   categories: { id: string; name: string }[];
@@ -37,25 +37,27 @@ export function SearchFilters({
 
   const activeCount = [activeCategory !== "All" ? "cat" : "", minPrice || maxPrice ? "price" : ""].filter(Boolean).length;
 
+  const handleSearch = () => {
+    // Trigger search - the parent handles the actual filtering
+    onSearchChange(searchQuery);
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 bg-muted border-border"
-          />
-        </div>
-        <Button variant="outline" onClick={() => setExpanded(!expanded)} className="gap-2">
+        <SearchAutocomplete
+          value={searchQuery}
+          onChange={onSearchChange}
+          onSearch={handleSearch}
+          placeholder="Search products..."
+        />
+        <Button variant="outline" onClick={() => setExpanded(!expanded)} className="gap-2 shrink-0">
           <SlidersHorizontal className="h-4 w-4" />
           Filters
           {activeCount > 0 && <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">{activeCount}</Badge>}
         </Button>
         {activeCount > 0 && (
-          <Button variant="ghost" size="icon" onClick={() => { onCategoryChange("All"); setMinPrice(""); setMaxPrice(""); onPriceChange([0, 10000]); }}>
+          <Button variant="ghost" size="icon" onClick={() => { onCategoryChange("All"); setMinPrice(""); setMaxPrice(""); onPriceChange([0, 10000]); }} className="shrink-0">
             <X className="h-4 w-4" />
           </Button>
         )}
