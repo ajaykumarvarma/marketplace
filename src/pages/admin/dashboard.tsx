@@ -24,7 +24,6 @@ interface UserProfile {
   id: string;
   full_name: string | null;
   role: string;
-  verification_tier: string;
   created_at: string;
   email?: string;
 }
@@ -81,8 +80,8 @@ export default function AdminDashboardPage() {
   async function loadDashboard() {
     setLoading(true);
     const [fraudRes, usersRes, ordersRes] = await Promise.all([
-      supabase.from("fraud_logs").select("*").order("created_at", { ascending: false }).limit(50),
-      supabase.from("profiles").select("id, full_name, role, verification_tier, created_at, email").order("created_at", { ascending: false }).limit(200),
+      supabase.from("fraud_alerts").select("*").order("created_at", { ascending: false }).limit(50),
+      supabase.from("profiles").select("id, full_name, role, created_at, email").order("created_at", { ascending: false }).limit(200),
       supabase.from("orders").select("status, total_amount"),
     ]);
 
@@ -322,7 +321,6 @@ export default function AdminDashboardPage() {
                     <tr className="border-b border-border bg-muted">
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Role</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tier</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Joined</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
                     </tr>
@@ -341,11 +339,6 @@ export default function AdminDashboardPage() {
                             {user.role}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className={`text-xs capitalize ${user.verification_tier === "gold" ? "bg-muted text-foreground" : user.verification_tier === "silver" ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
-                            {user.verification_tier}
-                          </Badge>
-                        </td>
                         <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
@@ -361,7 +354,7 @@ export default function AdminDashboardPage() {
                     ))}
                     {paginatedUsers.length === 0 && (
                       <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No users found</td>
+                        <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No users found</td>
                       </tr>
                     )}
                   </tbody>

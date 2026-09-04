@@ -47,6 +47,7 @@ export default function SellerDashboardPage() {
   const [bulkResults, setBulkResults] = useState<{ success: number; errors: Array<{ row: number; error: string }> } | null>(null);
   const [productsPage, setProductsPage] = useState(1);
   const productsPerPage = 10;
+  const [topProductsData, setTopProductsData] = useState<Array<{ name: string; revenue: number; sales: number }>>([]);
 
   const paginatedOrders = orders.slice((ordersPage - 1) * ordersPerPage, ordersPage * ordersPerPage);
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
@@ -73,6 +74,20 @@ export default function SellerDashboardPage() {
         productCount: productsRes.data.length,
         rating: 4.9,
       });
+
+      // Build top products data from actual completed orders
+      const productSales: Record<string, { name: string; revenue: number; sales: number }> = {};
+      (ordersRes.data || []).forEach((order) => {
+        const title = (order as Record<string, unknown>).product?.title || "Unknown";
+        const pid = String((order as Record<string, unknown>).product_id || title);
+        const amount = Number((order as Record<string, unknown>).total_amount || 0);
+        if (!productSales[pid]) {
+          productSales[pid] = { name: title, revenue: 0, sales: 0 };
+        }
+        productSales[pid].revenue += amount;
+        productSales[pid].sales += 1;
+      });
+      setTopProductsData(Object.values(productSales).sort((a, b) => b.revenue - a.revenue).slice(0, 5));
     }
     setLoading(false);
   }, [user]);
@@ -695,7 +710,7 @@ export default function SellerDashboardPage() {
               />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <SalesChart data={orders.map((o) => ({ date: o.created_at, revenue: o.total_amount || 0, orders: 1 }))} />
-                <TopProductsChart data={products.map((p) => ({ name: p.title, revenue: p.price * p.stock, sales: p.stock }))} />
+                <TopProductsChart data={topProductsData} />
               </div>
             </TabsContent>
           </Tabs>
