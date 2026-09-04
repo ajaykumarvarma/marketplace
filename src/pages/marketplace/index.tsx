@@ -140,17 +140,16 @@ export default function MarketplacePage() {
     setPage(1);
   };
 
-  // Load categories once
+  // Load categories from database
   useEffect(() => {
     async function loadCategories() {
       try {
-        const res = await fetch("/api/products?limit=1");
-        // Actually fetch categories from a separate endpoint or extract from products
-        // For now, use a simple fetch to get unique categories
-        const catsRes = await fetch("/api/products?limit=100");
-        const data = await catsRes.json();
-        const uniqueCats = [...new Set((data.products || []).map((p: Product) => p.category?.name).filter(Boolean))];
-        setCategories([{ id: "all", name: "All" }, ...uniqueCats.map((name) => ({ id: name as string, name: name as string }))]);
+        const { data } = await supabase.from("categories").select("id, name").order("name");
+        if (data) {
+          setCategories([{ id: "all", name: "All" }, ...data.map((c) => ({ id: String(c.id), name: String(c.name) }))]);
+        } else {
+          setCategories([{ id: "all", name: "All" }]);
+        }
       } catch {
         setCategories([{ id: "all", name: "All" }]);
       }

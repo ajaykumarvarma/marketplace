@@ -45,13 +45,23 @@ async function sendTemplateEmail(to: string, template: string, props: Record<str
   }
 }
 
+// Helper to read raw body as buffer
+function readRawBody(req: NextApiRequest): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", reject);
+  });
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const sig = req.headers["stripe-signature"] as string;
-  const buf = await buffer(req);
+  const buf = await readRawBody(req);
   const payload = buf.toString();
 
   let event: Stripe.Event;
@@ -95,15 +105,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const product = productArray?.[0] || {};
         const isAutoDelivery = product?.auto_delivery === true;
 
-        // Update order status to paid
-        await supabaseAdmin
-          .from("orders")
-          .update({
-            status: "paid",
-            stripe_payment_intent_id: paymentIntent.id,
-            paid_at: new Date().toISOString(),
-          })
-          .eq("id", orderData.id);
+        // Fetch buyer and seller profiles for email notifications
+        const [buyerRes, sellerRes] = await Promise.all([
+          supabaseAdmin.from("profiles").select("full_name, email").eq("id", orderData.buyer_id).maybeSingle(),
+          supabaseAdmin.from("profiles").select("full_name, email").eq("id", orderData.seller_id).maybeSingle(),
+        ]);
+
+        const buyerProfile = buyerRes.data as { full_name: string | null; email: string | null } | null;
+        const sellerProfile = sellerRes.data as { full_name: string | null; email: string | null } | null;
 
         // Send order confirmation email to buyer
         if (buyerProfile?.email) {
