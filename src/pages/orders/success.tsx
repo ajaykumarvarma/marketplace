@@ -67,10 +67,10 @@ export default function OrderSuccessPage() {
               <CheckCircle className="h-10 w-10 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2 animate-in fade-in zoom-in duration-700">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
             Payment Successful!
           </h1>
-          <p className="text-muted-foreground text-center max-w-md animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+          <p className="text-muted-foreground text-center max-w-md">
             Your order is being processed with escrow protection.
           </p>
         </div>

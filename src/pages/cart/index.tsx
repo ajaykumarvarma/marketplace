@@ -38,7 +38,7 @@ export default function CartPage() {
     return (
       <>
         <SEO title="Shopping Cart — TradeVault" description="Review your items and proceed to checkout." />
-        <div className="container py-12">
+        <div className="container px-4 sm:px-6 py-12">
           <div className="max-w-4xl mx-auto">
             <h1 className="font-display text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
             <div>
@@ -54,7 +54,7 @@ export default function CartPage() {
   return (
     <>
       <SEO title="Shopping Cart — TradeVault" description="Review your items and proceed to checkout with escrow protection." />
-      <div className="container py-8 md:py-12">
+      <div className="container px-4 sm:px-6 py-8 md:py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="font-display text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
 
