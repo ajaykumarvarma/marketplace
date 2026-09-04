@@ -78,9 +78,11 @@ export default function SellerDashboardPage() {
       // Build top products data from actual completed orders
       const productSales: Record<string, { name: string; revenue: number; sales: number }> = {};
       (ordersRes.data || []).forEach((order) => {
-        const title = (order as Record<string, unknown>).product?.title || "Unknown";
-        const pid = String((order as Record<string, unknown>).product_id || title);
-        const amount = Number((order as Record<string, unknown>).total_amount || 0);
+        const row = order as Record<string, unknown>;
+        const productData = row.product as Record<string, unknown> | undefined;
+        const title = productData?.title ? String(productData.title) : "Unknown";
+        const pid = String(row.product_id || title);
+        const amount = Number(row.total_amount || 0);
         if (!productSales[pid]) {
           productSales[pid] = { name: title, revenue: 0, sales: 0 };
         }

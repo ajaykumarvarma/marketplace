@@ -12,12 +12,14 @@ import { useAuth } from "@/contexts/AuthContext";
 interface FraudLog {
   id: string;
   user_id: string;
-  event_type: string;
-  risk_score: number;
-  reason: string;
-  metadata: { ip_address?: string; device_fingerprint?: string } | null;
-  created_at: string;
+  alert_type: string;
+  severity: string;
+  status: string;
+  description: string | null;
+  order_id: string | null;
   reviewed_at: string | null;
+  reviewed_by: string | null;
+  created_at: string;
 }
 
 interface UserProfile {
@@ -34,7 +36,7 @@ interface OrderStats {
   active_orders: number;
 }
 
-const riskColor = (risk: number) => {
+const riskColor = (severity: string | number) => {
   return "bg-muted text-foreground border-border";
 };
 
@@ -85,7 +87,23 @@ export default function AdminDashboardPage() {
       supabase.from("orders").select("status, total_amount"),
     ]);
 
-    if (fraudRes.data) setFraudLogs(fraudRes.data as FraudLog[]);
+    if (fraudRes.data) {
+      setFraudLogs((fraudRes.data as unknown[]).map((item) => {
+        const row = item as Record<string, unknown>;
+        return {
+          id: String(row.id),
+          user_id: String(row.user_id),
+          alert_type: String(row.alert_type || "unknown"),
+          severity: String(row.severity || "low"),
+          status: String(row.status || "open"),
+          description: row.description ? String(row.description) : null,
+          order_id: row.order_id ? String(row.order_id) : null,
+          reviewed_at: row.reviewed_at ? String(row.reviewed_at) : null,
+          reviewed_by: row.reviewed_by ? String(row.reviewed_by) : null,
+          created_at: String(row.created_at),
+        };
+      }));
+    }
     if (usersRes.data) {
       setUsers(usersRes.data as UserProfile[]);
       setFilteredUsers(usersRes.data as UserProfile[]);
@@ -106,7 +124,7 @@ export default function AdminDashboardPage() {
   }
 
   async function resolveFraud(logId: string) {
-    await supabase.from("fraud_logs").update({ reviewed_at: new Date().toISOString() }).eq("id", logId);
+    await supabase.from("fraud_alerts").update({ status: "resolved", reviewed_at: new Date().toISOString() }).eq("id", logId);
     loadDashboard();
   }
 
@@ -199,10 +217,10 @@ export default function AdminDashboardPage() {
                   <div>
                     {fraudLogs.slice(0, 5).map((log) => (
                       <div key={log.id} className="flex items-start gap-3 text-sm mb-3">
-                        <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.risk_score >= 70 ? "bg-foreground" : log.risk_score >= 40 ? "bg-muted-foreground" : "bg-muted"}`} />
+                        <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.severity === "high" ? "bg-destructive" : log.severity === "medium" ? "bg-warning" : "bg-muted"}`} />
                         <div className="flex-1">
-                          <p className="text-foreground">{log.event_type.toUpperCase()} — Risk: {log.risk_score}</p>
-                          <p className="text-muted-foreground text-xs">{log.reason.slice(0, 80)}...</p>
+                          <p className="text-foreground">{log.alert_type.toUpperCase()} — Severity: {log.severity}</p>
+                          <p className="text-muted-foreground text-xs">{(log.description || "").slice(0, 80)}...</p>
                         </div>
                         <span className="text-xs text-muted-foreground font-mono">{new Date(log.created_at).toLocaleTimeString()}</span>
                       </div>
@@ -215,16 +233,16 @@ export default function AdminDashboardPage() {
               <div className="bg-card border border-border rounded-lg p-6">
                 <h3 className="font-display font-semibold text-foreground mb-4">Risk Distribution</h3>
                 {(() => {
-                  const high = fraudLogs.filter((f) => f.risk_score >= 70).length;
-                  const med = fraudLogs.filter((f) => f.risk_score >= 40 && f.risk_score < 70).length;
-                  const low = fraudLogs.filter((f) => f.risk_score < 40).length;
+                  const high = fraudLogs.filter((f) => f.severity === "high").length;
+                  const med = fraudLogs.filter((f) => f.severity === "medium").length;
+                  const low = fraudLogs.filter((f) => f.severity === "low" || !f.severity).length;
                   const total = fraudLogs.length || 1;
                   return (
                     <div>
                       {[
                         { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-muted" },
-                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-muted" },
-                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-muted" },
+                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-warning" },
+                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-destructive" },
                       ].map((r) => (
                         <div key={r.label} className="mb-4">
                           <div className="flex items-center justify-between text-sm mb-1">
@@ -260,8 +278,8 @@ export default function AdminDashboardPage() {
                     <thead>
                       <tr className="border-b border-border bg-muted">
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Risk</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Reason</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Severity</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Description</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
                       </tr>
@@ -269,21 +287,21 @@ export default function AdminDashboardPage() {
                     <tbody>
                       {fraudLogs.map((log) => (
                         <tr key={log.id} className="border-b border-border hover:bg-muted transition-colors">
-                          <td className="px-4 py-3 text-foreground capitalize">{log.event_type}</td>
+                          <td className="px-4 py-3 text-foreground capitalize">{log.alert_type}</td>
                           <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${riskColor(log.risk_score)}`}>
-                              {log.risk_score}
+                            <Badge variant="outline" className={`text-xs ${riskColor(log.severity === "high" ? 80 : log.severity === "medium" ? 50 : 20)}`}>
+                              {log.severity}
                             </Badge>
                           </td>
-                          <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.reason}</td>
+                          <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.description || "—"}</td>
                           <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${log.reviewed_at ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
-                              {log.reviewed_at ? "Resolved" : "Open"}
+                            <Badge variant="outline" className={`text-xs ${log.status === "resolved" ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
+                              {log.status === "resolved" ? "Resolved" : "Open"}
                             </Badge>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1">
-                              {!log.reviewed_at && (
+                              {log.status !== "resolved" && (
                                 <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Resolve" aria-label="Resolve alert">
                                   <CheckCircle className="h-4 w-4" />
                                 </button>
