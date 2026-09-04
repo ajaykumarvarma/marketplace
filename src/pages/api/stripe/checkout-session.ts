@@ -96,7 +96,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       metadata: {
         order_id: orderId,
         buyer_id: userId,
-        coupon_code: req.body.couponCode || "",
+        coupon_code: req.body.couponId || "",
         commission: String(commission || 0),
       },
       payment_intent_data: {

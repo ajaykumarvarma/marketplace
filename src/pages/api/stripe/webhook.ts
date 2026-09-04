@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
-import { buffer } from "micro";
 import { createNotification } from "@/services/notificationService";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
@@ -13,6 +12,18 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
+async function sendEmail(to: string, template: string, props: Record<string, string>) {
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/api/send-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to, template, props }),
+    });
+  } catch (err) {
+    console.error("Failed to send email:", err);
+  }
+}
+
 // Disable body parsing for raw body access
 export const config = {
   api: {
@@ -21,18 +32,6 @@ export const config = {
 };
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
-
-async function sendEmail(to: string, subject: string, html: string) {
-  try {
-    await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/send-email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to, subject, html }),
-    });
-  } catch (err) {
-    console.error("Failed to send email:", err);
-  }
-}
 
 async function sendTemplateEmail(to: string, template: string, props: Record<string, string>) {
   try {
@@ -96,6 +95,64 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const product = productArray?.[0] || {};
         const isAutoDelivery = product?.auto_delivery === true;
 
+        // Update order status to paid
+        await supabaseAdmin
+          .from("orders")
+          .update({
+            status: "paid",
+            stripe_payment_intent_id: paymentIntent.id,
+            paid_at: new Date().toISOString(),
+          })
+          .eq("id", orderData.id);
+
+        // Send order confirmation email to buyer
+        if (buyerProfile?.email) {
+          await sendEmail(
+            buyerProfile.email,
+            "order_confirmation",
+            {
+              buyerName: buyerProfile.full_name || "there",
+              orderId: orderData.id.slice(0, 8).toUpperCase(),
+              productTitle: product?.title || "Digital Goods",
+              totalAmount: `$${orderData.total_amount.toFixed(2)}`,
+              orderUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/orders/${orderData.id}`,
+              sellerName: sellerProfile?.full_name || "TradeVault Seller",
+            }
+          );
+        }
+
+        // Send seller notification email
+        if (sellerProfile?.email) {
+          await sendEmail(
+            sellerProfile.email,
+            "seller_notification",
+            {
+              sellerName: sellerProfile.full_name || "there",
+              orderId: orderData.id.slice(0, 8).toUpperCase(),
+              productTitle: product?.title || "Digital Goods",
+              totalAmount: `$${orderData.total_amount.toFixed(2)}`,
+              dashboardUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/seller/dashboard`,
+            }
+          );
+        }
+
+        // Create in-app notifications
+        await createNotification(
+          orderData.buyer_id,
+          "order",
+          "Payment Confirmed",
+          `Your order for ${product?.title || "digital goods"} has been confirmed.`,
+          { orderId: orderData.id }
+        );
+
+        await createNotification(
+          orderData.seller_id,
+          "order",
+          "New Order",
+          `You have a new order for ${product?.title || "digital goods"}.`,
+          { orderId: orderData.id }
+        );
+
         // AUTO-DELIVERY: Fetch unsold stock and assign to order
         if (isAutoDelivery) {
           const { data: stockItem } = await supabaseAdmin
@@ -129,66 +186,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }
 
-        const { data: buyerProfile } = await supabaseAdmin
-          .from("profiles")
-          .select("email, full_name")
-          .eq("id", orderData.buyer_id)
-          .maybeSingle();
-
-        const { data: sellerProfile } = await supabaseAdmin
-          .from("profiles")
-          .select("email, full_name")
-          .eq("id", orderData.seller_id)
-          .maybeSingle();
-
-        // Send order confirmation to buyer
-        if (buyerProfile?.email) {
-          const productTitle = product?.title || "your order";
-          await sendTemplateEmail(
-            buyerProfile.email,
-            "order_confirmation",
-            {
-              buyerName: buyerProfile.full_name || "there",
-              orderId: orderData.id.slice(0, 8),
-              productTitle,
-              amount: `$${(orderData.total_amount || 0).toFixed(2)}`,
-              orderUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/orders/${orderData.id}`,
-            }
-          );
-        }
-
-        // Send notification to seller
-        if (sellerProfile?.email) {
-          await sendTemplateEmail(
-            sellerProfile.email,
-            "seller_notification",
-            {
-              sellerName: sellerProfile.full_name || "there",
-              orderId: orderData.id.slice(0, 8),
-              productTitle: product?.title || "your product",
-              amount: `$${(orderData.total_amount || 0).toFixed(2)}`,
-              dashboardUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/seller/dashboard`,
-            }
-          );
-        }
-
-        // Create in-app notifications
-        await createNotification(
-          orderData.buyer_id,
-          "order",
-          "Payment Confirmed",
-          `Your order #${orderData.id.slice(0, 8)} has been paid and is being processed.`,
-          { orderId: orderData.id, amount: orderData.total_amount }
-        );
-
-        await createNotification(
-          orderData.seller_id,
-          "order",
-          "New Order Received",
-          `You have a new order #${orderData.id.slice(0, 8)} for $${(orderData.total_amount || 0).toFixed(2)}.`,
-          { orderId: orderData.id, amount: orderData.total_amount }
-        );
-
         // If auto-delivered, notify buyer of instant delivery
         if (isAutoDelivery) {
           await createNotification(
@@ -198,6 +195,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             `Your order #${orderData.id.slice(0, 8)} has been automatically delivered. View it now.`,
             { orderId: orderData.id }
           );
+
+          // Send delivery confirmation email
+          if (buyerProfile?.email) {
+            await sendEmail(
+              buyerProfile.email,
+              "delivery_confirmation",
+              {
+                buyerName: buyerProfile.full_name || "there",
+                orderId: orderData.id.slice(0, 8).toUpperCase(),
+                productTitle: product?.title || "Digital Goods",
+                orderUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tradevault.io"}/orders/${orderData.id}`,
+              }
+            );
+          }
 
           // Check for low stock alert
           const { count: remainingStock } = await supabaseAdmin
