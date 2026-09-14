@@ -40,7 +40,7 @@ export default function CheckoutPage() {
     return (
       <>
         <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
-        <div className="container py-12">
+        <div className="container px-4 sm:px-6 py-12">
           <div className="max-w-4xl mx-auto">
             <div className="h-8 bg-muted rounded w-1/3 mb-4" />
             <div className="h-48 bg-muted rounded-lg" />
@@ -68,10 +68,13 @@ export default function CheckoutPage() {
     return (
       <>
         <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection." />
-        <div className="container py-16 text-center">
+        <div className="container px-4 sm:px-6 py-16 text-center">
+          <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <ShoppingCart className="h-8 w-8 text-primary" />
+          </div>
           <h1 className="font-display text-xl font-medium text-foreground">Your cart is empty</h1>
           <Link href="/marketplace">
-            <Button variant="outline" className="mt-4">Browse Marketplace</Button>
+            <Button className="mt-4 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">Browse Marketplace</Button>
           </Link>
         </div>
       </>

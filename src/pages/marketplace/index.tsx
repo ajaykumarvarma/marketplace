@@ -335,19 +335,19 @@ export default function MarketplacePage() {
                   size="sm"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1 || loading}
-                  className="border-border"
+                  className="border-border hover:border-primary hover:text-primary"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <span className="text-sm text-muted-foreground font-mono">
-                  Page {page} of {totalPages}
+                  Page <span className="text-foreground font-semibold">{page}</span> of <span className="text-foreground font-semibold">{totalPages}</span>
                 </span>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages || loading}
-                  className="border-border"
+                  className="border-border hover:border-primary hover:text-primary"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -358,12 +358,14 @@ export default function MarketplacePage() {
 
         {!loading && products.length === 0 && (
           <div className="text-center py-16 flex flex-col items-center gap-4">
-            <Search className="h-12 w-12 text-muted-foreground mx-auto" />
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              <Search className="h-8 w-8 text-primary" />
+            </div>
             <h3 className="font-display text-lg font-medium text-foreground">No products found</h3>
             {activeFilters.length > 0 ? (
               <>
                 <p className="text-sm text-muted-foreground">No results for: {activeFilters.join(", ")}</p>
-                <Button variant="outline" className="gap-2 border-border" onClick={clearAllFilters}>
+                <Button variant="outline" className="gap-2 border-primary text-primary hover:bg-primary/10" onClick={clearAllFilters}>
                   <X className="h-4 w-4" />
                   Clear all filters
                 </Button>
@@ -372,7 +374,7 @@ export default function MarketplacePage() {
               <>
                 <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
                 <Link href="/marketplace">
-                  <Button variant="outline" className="border-border">Browse all products</Button>
+                  <Button className="bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">Browse all products</Button>
                 </Link>
               </>
             )}
