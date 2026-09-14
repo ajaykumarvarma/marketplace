@@ -383,7 +383,7 @@ export default function SellerDashboardPage() {
                 Bulk Upload
               </Button>
               <Link href="/seller/products/new">
-                <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <Store className="h-4 w-4" />
                   Add Product
                 </Button>
