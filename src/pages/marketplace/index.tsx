@@ -183,6 +183,35 @@ export default function MarketplacePage() {
           <p className="text-muted-foreground">Browse verified digital goods from trusted sellers</p>
         </div>
 
+        {/* Horizontal pill category filter with colors */}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {categories.map((c) => {
+            const isActive = (c.id === "all" && activeCategory === "All") || activeCategory === c.id;
+            const categoryColors: Record<string, string> = {
+              all: "from-violet-500 to-purple-600",
+              gaming: "from-rose-500 to-pink-600",
+              software: "from-blue-500 to-cyan-500",
+              subscriptions: "from-emerald-500 to-teal-500",
+              accounts: "from-amber-500 to-orange-500",
+              services: "from-indigo-500 to-violet-500",
+            };
+            const colorClass = categoryColors[c.id.toLowerCase()] || "from-slate-500 to-slate-600";
+            return (
+              <button
+                key={c.id}
+                onClick={() => onCategoryChange(c.id === "all" ? "All" : c.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                  isActive
+                    ? `bg-gradient-to-r ${colorClass} text-white shadow-lg shadow-${colorClass.split(" ")[1].replace("to-", "")}/30`
+                    : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+                }`}
+              >
+                {c.name}
+              </button>
+            );
+          })}
+        </div>
+
         <SearchFilters
           categories={categories}
           activeCategory={activeCategory}
@@ -239,7 +268,7 @@ export default function MarketplacePage() {
                 const isInstant = product.delivery_time.toLowerCase().includes("instant") || product.delivery_time.toLowerCase().includes("auto");
 
                 return (
-                  <div key={product.id} className="group bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-all">
+                  <div key={product.id} className="group bg-card border border-border rounded-xl overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all">
                     <Link href={`/marketplace/${product.id}`} className="block">
                       <div className="aspect-[16/10] bg-muted relative overflow-hidden">
                         <Image
@@ -251,20 +280,25 @@ export default function MarketplacePage() {
                           loading="lazy"
                         />
                         {product.featured === true && (
-                          <div className="absolute top-3 left-3 px-2 py-1 bg-amber-500 text-black text-[10px] font-bold uppercase tracking-wider rounded">
+                          <div className="absolute top-3 left-3 px-2.5 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-black text-[10px] font-bold uppercase tracking-wider rounded-full shadow-lg">
                             Featured
+                          </div>
+                        )}
+                        {product.stock <= 5 && product.stock > 0 && (
+                          <div className="absolute top-3 right-3 px-2 py-1 bg-red-500 text-white text-[10px] font-bold rounded-full">
+                            Only {product.stock} left
                           </div>
                         )}
                       </div>
                     </Link>
                     <div className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-lg font-bold text-muted-foreground font-mono">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-lg font-bold text-white font-mono shadow-md">
                           {letterPrefix}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                            <span className="text-[10px] uppercase tracking-wider text-primary font-semibold">
                               {product.category?.name || "Other"}
                             </span>
                             <span className="text-[10px] text-muted-foreground">·</span>
@@ -273,7 +307,7 @@ export default function MarketplacePage() {
                             </span>
                           </div>
                           <Link href={`/marketplace/${product.id}`}>
-                            <h3 className="font-medium text-foreground group-hover:text-foreground line-clamp-1 text-[15px] leading-snug">
+                            <h3 className="font-medium text-foreground group-hover:text-primary line-clamp-1 text-[15px] leading-snug transition-colors">
                               {product.title}
                             </h3>
                           </Link>
@@ -282,12 +316,12 @@ export default function MarketplacePage() {
 
                       <div className="flex items-center gap-3 mt-3">
                         <div className="flex items-center gap-1">
-                          <Star className="h-3 w-3 fill-foreground text-foreground" />
+                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                           <span className="text-xs font-medium text-foreground">{rating.toFixed(1)}</span>
                           <span className="text-xs text-muted-foreground">({reviewCount})</span>
                         </div>
                         {isInstant && (
-                          <Badge variant="outline" className="text-[10px] h-5 px-1.5 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                          <Badge className="text-[10px] h-5 px-1.5 bg-emerald-500 text-white border-0 shadow-sm shadow-emerald-500/20">
                             instant
                           </Badge>
                         )}
@@ -295,16 +329,18 @@ export default function MarketplacePage() {
 
                       <div className="flex items-end justify-between mt-4 pt-3 border-t border-border">
                         <div>
-                          <p className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</p>
+                          <p className="font-mono text-lg font-bold text-foreground">${product.price.toFixed(2)}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[10px] text-muted-foreground">{product.stock} ready</span>
+                            <span className={`text-[10px] font-medium ${product.stock > 10 ? "text-emerald-400" : product.stock > 0 ? "text-amber-400" : "text-red-400"}`}>
+                              {product.stock} in stock
+                            </span>
                             <span className="text-[10px] text-muted-foreground">·</span>
-                            <span className="text-[10px] text-muted-foreground">{warranty} day{warranty !== 1 ? "s" : ""} warranty</span>
+                            <span className="text-[10px] text-muted-foreground">{warranty} day warranty</span>
                           </div>
                         </div>
                         <Button
                           size="sm"
-                          className="h-9 px-3 bg-foreground text-background hover:bg-foreground/90 gap-1.5 text-xs font-medium"
+                          className="h-9 px-3 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 gap-1.5 text-xs font-medium shadow-md shadow-primary/20 border-0"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();

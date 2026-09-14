@@ -415,7 +415,7 @@ export default function ProductDetailPage() {
 
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                <span className="text-[10px] uppercase tracking-wider text-primary font-semibold bg-primary/10 px-2 py-0.5 rounded-full">
                   {product.category?.name || "Other"}
                 </span>
                 <span className="text-[10px] text-muted-foreground">·</span>
@@ -425,7 +425,7 @@ export default function ProductDetailPage() {
                 {product.seller?.role !== "buyer" && (
                   <>
                     <span className="text-[10px] text-muted-foreground">·</span>
-                    <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+                    <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full">
                       <Shield className="h-3 w-3" />
                       Verified
                     </span>
@@ -433,19 +433,19 @@ export default function ProductDetailPage() {
                 )}
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-xl font-bold text-muted-foreground font-mono">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-xl font-bold text-white font-mono shadow-md">
                   {product.title.charAt(0).toUpperCase()}
                 </div>
                 <div>
                   <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">{product.title}</h1>
                   <div className="flex items-center gap-3 mt-1">
                     <div className="flex items-center gap-1">
-                      <Star className="h-3.5 w-3.5 fill-foreground text-foreground" />
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                       <span className="text-sm font-medium text-foreground">{avgRatingDisplay}</span>
                       <span className="text-sm text-muted-foreground">({product.reviews?.length || 0})</span>
                     </div>
                     {product.auto_delivery && (
-                      <Badge variant="outline" className="text-[10px] h-5 px-1.5 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                      <Badge className="text-[10px] h-5 px-1.5 bg-emerald-500 text-white border-0 shadow-sm">
                         instant
                       </Badge>
                     )}
@@ -585,13 +585,13 @@ export default function ProductDetailPage() {
             <div className="bg-card border border-border rounded-xl p-6 sm:sticky sm:top-24">
               <div className="mb-6">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-3xl font-bold text-foreground">${product.price.toFixed(2)}</span>
+                  <span className="font-mono text-3xl font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${product.price.toFixed(2)}</span>
                   {product.original_price && (
                     <span className="text-lg text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                   )}
                 </div>
                 {product.original_price && (
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-emerald-400 mt-1 font-medium">
                     Save {Math.round((1 - product.price / product.original_price) * 100)}% from original price
                   </p>
                 )}
@@ -601,7 +601,7 @@ export default function ProductDetailPage() {
                 <Button
                   onClick={handleAddToCart}
                   disabled={adding}
-                  className="h-11 gap-2 bg-foreground text-background hover:bg-foreground/90 text-sm font-medium rounded-lg"
+                  className="h-11 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium rounded-lg shadow-lg shadow-primary/25 border-0"
                 >
                   {adding ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -613,7 +613,7 @@ export default function ProductDetailPage() {
                 <Button
                   variant="outline"
                   onClick={() => setChatOpen(true)}
-                  className="h-11 gap-2 border-border text-sm font-medium rounded-lg"
+                  className="h-11 gap-2 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary text-sm font-medium rounded-lg"
                 >
                   <MessageSquare className="h-4 w-4" />
                   Message Seller
@@ -653,10 +653,15 @@ export default function ProductDetailPage() {
               <div className="pt-4 border-t border-border mt-4 text-sm space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground text-xs">Stock</span>
-                  <span className="font-mono text-foreground text-sm">{product.stock} left</span>
+                  <span className={`font-mono text-sm font-semibold ${product.stock > 10 ? "text-emerald-400" : product.stock > 0 ? "text-amber-400" : "text-red-400"}`}>
+                    {product.stock} left
+                  </span>
                 </div>
                 {product.stock <= 5 && product.stock > 0 && (
-                  <p className="text-xs text-foreground">Only {product.stock} left — order soon</p>
+                  <p className="text-xs text-amber-400 font-medium flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Only {product.stock} left — order soon
+                  </p>
                 )}
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground text-xs">Delivery</span>
@@ -664,7 +669,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground text-xs">Protection</span>
-                  <span className="text-foreground text-sm flex items-center gap-1">
+                  <span className="text-primary text-sm flex items-center gap-1 font-medium">
                     <Shield className="h-3 w-3" /> Escrow
                   </span>
                 </div>
@@ -672,7 +677,7 @@ export default function ProductDetailPage() {
 
               <div className="pt-4 border-t border-border mt-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-md">
                     {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
                   </div>
                   <div>
@@ -681,8 +686,8 @@ export default function ProductDetailPage() {
                       {product.seller?.role !== "buyer" && <Shield className="h-3.5 w-3.5 text-emerald-400" />}
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Star className="h-3 w-3 fill-foreground text-foreground" />
-                      <span>{avgRatingDisplay}</span>
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span className="text-foreground font-medium">{avgRatingDisplay}</span>
                       <span>·</span>
                       <span>{product.reviews?.length || 0} reviews</span>
                     </div>
