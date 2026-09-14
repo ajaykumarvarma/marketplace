@@ -78,12 +78,19 @@ export default function WishlistPage() {
     return (
       <>
         <SEO title="Wishlist — TradeVault" />
-        <div className="container py-16 text-center">
-          <Heart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h1 className="font-display text-xl font-medium text-foreground">Please sign in to view your wishlist</h1>
-          <Link href="/auth/login?redirect=/wishlist">
-            <Button className="mt-4">Sign In</Button>
-          </Link>
+        <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0 bg-mesh-warm" />
+          <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+          <div className="absolute top-20 right-[10%] w-72 h-72 bg-gradient-to-bl from-amber-500/15 to-transparent rounded-full blur-3xl" />
+          <div className="text-center px-4 relative">
+            <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+              <Heart className="h-8 w-8 text-red-400" />
+            </div>
+            <h1 className="font-display text-xl font-medium text-foreground">Please sign in to view your wishlist</h1>
+            <Link href="/auth/login?redirect=/wishlist">
+              <Button className="mt-4 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">Sign In</Button>
+            </Link>
+          </div>
         </div>
       </>
     );
@@ -92,85 +99,94 @@ export default function WishlistPage() {
   return (
     <>
       <SEO title="Your Wishlist — TradeVault" />
-      <div className="container px-4 sm:px-6 py-8 md:py-12">
-        <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Marketplace
-        </Link>
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-mesh-warm" />
+        <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+        <div className="absolute top-20 right-[10%] w-72 h-72 bg-gradient-to-bl from-amber-500/15 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-[5%] w-80 h-80 bg-gradient-to-tr from-rose-500/8 to-transparent rounded-full blur-3xl" />
 
-        <h1 className="font-display text-2xl font-bold text-foreground mb-6">Your Wishlist</h1>
+        <div className="relative container px-4 sm:px-6 py-8 md:py-12">
+          <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Marketplace
+          </Link>
 
-        {loading && (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          </div>
-        )}
+          <h1 className="font-display text-2xl font-bold text-foreground mb-6">Your Wishlist</h1>
 
-        {!loading && items.length === 0 && (
-          <div className="text-center py-16">
-            <Heart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="font-display text-lg font-medium text-foreground mb-2">Your wishlist is empty</h3>
-            <p className="text-sm text-muted-foreground mb-4">Save products you&apos;re interested in for later</p>
-            <Link href="/marketplace">
-              <Button>Browse Marketplace</Button>
-            </Link>
-          </div>
-        )}
+          {loading && (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          )}
 
-        {!loading && items.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((item) => {
-              const product = item.product;
-              if (!product) return null;
-              return (
-                <div key={item.id} className="bg-card border border-border rounded-lg overflow-hidden">
-                  <Link href={`/marketplace/${product.id}`}>
-                    <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                      <Image
-                        src={product.image_url || "/generated/hero-product.png"}
-                        alt={product.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                  </Link>
-                  <div className="p-4">
+          {!loading && items.length === 0 && (
+            <div className="text-center py-16">
+              <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                <Heart className="h-8 w-8 text-red-400" />
+              </div>
+              <h3 className="font-display text-lg font-medium text-foreground mb-2">Your wishlist is empty</h3>
+              <p className="text-sm text-muted-foreground mb-4">Save products you&apos;re interested in for later</p>
+              <Link href="/marketplace">
+                <Button className="bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">Browse Marketplace</Button>
+              </Link>
+            </div>
+          )}
+
+          {!loading && items.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {items.map((item) => {
+                const product = item.product;
+                if (!product) return null;
+                return (
+                  <div key={item.id} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all group">
                     <Link href={`/marketplace/${product.id}`}>
-                      <h3 className="font-medium text-foreground hover:text-foreground line-clamp-1 mb-2">{product.title}</h3>
+                      <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                        <Image
+                          src={product.image_url || "/generated/hero-product.png"}
+                          alt={product.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
                     </Link>
-                    <p className="text-xs text-muted-foreground mb-2">{product.seller?.full_name || "Unknown Seller"}</p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
-                      {product.original_price && (
-                        <span className="text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-                        onClick={() => moveToCart(product)}
-                      >
-                        <ShoppingCart className="h-4 w-4" />
-                        Add to Cart
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-border text-muted-foreground hover:text-foreground"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                    <div className="p-4">
+                      <Link href={`/marketplace/${product.id}`}>
+                        <h3 className="font-medium text-foreground hover:text-primary line-clamp-1 mb-2 transition-colors">{product.title}</h3>
+                      </Link>
+                      <p className="text-xs text-muted-foreground mb-2">{product.seller?.full_name || "Unknown Seller"}</p>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="font-mono text-lg font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${product.price.toFixed(2)}</span>
+                        {product.original_price && (
+                          <span className="text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-sm"
+                          onClick={() => moveToCart(product)}
+                        >
+                          <ShoppingCart className="h-4 w-4" />
+                          Add to Cart
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-border/60 text-muted-foreground hover:text-red-400 hover:border-red-400/30"
+                          onClick={() => removeItem(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
