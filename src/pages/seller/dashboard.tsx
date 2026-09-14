@@ -398,7 +398,7 @@ export default function SellerDashboardPage() {
               { label: "Products", value: stats.productCount.toString(), change: "+2", up: true, icon: Package, color: "from-violet-500 to-purple-500" },
               { label: "Rating", value: stats.rating.toString(), change: "+0.1", up: true, icon: Star, color: "from-amber-400 to-orange-500" },
             ].map((stat) => (
-              <div key={stat.label} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 hover:border-primary/20 hover:shadow-card-hover transition-all shadow-card">
+              <div key={stat.label} className="bg-card border border-border rounded-lg p-5 hover:border-primary/20 hover:shadow-card-hover transition-all shadow-card">
                 <div className="flex items-center justify-between mb-3">
                   <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
                     <stat.icon className="h-4 w-4 text-white" />
@@ -422,34 +422,34 @@ export default function SellerDashboardPage() {
             </div>
           ) : (
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="bg-card/80 backdrop-blur-sm border border-border/60">
-                <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({orders.length})</TabsTrigger>
-                <TabsTrigger value="products" className="data-[state=active]:bg-card">Products ({products.length})</TabsTrigger>
-                <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({reviews.length})</TabsTrigger>
-                <TabsTrigger value="analytics" className="data-[state=active]:bg-card">Analytics</TabsTrigger>
+              <TabsList className="bg-card border border-border">
+                <TabsTrigger value="orders" className="data-[state=active]:bg-muted">Orders ({orders.length})</TabsTrigger>
+                <TabsTrigger value="products" className="data-[state=active]:bg-muted">Products ({products.length})</TabsTrigger>
+                <TabsTrigger value="reviews" className="data-[state=active]:bg-muted">Reviews ({reviews.length})</TabsTrigger>
+                <TabsTrigger value="analytics" className="data-[state=active]:bg-muted">Analytics</TabsTrigger>
               </TabsList>
 
               <TabsContent value="orders" className="mt-4">
                 {orders.length === 0 && !loading ? (
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                  <div className="bg-card border border-border rounded-lg p-12 text-center shadow-card">
                     <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
                       <Inbox className="h-8 w-8 text-blue-400" />
                     </div>
                     <h3 className="font-display text-lg font-medium text-foreground mb-2">No orders yet</h3>
                     <p className="text-sm text-muted-foreground mb-4">When buyers purchase your products, orders will appear here.</p>
                     <Link href="/seller/products/new">
-                      <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                      <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                         <Plus className="h-4 w-4" />
                         Add Your First Product
                       </Button>
                     </Link>
                   </div>
                 ) : (
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                  <div className="bg-card border border-border rounded-lg overflow-hidden shadow-card">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-border bg-muted/50">
+                          <tr className="border-b border-border bg-muted">
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
@@ -473,7 +473,7 @@ export default function SellerDashboardPage() {
                                   <Button
                                     size="sm"
                                     onClick={() => openFulfillModal(order)}
-                                    className="gap-1.5 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-xs border-0 shadow-sm"
+                                    className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
                                   >
                                     <Upload className="h-3.5 w-3.5" />
                                     Fulfill
@@ -522,25 +522,25 @@ export default function SellerDashboardPage() {
 
               <TabsContent value="products" className="mt-4">
                 {products.length === 0 && !loading ? (
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                  <div className="bg-card border border-border rounded-lg p-12 text-center shadow-card">
                     <div className="h-16 w-16 rounded-full bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
                       <Package className="h-8 w-8 text-violet-400" />
                     </div>
                     <h3 className="font-display text-lg font-medium text-foreground mb-2">No products listed</h3>
                     <p className="text-sm text-muted-foreground mb-4">Start selling by adding your first digital product.</p>
                     <Link href="/seller/products/new">
-                      <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                      <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                         <Plus className="h-4 w-4" />
                         Add Product
                       </Button>
                     </Link>
                   </div>
                 ) : (
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                  <div className="bg-card border border-border rounded-lg overflow-hidden shadow-card">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-border bg-muted/50">
+                          <tr className="border-b border-border bg-muted">
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
@@ -638,7 +638,7 @@ export default function SellerDashboardPage() {
 
               <TabsContent value="reviews" className="mt-4">
                 {reviews.length === 0 && !reviewsLoading ? (
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                  <div className="bg-card border border-border rounded-lg p-12 text-center shadow-card">
                     <div className="h-16 w-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
                       <Star className="h-8 w-8 text-amber-400" />
                     </div>
@@ -646,11 +646,11 @@ export default function SellerDashboardPage() {
                     <p className="text-sm text-muted-foreground">When buyers review your products, they will appear here.</p>
                   </div>
                 ) : (
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                  <div className="bg-card border border-border rounded-lg overflow-hidden shadow-card">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-border bg-muted/50">
+                          <tr className="border-b border-border bg-muted">
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Review</th>
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Rating</th>
                             <th className="text-left px-4 py-3 font-medium text-muted-foreground">Helpful</th>
@@ -733,7 +733,7 @@ export default function SellerDashboardPage() {
             </Tabs>
           )}
           <Dialog open={fulfillModalOpen} onOpenChange={setFulfillModalOpen}>
-            <DialogContent className="bg-card/95 backdrop-blur-md border-border/60 max-w-lg">
+            <DialogContent className="bg-card border-border max-w-lg">
               <DialogHeader>
                 <DialogTitle className="font-display text-foreground">Fulfill Order</DialogTitle>
               </DialogHeader>
@@ -775,7 +775,7 @@ export default function SellerDashboardPage() {
                   <Button
                     onClick={submitFulfillment}
                     disabled={fulfilling}
-                    className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-md"
+                    className="flex-1 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {fulfilling ? (
                       <>
@@ -797,7 +797,7 @@ export default function SellerDashboardPage() {
             </DialogContent>
           </Dialog>
           <Dialog open={bulkModalOpen} onOpenChange={setBulkModalOpen}>
-            <DialogContent className="bg-card/95 backdrop-blur-md border-border/60 max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-display text-foreground">Bulk Upload Products</DialogTitle>
               </DialogHeader>
@@ -838,7 +838,7 @@ export default function SellerDashboardPage() {
                   <Button
                     onClick={parseAndUploadCSV}
                     disabled={bulkParsing || !csvText.trim()}
-                    className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-md"
+                    className="flex-1 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {bulkParsing ? (
                       <>

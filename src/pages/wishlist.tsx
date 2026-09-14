@@ -80,7 +80,6 @@ export default function WishlistPage() {
         <SEO title="Wishlist — TradeVault" />
         <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 bg-mesh-warm" />
-          <div className="absolute inset-0 bg-dot-pattern opacity-30" />
           <div className="absolute top-20 right-[10%] w-72 h-72 bg-gradient-to-bl from-amber-500/15 to-transparent rounded-full blur-3xl" />
           <div className="text-center px-4 relative">
             <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
@@ -88,7 +87,7 @@ export default function WishlistPage() {
             </div>
             <h1 className="font-display text-xl font-medium text-foreground">Please sign in to view your wishlist</h1>
             <Link href="/auth/login?redirect=/wishlist">
-              <Button className="mt-4 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">Sign In</Button>
+              <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">Sign In</Button>
             </Link>
           </div>
         </div>
@@ -101,7 +100,6 @@ export default function WishlistPage() {
       <SEO title="Your Wishlist — TradeVault" />
       <div className="relative min-h-screen overflow-hidden">
         <div className="absolute inset-0 bg-mesh-warm" />
-        <div className="absolute inset-0 bg-dot-pattern opacity-30" />
         <div className="absolute top-20 right-[10%] w-72 h-72 bg-gradient-to-bl from-amber-500/15 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-[5%] w-80 h-80 bg-gradient-to-tr from-rose-500/8 to-transparent rounded-full blur-3xl" />
 
@@ -127,7 +125,7 @@ export default function WishlistPage() {
               <h3 className="font-display text-lg font-medium text-foreground mb-2">Your wishlist is empty</h3>
               <p className="text-sm text-muted-foreground mb-4">Save products you&apos;re interested in for later</p>
               <Link href="/marketplace">
-                <Button className="bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">Browse Marketplace</Button>
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Browse Marketplace</Button>
               </Link>
             </div>
           )}
@@ -138,7 +136,7 @@ export default function WishlistPage() {
                 const product = item.product;
                 if (!product) return null;
                 return (
-                  <div key={item.id} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all group">
+                  <div key={item.id} className="bg-card border border-border rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all group">
                     <Link href={`/marketplace/${product.id}`}>
                       <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                         <Image
@@ -157,7 +155,7 @@ export default function WishlistPage() {
                       </Link>
                       <p className="text-xs text-muted-foreground mb-2">{product.seller?.full_name || "Unknown Seller"}</p>
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="font-mono text-lg font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${product.price.toFixed(2)}</span>
+                        <span className="font-mono text-lg font-bold text-foreground">${product.price.toFixed(2)}</span>
                         {product.original_price && (
                           <span className="text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                         )}
@@ -165,7 +163,7 @@ export default function WishlistPage() {
                       <div className="flex gap-2">
                         <Button
                           size="sm"
-                          className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-sm"
+                          className="flex-1 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
                           onClick={() => moveToCart(product)}
                         >
                           <ShoppingCart className="h-4 w-4" />
@@ -174,7 +172,7 @@ export default function WishlistPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-border/60 text-muted-foreground hover:text-red-400 hover:border-red-400/30"
+                          className="border-border text-muted-foreground hover:text-red-400 hover:border-red-400/30"
                           onClick={() => removeItem(item.id)}
                         >
                           <Trash2 className="h-4 w-4" />

@@ -76,7 +76,7 @@ export default function OrdersPage() {
           {loading ? (
             <div>
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 mb-4 shadow-card">
+                <div key={i} className="bg-card border border-border rounded-lg p-5 mb-4">
                   <div className="h-4 bg-muted rounded w-1/4 mb-3" />
                   <div className="h-3 bg-muted rounded w-1/2" />
                 </div>
@@ -88,7 +88,7 @@ export default function OrdersPage() {
                 const config = statusConfig[order.status] || statusConfig.pending;
                 const Icon = config.icon;
                 return (
-                  <div key={order.id} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 mb-4 shadow-card hover:shadow-card-hover transition-all">
+                  <div key={order.id} className="bg-card border border-border rounded-lg p-5 mb-4 shadow-card hover:shadow-card-hover transition-all">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                       <div className="flex items-start gap-4">
                         <div className="h-12 w-12 bg-primary/10 rounded-md flex items-center justify-center shrink-0">
@@ -139,7 +139,7 @@ export default function OrdersPage() {
               </div>
               <h3 className="font-display text-lg font-medium text-foreground mb-4">No orders yet</h3>
               <Link href="/marketplace">
-                <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   Browse Marketplace
                   <ArrowRight className="h-4 w-4" />
                 </Button>

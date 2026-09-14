@@ -183,7 +183,7 @@ export default function AdminDashboardPage() {
               { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign, color: "from-violet-500 to-purple-500" },
               { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, color: "from-red-500 to-rose-500" },
             ].map((stat) => (
-              <div key={stat.label} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 hover:border-primary/20 hover:shadow-card-hover transition-all shadow-card">
+              <div key={stat.label} className="bg-card border border-border rounded-lg p-5 hover:border-primary/20 hover:shadow-card-hover transition-all shadow-card">
                 <div className="flex items-center justify-between mb-3">
                   <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
                     <stat.icon className="h-4 w-4 text-white" />
@@ -199,16 +199,16 @@ export default function AdminDashboardPage() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-card/80 backdrop-blur-sm border border-border/60">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-card">Overview</TabsTrigger>
-              <TabsTrigger value="fraud" className="data-[state=active]:bg-card">Fraud Alerts ({openAlerts})</TabsTrigger>
-              <TabsTrigger value="users" className="data-[state=active]:bg-card">Users ({users.length})</TabsTrigger>
-              <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({stats.total_orders})</TabsTrigger>
+            <TabsList className="bg-card border border-border">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-muted">Overview</TabsTrigger>
+              <TabsTrigger value="fraud" className="data-[state=active]:bg-muted">Fraud Alerts ({openAlerts})</TabsTrigger>
+              <TabsTrigger value="users" className="data-[state=active]:bg-muted">Users ({users.length})</TabsTrigger>
+              <TabsTrigger value="orders" className="data-[state=active]:bg-muted">Orders ({stats.total_orders})</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="mt-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-6 shadow-card">
+                <div className="bg-card border border-border rounded-lg p-6 shadow-card">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-display font-semibold text-foreground">Live Activity</h3>
                     <div className="flex items-center gap-1.5">
@@ -239,7 +239,7 @@ export default function AdminDashboardPage() {
                   )}
                 </div>
 
-                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-6 shadow-card">
+                <div className="bg-card border border-border rounded-lg p-6 shadow-card">
                   <h3 className="font-display font-semibold text-foreground mb-4">Risk Distribution</h3>
                   {(() => {
                     const high = fraudLogs.filter((f) => f.severity === "high").length;
@@ -272,7 +272,7 @@ export default function AdminDashboardPage() {
 
             <TabsContent value="fraud" className="mt-4">
               {fraudLogs.length === 0 && !loading ? (
-                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                <div className="bg-card border border-border rounded-lg p-12 text-center shadow-card">
                   <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
                     <Inbox className="h-8 w-8 text-emerald-400" />
                   </div>
@@ -283,11 +283,11 @@ export default function AdminDashboardPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                <div className="bg-card border border-border rounded-lg overflow-hidden shadow-card">
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-border bg-muted/50">
+                        <tr className="border-b border-border bg-muted">
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Severity</th>
                           <th className="text-left px-4 py-3 font-medium text-muted-foreground">Description</th>
@@ -345,15 +345,15 @@ export default function AdminDashboardPage() {
                     placeholder="Search users by name, ID, or email..."
                     value={userSearch}
                     onChange={(e) => setUserSearch(e.target.value)}
-                    className="pl-9 bg-card/80 backdrop-blur-sm border-border/60"
+                    className="pl-9 bg-card border-border"
                   />
                 </div>
               </div>
-              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+              <div className="bg-card border border-border rounded-lg overflow-hidden shadow-card">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-border bg-muted/50">
+                      <tr className="border-b border-border bg-muted">
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Role</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Joined</th>
@@ -424,7 +424,7 @@ export default function AdminDashboardPage() {
             </TabsContent>
 
             <TabsContent value="orders" className="mt-4">
-              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-8 text-center shadow-card">
+              <div className="bg-card border border-border rounded-lg p-8 text-center shadow-card">
                 <ShoppingCart className="h-12 w-12 text-primary mx-auto mb-4" />
                 <h3 className="font-display font-semibold text-foreground">{stats.total_orders.toLocaleString()} Total Orders</h3>
                 <p className="text-sm text-muted-foreground mt-2">Full order moderation tools available in the database console.</p>

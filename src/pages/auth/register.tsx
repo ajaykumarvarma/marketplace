@@ -114,7 +114,7 @@ export default function RegisterPage() {
         <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-blue-500/15 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
         <div className="relative w-full max-w-md">
-          <div className="bg-card/80 backdrop-blur-md border border-border/60 rounded-2xl p-8 shadow-card-hover">
+          <div className="bg-card border border-border rounded-2xl p-8 shadow-card-hover">
             <div className="text-center mb-6">
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg mx-auto mb-4">
                 <Shield className="h-7 w-7 text-white" />
@@ -124,17 +124,17 @@ export default function RegisterPage() {
             </div>
 
             {error && (
-              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-3 flex items-center gap-2 mb-4 backdrop-blur-sm">
+              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-3 flex items-center gap-2 mb-4">
                 <AlertTriangle className="h-4 w-4 text-red-400 shrink-0" />
                 <p className="text-xs text-foreground">{error}</p>
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-2 p-1 bg-muted/50 backdrop-blur-sm rounded-lg mb-4 border border-border/40">
+            <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg mb-4 border border-border">
               <button
                 type="button"
                 onClick={() => setAccountType("buyer")}
-                className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all ${accountType === "buyer" ? "bg-card text-foreground shadow-md border border-border/60" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"}`}
+                className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all ${accountType === "buyer" ? "bg-card text-foreground shadow-sm border border-border" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
               >
                 <User className="h-4 w-4" />
                 Buyer
@@ -142,7 +142,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setAccountType("seller")}
-                className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all ${accountType === "seller" ? "bg-card text-foreground shadow-md border border-border/60" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"}`}
+                className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all ${accountType === "seller" ? "bg-card text-foreground shadow-sm border border-border" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
               >
                 <Store className="h-4 w-4" />
                 Seller
@@ -150,21 +150,21 @@ export default function RegisterPage() {
             </div>
 
             <div className="mb-4">
-              <Button variant="outline" className="w-full gap-2 border-border/60 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5 mb-2" onClick={() => {}}>
+              <Button variant="outline" className="w-full gap-2 border-border bg-muted hover:border-primary/30 hover:bg-primary/5 mb-2" onClick={() => {}}>
                 <Github className="h-4 w-4" />
                 Continue with GitHub
               </Button>
-              <Button variant="outline" className="w-full gap-2 border-border/60 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5" onClick={() => {}}>
+              <Button variant="outline" className="w-full gap-2 border-border bg-muted hover:border-primary/30 hover:bg-primary/5" onClick={() => {}}>
                 <Mail className="h-4 w-4" />
                 Continue with Google
               </Button>
 
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border/60" />
+                  <span className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card/80 px-2 text-muted-foreground font-medium backdrop-blur-sm">Or continue with email</span>
+                  <span className="bg-card px-2 text-muted-foreground font-medium">Or continue with email</span>
                 </div>
               </div>
             </div>
@@ -172,20 +172,20 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <Label htmlFor="username" className="mb-2 block">Username</Label>
-                <Input id="username" type="text" placeholder="trader123" value={username} onChange={(e) => setUsername(e.target.value)} className="bg-muted/50 border-border/60 backdrop-blur-sm" required minLength={3} />
+                <Input id="username" type="text" placeholder="trader123" value={username} onChange={(e) => setUsername(e.target.value)} className="bg-muted border-border" required minLength={3} />
                 {username.length > 0 && username.length < 3 && (
                   <p className="text-xs text-red-400 mt-1">Username must be at least 3 characters</p>
                 )}
               </div>
               <div className="mb-4">
                 <Label htmlFor="email" className="mb-2 block">Email</Label>
-                <Input id="email" type="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className={`bg-muted/50 border-border/60 backdrop-blur-sm ${emailError ? "border-red-400" : ""}`} required />
+                <Input id="email" type="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className={`bg-muted border-border ${emailError ? "border-red-400" : ""}`} required />
                 {emailError && <p className="text-xs text-red-400 mt-1">{emailError}</p>}
               </div>
               <div className="mb-4">
                 <Label htmlFor="password" className="mb-2 block">Password</Label>
                 <div className="relative">
-                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="Min. 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} className={`bg-muted/50 border-border/60 backdrop-blur-sm pr-10 ${passwordError ? "border-red-400" : ""}`} required />
+                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="Min. 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} className={`bg-muted border-border pr-10 ${passwordError ? "border-red-400" : ""}`} required />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -223,19 +223,19 @@ export default function RegisterPage() {
 
               <div className="mb-4">
                 <Label htmlFor="confirmPassword" className="mb-2 block">Confirm Password</Label>
-                <Input id="confirmPassword" type="password" placeholder="Repeat your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`bg-muted/50 border-border/60 backdrop-blur-sm ${confirmError ? "border-red-400" : ""}`} required />
+                <Input id="confirmPassword" type="password" placeholder="Repeat your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`bg-muted border-border ${confirmError ? "border-red-400" : ""}`} required />
                 {confirmError && <p className="text-xs text-red-400 mt-1">{confirmError}</p>}
                 {passwordsMatch && <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1"><CheckCircle className="h-3 w-3" /> Passwords match</p>}
               </div>
 
               <div className="flex items-start gap-2 mb-4">
-                <input type="checkbox" id="terms" className="mt-1 h-4 w-4 rounded border-border/60 bg-muted/50 accent-primary" required />
+                <input type="checkbox" id="terms" className="mt-1 h-4 w-4 rounded border-border bg-muted accent-primary" required />
                 <label htmlFor="terms" className="text-xs text-muted-foreground">
                   I agree to the <Link href="/terms" className="text-primary hover:text-primary/80">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:text-primary/80">Privacy Policy</Link>
                 </label>
               </div>
 
-              <Button type="submit" className="w-full bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white shadow-lg shadow-primary/25 border-0" disabled={loading || !isFormValid}>
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={loading || !isFormValid}>
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />

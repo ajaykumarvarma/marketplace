@@ -89,7 +89,7 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-violet-500/20 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
         <div className="relative w-full max-w-md">
-          <div className="bg-card/80 backdrop-blur-md border border-border/60 rounded-2xl p-8 shadow-card-hover">
+          <div className="bg-card border border-border rounded-2xl p-8 shadow-card-hover">
             <div className="text-center mb-6">
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg mx-auto mb-4">
                 <Shield className="h-7 w-7 text-white" />
@@ -99,7 +99,7 @@ export default function LoginPage() {
             </div>
 
             {locked && (
-              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-4 flex items-start gap-3 mb-4 backdrop-blur-sm">
+              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-4 flex items-start gap-3 mb-4">
                 <AlertTriangle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-foreground">Account temporarily locked</p>
@@ -109,35 +109,35 @@ export default function LoginPage() {
             )}
 
             {error && !locked && (
-              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-3 flex items-center gap-2 mb-4 backdrop-blur-sm">
+              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-3 flex items-center gap-2 mb-4">
                 <AlertTriangle className="h-4 w-4 text-red-400 shrink-0" />
                 <p className="text-xs text-foreground">{error}</p>
               </div>
             )}
 
             {attempts > 0 && !locked && !error && (
-              <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-3 flex items-center gap-2 mb-4 backdrop-blur-sm">
+              <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-3 flex items-center gap-2 mb-4">
                 <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
                 <p className="text-xs text-foreground">{5 - attempts} attempts remaining before temporary lock</p>
               </div>
             )}
 
             <div className="mb-4 space-y-2">
-              <Button variant="outline" className="w-full gap-2 border-border/60 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5" onClick={() => {}}>
+              <Button variant="outline" className="w-full gap-2 border-border bg-muted hover:border-primary/30 hover:bg-primary/5" onClick={() => {}}>
                 <Github className="h-4 w-4" />
                 Continue with GitHub
               </Button>
-              <Button variant="outline" className="w-full gap-2 border-border/60 bg-card/50 backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5" onClick={() => {}}>
+              <Button variant="outline" className="w-full gap-2 border-border bg-muted hover:border-primary/30 hover:bg-primary/5" onClick={() => {}}>
                 <Mail className="h-4 w-4" />
                 Continue with Google
               </Button>
 
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border/60" />
+                  <span className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card/80 px-2 text-muted-foreground backdrop-blur-sm">Or continue with email</span>
+                  <span className="bg-card px-2 text-muted-foreground">Or continue with email</span>
                 </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`bg-muted/50 border-border/60 backdrop-blur-sm ${emailError ? "border-red-400" : ""}`}
+                  className={`bg-muted border-border ${emailError ? "border-red-400" : ""}`}
                   disabled={locked}
                   required
                 />
@@ -171,7 +171,7 @@ export default function LoginPage() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-muted/50 border-border/60 backdrop-blur-sm pr-10"
+                    className="bg-muted border-border pr-10"
                     disabled={locked}
                     required
                   />
@@ -191,12 +191,12 @@ export default function LoginPage() {
                   id="remember"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-border bg-muted/50 accent-primary"
+                  className="h-4 w-4 rounded border-border bg-muted accent-primary"
                 />
                 <label htmlFor="remember" className="text-xs text-muted-foreground">Remember my email</label>
               </div>
 
-              <Button type="submit" className="w-full bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white shadow-lg shadow-primary/25 border-0" disabled={locked || loading}>
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={locked || loading}>
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
