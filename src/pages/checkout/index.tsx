@@ -217,209 +217,210 @@ export default function CheckoutPage() {
   return (
     <>
       <SEO title="Checkout — TradeVault" description="Secure checkout with escrow protection for digital goods." />
-      <div className="container px-4 sm:px-6 py-8 md:py-12">
-        <Link href="/cart" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Cart
-        </Link>
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-mesh-violet" />
+        <div className="absolute inset-0 bg-dot-pattern opacity-40" />
+        <div className="absolute top-24 left-[8%] w-72 h-72 bg-gradient-to-br from-primary/15 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-[10%] w-80 h-80 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-3xl" />
 
-        <h1 className="font-display text-2xl font-bold text-foreground mb-6">Checkout</h1>
+        <div className="relative container px-4 sm:px-6 py-8 md:py-12">
+          <Link href="/cart" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Cart
+          </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="mb-8">
-              <h2 className="font-display text-xl font-semibold text-foreground mb-4">Payment Method</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("card")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
-                    paymentMethod === "card"
-                      ? "border-primary bg-primary/5 shadow-md shadow-primary/10"
-                      : "border-border bg-card hover:border-primary/30"
-                  }`}
-                >
-                  <CreditCard className={`h-5 w-5 ${paymentMethod === "card" ? "text-primary" : "text-muted-foreground"}`} />
-                  <div className="text-left">
-                    <p className={`font-medium text-sm ${paymentMethod === "card" ? "text-foreground" : "text-muted-foreground"}`}>Credit Card</p>
-                    <p className="text-xs text-muted-foreground">Visa, Mastercard</p>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("crypto")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
-                    paymentMethod === "crypto"
-                      ? "border-amber-500 bg-amber-500/5 shadow-md shadow-amber-500/10"
-                      : "border-border bg-card hover:border-amber-500/30"
-                  }`}
-                >
-                  <Bitcoin className={`h-5 w-5 ${paymentMethod === "crypto" ? "text-amber-400" : "text-muted-foreground"}`} />
-                  <div className="text-left">
-                    <p className={`font-medium text-sm ${paymentMethod === "crypto" ? "text-foreground" : "text-muted-foreground"}`}>Cryptocurrency</p>
-                    <p className="text-xs text-muted-foreground">BTC, ETH, USDT</p>
-                  </div>
-                </button>
-              </div>
-            </div>
+          <h1 className="font-display text-2xl font-bold text-foreground mb-6">Checkout</h1>
 
-            {/* Promo Code Section */}
-            <div className="mb-8">
-              <h2 className="font-display text-lg font-semibold text-foreground mb-3">Promo Code</h2>
-              {!appliedCoupon ? (
-                <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-                      <Input
-                        placeholder="Enter promo code"
-                        value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value)}
-                        className="pl-9 border-border bg-card focus:border-primary focus:ring-primary/20"
-                        onKeyDown={(e) => e.key === "Enter" && applyPromoCode()}
-                      />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6 shadow-card">
+                <h2 className="font-display text-xl font-semibold text-foreground mb-4">Payment Method</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("card")}
+                    className={`flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                      paymentMethod === "card"
+                        ? "border-primary bg-primary/5 shadow-md shadow-primary/10"
+                        : "border-border/60 bg-card/50 hover:border-primary/30"
+                    }`}
+                  >
+                    <CreditCard className={`h-5 w-5 ${paymentMethod === "card" ? "text-primary" : "text-muted-foreground"}`} />
+                    <div className="text-left">
+                      <p className={`font-medium text-sm ${paymentMethod === "card" ? "text-foreground" : "text-muted-foreground"}`}>Credit Card</p>
+                      <p className="text-xs text-muted-foreground">Visa, Mastercard</p>
                     </div>
-                    <Button
-                      onClick={applyPromoCode}
-                      disabled={promoLoading || !promoCode.trim()}
-                      variant="outline"
-                      className="border-primary text-primary hover:bg-primary/10"
-                    >
-                      {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
-                    </Button>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Gift className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-amber-400" />
-                      <Input
-                        placeholder="Referral code (optional)"
-                        value={referralCode}
-                        onChange={(e) => setReferralCode(e.target.value)}
-                        className="pl-9 border-border bg-card focus:border-amber-400 focus:ring-amber-400/20"
-                      />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("crypto")}
+                    className={`flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                      paymentMethod === "crypto"
+                        ? "border-amber-500 bg-amber-500/5 shadow-md shadow-amber-500/10"
+                        : "border-border/60 bg-card/50 hover:border-amber-500/30"
+                    }`}
+                  >
+                    <Bitcoin className={`h-5 w-5 ${paymentMethod === "crypto" ? "text-amber-400" : "text-muted-foreground"}`} />
+                    <div className="text-left">
+                      <p className={`font-medium text-sm ${paymentMethod === "crypto" ? "text-foreground" : "text-muted-foreground"}`}>Cryptocurrency</p>
+                      <p className="text-xs text-muted-foreground">BTC, ETH, USDT</p>
                     </div>
-                    <Button
-                      onClick={() => validateReferral(referralCode)}
-                      disabled={checkingReferral || !referralCode.trim()}
-                      variant="outline"
-                      className="border-amber-400 text-amber-400 hover:bg-amber-400/10"
-                    >
-                      {checkingReferral ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
-                  <CheckCircle className="h-5 w-5 text-emerald-400" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-emerald-400">
-                      {appliedCoupon.code} — {appliedCoupon.discount_percent}% off
-                    </p>
-                  </div>
-                  <button onClick={removePromo} className="text-muted-foreground hover:text-foreground">
-                    <X className="h-4 w-4" />
                   </button>
                 </div>
-              )}
-              {promoError && (
-                <p className="text-sm text-red-400 mt-2">{promoError}</p>
-              )}
-            </div>
+              </div>
 
-            <div className="mb-4">
-              {paymentMethod === "card" && (
-                <div className="bg-card border border-border rounded-lg p-6 mb-4">
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6 shadow-card">
+                <h2 className="font-display text-lg font-semibold text-foreground mb-3">Promo Code</h2>
+                {!appliedCoupon ? (
+                  <div className="space-y-3">
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+                        <Input
+                          placeholder="Enter promo code"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value)}
+                          className="pl-9 border-border/60 bg-card/50 focus:border-primary focus:ring-primary/20"
+                          onKeyDown={(e) => e.key === "Enter" && applyPromoCode()}
+                        />
+                      </div>
+                      <Button
+                        onClick={applyPromoCode}
+                        disabled={promoLoading || !promoCode.trim()}
+                        variant="outline"
+                        className="border-primary text-primary hover:bg-primary/10"
+                      >
+                        {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                      </Button>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Gift className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-amber-400" />
+                        <Input
+                          placeholder="Referral code (optional)"
+                          value={referralCode}
+                          onChange={(e) => setReferralCode(e.target.value)}
+                          className="pl-9 border-border/60 bg-card/50 focus:border-amber-400 focus:ring-amber-400/20"
+                        />
+                      </div>
+                      <Button
+                        onClick={() => validateReferral(referralCode)}
+                        disabled={checkingReferral || !referralCode.trim()}
+                        variant="outline"
+                        className="border-amber-400 text-amber-400 hover:bg-amber-400/10"
+                      >
+                        {checkingReferral ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
+                    <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-emerald-400">
+                        {appliedCoupon.code} — {appliedCoupon.discount_percent}% off
+                      </p>
+                    </div>
+                    <button onClick={removePromo} className="text-muted-foreground hover:text-foreground">
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+                {promoError && (
+                  <p className="text-sm text-red-400 mt-2">{promoError}</p>
+                )}
+              </div>
+
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6 shadow-card">
+                {paymentMethod === "card" && (
                   <div className="flex items-center gap-3 mb-4">
-                    <Lock className="h-5 w-5 text-muted-foreground" />
+                    <Lock className="h-5 w-5 text-primary" />
                     <div>
                       <p className="text-sm font-medium text-foreground">Secure Payment via Stripe</p>
                       <p className="text-xs text-muted-foreground">Your card details are never stored on our servers.</p>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    You will be redirected to Stripe's secure checkout page to complete your payment.
-                  </p>
-                </div>
-              )}
+                )}
 
-              {paymentMethod === "crypto" && (
-                <div className="bg-card border border-border rounded-lg p-4 mb-4">
-                  <p className="text-sm text-muted-foreground mb-3">Send the exact amount to the address shown after confirmation. Your order will be processed once the transaction is verified.</p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Lock className="h-4 w-4" />
-                    <span>Network: Ethereum (ERC-20)</span>
+                {paymentMethod === "crypto" && (
+                  <div className="mb-4">
+                    <p className="text-sm text-muted-foreground mb-3">Send the exact amount to the address shown after confirmation. Your order will be processed once the transaction is verified.</p>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Lock className="h-4 w-4 text-amber-400" />
+                      <span>Network: Ethereum (ERC-20)</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-start gap-3 pt-4 mb-4 border-t border-border">
+                  <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground mb-1">Escrow Protected</p>
+                    <p className="text-xs text-muted-foreground">Your payment is held securely until you confirm delivery. If the seller fails to deliver, you get a full refund.</p>
                   </div>
                 </div>
-              )}
 
-              <div className="flex items-start gap-3 pt-4 mb-4">
-                <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground mb-1">Escrow Protected</p>
-                  <p className="text-xs text-muted-foreground">Your payment is held securely until you confirm delivery. If the seller fails to deliver, you get a full refund.</p>
-                </div>
+                <Button onClick={handleStripeCheckout} disabled={processing} className="w-full h-12 bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white gap-2 shadow-lg shadow-primary/25 border-0">
+                  {processing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    `Pay $${finalTotal.toFixed(2)}`
+                  )}
+                </Button>
               </div>
-
-              <Button onClick={handleStripeCheckout} disabled={processing} className="w-full h-12 bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white gap-2 shadow-lg shadow-primary/25 border-0">
-                {processing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  `Pay $${finalTotal.toFixed(2)}`
-                )}
-              </Button>
             </div>
-          </div>
 
-          <div>
-            <div className="bg-card border border-border rounded-xl p-4 md:p-6 sm:sticky sm:top-24">
-              <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
-              
-              {fraudResult && fraudResult.riskScore >= 40 && (
-                <div className="p-3 rounded-lg mb-4 bg-amber-500/5 border border-amber-500/20">
-                  <div className="flex items-center gap-2 mb-1">
-                    <AlertTriangle className="h-4 w-4 text-amber-400" />
-                    <span className="text-sm font-medium text-foreground">
-                      {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
-                    </span>
-                  </div>
-                  <div className="mb-1">
-                    {fraudResult.flags.map((flag, i) => (
-                      <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
-                    ))}
-                  </div>
-                  <p className="text-xs font-mono text-amber-400">Risk Score: {fraudResult.riskScore}/100</p>
-                </div>
-              )}
-
-              <div className="mb-3">
-                {items.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-muted-foreground truncate max-w-[200px]">{item.title} x{item.quantity}</span>
-                    <span className="font-mono text-foreground">${(item.price * item.quantity).toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-border pt-3 text-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-mono text-foreground">${totalPrice.toFixed(2)}</span>
-                </div>
-                {appliedCoupon && (
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-muted-foreground">Discount ({appliedCoupon.discount_percent}%)</span>
-                    <span className="font-mono text-emerald-400">-${discountAmount.toFixed(2)}</span>
+            <div>
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-5 md:p-6 sm:sticky sm:top-24 shadow-card">
+                <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
+                
+                {fraudResult && fraudResult.riskScore >= 40 && (
+                  <div className="p-3 rounded-lg mb-4 bg-amber-500/5 border border-amber-500/20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <AlertTriangle className="h-4 w-4 text-amber-400" />
+                      <span className="text-sm font-medium text-foreground">
+                        {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
+                      </span>
+                    </div>
+                    <div className="mb-1">
+                      {fraudResult.flags.map((flag, i) => (
+                        <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
+                      ))}
+                    </div>
+                    <p className="text-xs font-mono text-amber-400">Risk Score: {fraudResult.riskScore}/100</p>
                   </div>
                 )}
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-muted-foreground">Platform Fee</span>
-                  <span className="font-mono text-foreground">${((totalPrice - discountAmount) * 0.02).toFixed(2)}</span>
+
+                <div className="mb-3">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between text-sm mb-2">
+                      <span className="text-muted-foreground truncate max-w-[200px]">{item.title} x{item.quantity}</span>
+                      <span className="font-mono text-foreground">${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="border-t border-border pt-2 flex items-center justify-between">
-                  <span className="font-medium text-foreground">Total</span>
-                  <span className="font-mono text-lg font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${finalTotal.toFixed(2)}</span>
+                <div className="border-t border-border pt-3 text-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-muted-foreground">Subtotal</span>
+                    <span className="font-mono text-foreground">${totalPrice.toFixed(2)}</span>
+                  </div>
+                  {appliedCoupon && (
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-muted-foreground">Discount ({appliedCoupon.discount_percent}%)</span>
+                      <span className="font-mono text-emerald-400">-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-muted-foreground">Platform Fee</span>
+                    <span className="font-mono text-foreground">${((totalPrice - discountAmount) * 0.02).toFixed(2)}</span>
+                  </div>
+                  <div className="border-t border-border pt-2 flex items-center justify-between">
+                    <span className="font-medium text-foreground">Total</span>
+                    <span className="font-mono text-lg font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${finalTotal.toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
             </div>

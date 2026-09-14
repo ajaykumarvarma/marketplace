@@ -394,350 +394,359 @@ export default function ProductDetailPage() {
           } : undefined
         }}
       />
-      <div className="container px-4 sm:px-6 py-8 md:py-12">
-        <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Marketplace
-        </Link>
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-mesh-cool" />
+        <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+        <div className="absolute top-32 right-[5%] w-72 h-72 bg-gradient-to-bl from-blue-500/15 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-[8%] w-80 h-80 bg-gradient-to-tr from-violet-500/10 to-cyan-500/5 rounded-full blur-3xl" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="aspect-[16/9] bg-muted rounded-xl relative overflow-hidden mb-6">
-              <Image
-                src={product.image_url || "/generated/hero-product.png"}
-                alt={product.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                className="object-cover"
-                priority
-              />
-            </div>
+        <div className="relative container px-4 sm:px-6 py-8 md:py-12">
+          <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Marketplace
+          </Link>
 
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[10px] uppercase tracking-wider text-primary font-semibold bg-primary/10 px-2 py-0.5 rounded-full">
-                  {product.category?.name || "Other"}
-                </span>
-                <span className="text-[10px] text-muted-foreground">·</span>
-                <span className="text-[10px] text-muted-foreground">
-                  {product.seller?.full_name || "Unknown"}
-                </span>
-                {product.seller?.role !== "buyer" && (
-                  <>
-                    <span className="text-[10px] text-muted-foreground">·</span>
-                    <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                      <Shield className="h-3 w-3" />
-                      Verified
-                    </span>
-                  </>
-                )}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="aspect-[16/9] bg-muted rounded-xl relative overflow-hidden mb-6 shadow-card">
+                <Image
+                  src={product.image_url || "/generated/hero-product.png"}
+                  alt={product.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  className="object-cover"
+                  priority
+                />
               </div>
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-xl font-bold text-white font-mono shadow-md">
-                  {product.title.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">{product.title}</h1>
-                  <div className="flex items-center gap-3 mt-1">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                      <span className="text-sm font-medium text-foreground">{avgRatingDisplay}</span>
-                      <span className="text-sm text-muted-foreground">({product.reviews?.length || 0})</span>
-                    </div>
-                    {product.auto_delivery && (
-                      <Badge className="text-[10px] h-5 px-1.5 bg-emerald-500 text-white border-0 shadow-sm">
-                        instant
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <Tabs defaultValue="description" className="w-full">
-              <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-6 h-auto p-0">
-                <TabsTrigger value="description" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
-                  Description
-                </TabsTrigger>
-                <TabsTrigger value="reviews" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
-                  Reviews ({product.reviews?.length || 0})
-                </TabsTrigger>
-                <TabsTrigger value="delivery" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
-                  Delivery
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="description" className="mt-4">
-                <p className="text-muted-foreground mb-4">{product.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {product.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="reviews" className="mt-4">
-                {user && (
-                  <div className="bg-card border border-border rounded-lg p-4 mb-4">
-                    <h3 className="font-medium text-foreground mb-3">Write a Review</h3>
-                    <div className="flex items-center gap-1 mb-3">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button key={star} onClick={() => setReviewRating(star)} className="p-0.5">
-                          <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-foreground text-foreground" : "text-muted"}`} />
-                        </button>
-                      ))}
-                    </div>
-                    <Textarea
-                      value={reviewText}
-                      onChange={(e) => setReviewText(e.target.value)}
-                      placeholder="Share your experience with this product..."
-                      className="bg-muted border-border min-h-[80px] mb-3"
-                    />
-                    <Button
-                      onClick={submitReview}
-                      disabled={submittingReview}
-                      size="sm"
-                      className="gap-2 bg-primary hover:bg-primary/90 mb-2"
-                    >
-                      <Send className="h-4 w-4" />
-                      {submittingReview ? "Submitting..." : "Submit Review"}
-                    </Button>
-                    <p className="text-xs text-muted-foreground">You can only review products you have purchased and received.</p>
-                  </div>
-                )}
-                {product.reviews?.filter((r) => r.approved !== false).map((review) => {
-                  const reviewId = review.id;
-                  const helpfulCount = review.helpful_count || 0;
-                  const unhelpfulCount = review.unhelpful_count || 0;
-                  const reviewRating = review.rating || 0;
-                  const userVote = reviewVotes[reviewId];
-                  return (
-                    <div key={reviewId} className="bg-card border border-border rounded-lg p-4 mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
-                            {review.reviewer_id?.[0]?.toUpperCase() || "U"}
-                          </div>
-                          <span className="font-medium text-foreground">Buyer</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: 5 }).map((_, j) => (
-                            <Star key={j} className={`h-4 w-4 ${j < reviewRating ? "fill-foreground text-foreground" : "text-muted"}`} />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{review.comment}</p>
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => handleVote(reviewId, "up")}
-                          disabled={voteLoading === reviewId}
-                          className={`flex items-center gap-1.5 text-xs ${userVote === "up" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                        >
-                          <ThumbsUp className="h-3.5 w-3.5" />
-                          Helpful ({helpfulCount})
-                        </button>
-                        <button
-                          onClick={() => handleVote(reviewId, "down")}
-                          disabled={voteLoading === reviewId}
-                          className={`flex items-center gap-1.5 text-xs ${userVote === "down" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                        >
-                          <ThumbsDown className="h-3.5 w-3.5" />
-                          Not helpful ({unhelpfulCount})
-                        </button>
-                        <span className="text-xs text-muted-foreground ml-auto">{new Date(review.created_at).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-                {(!product.reviews || product.reviews.length === 0) && (
-                  <p className="text-muted-foreground text-sm">No reviews yet. Be the first to review!</p>
-                )}
-              </TabsContent>
-              <TabsContent value="delivery" className="mt-4">
-                <div className="bg-card border border-border rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium text-foreground">Estimated Delivery</p>
-                      <p className="text-sm text-muted-foreground">{product.delivery_time}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <Shield className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium text-foreground">Escrow Protection</p>
-                      <p className="text-sm text-muted-foreground">Your payment is held securely until delivery is confirmed</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium text-foreground">Instant Access</p>
-                      <p className="text-sm text-muted-foreground">Digital delivery — no shipping required</p>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-
-          <div>
-            <div className="bg-card border border-border rounded-xl p-6 sm:sticky sm:top-24">
-              <div className="mb-6">
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-3xl font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${product.price.toFixed(2)}</span>
-                  {product.original_price && (
-                    <span className="text-lg text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
+              <div className="mb-8 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] uppercase tracking-wider text-primary font-semibold bg-primary/10 px-2 py-0.5 rounded-full">
+                    {product.category?.name || "Other"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">·</span>
+                  <span className="text-[10px] text-muted-foreground">
+                    {product.seller?.full_name || "Unknown"}
+                  </span>
+                  {product.seller?.role !== "buyer" && (
+                    <>
+                      <span className="text-[10px] text-muted-foreground">·</span>
+                      <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                        <Shield className="h-3 w-3" />
+                        Verified
+                      </span>
+                    </>
                   )}
                 </div>
-                {product.original_price && (
-                  <p className="text-xs text-emerald-400 mt-1 font-medium">
-                    Save {Math.round((1 - product.price / product.original_price) * 100)}% from original price
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-2.5 pt-4 border-t border-border">
-                <Button
-                  onClick={handleAddToCart}
-                  disabled={adding}
-                  className="h-11 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium rounded-lg shadow-lg shadow-primary/25 border-0"
-                >
-                  {adding ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <ShoppingCart className="h-4 w-4" />
-                  )}
-                  Add to Cart
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setChatOpen(true)}
-                  className="h-11 gap-2 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary text-sm font-medium rounded-lg"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Message Seller
-                </Button>
-                <div className="flex gap-2">
-                  <WishlistButton productId={product.id} />
-                </div>
-              </div>
-
-              {!alertSet ? (
-                <div className="flex gap-2 pt-4 border-t border-border mt-4">
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={alertPrice}
-                    onChange={(e) => setAlertPrice(e.target.value)}
-                    placeholder="Target price"
-                    className="bg-muted border-border h-9 w-32"
-                  />
-                  <Button
-                    variant="outline"
-                    onClick={setPriceAlert}
-                    disabled={alertSubmitting}
-                    className="gap-2 border-border flex-1 h-9 text-xs"
-                  >
-                    <Bell className="h-3.5 w-3.5" />
-                    {alertSubmitting ? "Setting..." : "Price Alert"}
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-xs text-muted-foreground flex items-center gap-1 pt-4 border-t border-border mt-4">
-                  <CheckCircle className="h-3 w-3" />
-                  Price alert set. We'll notify you when the price drops.
-                </p>
-              )}
-
-              <div className="pt-4 border-t border-border mt-4 text-sm space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground text-xs">Stock</span>
-                  <span className={`font-mono text-sm font-semibold ${product.stock > 10 ? "text-emerald-400" : product.stock > 0 ? "text-amber-400" : "text-red-400"}`}>
-                    {product.stock} left
-                  </span>
-                </div>
-                {product.stock <= 5 && product.stock > 0 && (
-                  <p className="text-xs text-amber-400 font-medium flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    Only {product.stock} left — order soon
-                  </p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground text-xs">Delivery</span>
-                  <span className="text-foreground text-sm">{product.delivery_time}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground text-xs">Protection</span>
-                  <span className="text-primary text-sm flex items-center gap-1 font-medium">
-                    <Shield className="h-3 w-3" /> Escrow
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-border mt-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-md">
-                    {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-xl font-bold text-white font-mono shadow-md">
+                    {product.title.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-medium text-sm text-foreground">{product.seller?.full_name || "Unknown"}</span>
-                      {product.seller?.role !== "buyer" && <Shield className="h-3.5 w-3.5 text-emerald-400" />}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                      <span className="text-foreground font-medium">{avgRatingDisplay}</span>
-                      <span>·</span>
-                      <span>{product.reviews?.length || 0} reviews</span>
+                    <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">{product.title}</h1>
+                    <div className="flex items-center gap-3 mt-1">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                        <span className="text-sm font-medium text-foreground">{avgRatingDisplay}</span>
+                        <span className="text-sm text-muted-foreground">({product.reviews?.length || 0})</span>
+                      </div>
+                      {product.auto_delivery && (
+                        <Badge className="text-[10px] h-5 px-1.5 bg-emerald-500 text-white border-0 shadow-sm">
+                          instant
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground mt-4 pt-4 border-t border-border w-full">
-                <Flag className="h-3 w-3" />
-                Report this listing
-              </button>
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl overflow-hidden">
+                <Tabs defaultValue="description" className="w-full">
+                  <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-6 h-auto p-0 px-6 pt-2">
+                    <TabsTrigger value="description" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
+                      Description
+                    </TabsTrigger>
+                    <TabsTrigger value="reviews" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
+                      Reviews ({product.reviews?.length || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="delivery" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
+                      Delivery
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="description" className="mt-0 p-6">
+                    <p className="text-muted-foreground mb-4">{product.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {product.tags.map((tag) => (
+                        <span key={tag} className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-sm text-primary font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="reviews" className="mt-0 p-6">
+                    {user && (
+                      <div className="bg-muted/50 border border-border/40 rounded-lg p-4 mb-4">
+                        <h3 className="font-medium text-foreground mb-3">Write a Review</h3>
+                        <div className="flex items-center gap-1 mb-3">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button key={star} onClick={() => setReviewRating(star)} className="p-0.5">
+                              <Star className={`h-5 w-5 ${star <= reviewRating ? "fill-amber-400 text-amber-400" : "text-muted"}`} />
+                            </button>
+                          ))}
+                        </div>
+                        <Textarea
+                          value={reviewText}
+                          onChange={(e) => setReviewText(e.target.value)}
+                          placeholder="Share your experience with this product..."
+                          className="bg-card border-border min-h-[80px] mb-3"
+                        />
+                        <Button
+                          onClick={submitReview}
+                          disabled={submittingReview}
+                          size="sm"
+                          className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-sm"
+                        >
+                          <Send className="h-4 w-4" />
+                          {submittingReview ? "Submitting..." : "Submit Review"}
+                        </Button>
+                        <p className="text-xs text-muted-foreground mt-2">You can only review products you have purchased and received.</p>
+                      </div>
+                    )}
+                    {product.reviews?.filter((r) => r.approved !== false).map((review) => {
+                      const reviewId = review.id;
+                      const helpfulCount = review.helpful_count || 0;
+                      const unhelpfulCount = review.unhelpful_count || 0;
+                      const reviewRating = review.rating || 0;
+                      const userVote = reviewVotes[reviewId];
+                      return (
+                        <div key={reviewId} className="bg-muted/50 border border-border/40 rounded-lg p-4 mb-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-sm">
+                                {review.reviewer_id?.[0]?.toUpperCase() || "U"}
+                              </div>
+                              <span className="font-medium text-foreground">Buyer</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              {Array.from({ length: 5 }).map((_, j) => (
+                                <Star key={j} className={`h-4 w-4 ${j < reviewRating ? "fill-amber-400 text-amber-400" : "text-muted"}`} />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">{review.comment}</p>
+                          <div className="flex items-center gap-4">
+                            <button
+                              onClick={() => handleVote(reviewId, "up")}
+                              disabled={voteLoading === reviewId}
+                              className={`flex items-center gap-1.5 text-xs ${userVote === "up" ? "text-primary font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                            >
+                              <ThumbsUp className="h-3.5 w-3.5" />
+                              Helpful ({helpfulCount})
+                            </button>
+                            <button
+                              onClick={() => handleVote(reviewId, "down")}
+                              disabled={voteLoading === reviewId}
+                              className={`flex items-center gap-1.5 text-xs ${userVote === "down" ? "text-primary font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                            >
+                              <ThumbsDown className="h-3.5 w-3.5" />
+                              Not helpful ({unhelpfulCount})
+                            </button>
+                            <span className="text-xs text-muted-foreground ml-auto">{new Date(review.created_at).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {(!product.reviews || product.reviews.length === 0) && (
+                      <p className="text-muted-foreground text-sm">No reviews yet. Be the first to review!</p>
+                    )}
+                  </TabsContent>
+                  <TabsContent value="delivery" className="mt-0 p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+                        <Clock className="h-5 w-5 text-emerald-400" />
+                        <div>
+                          <p className="font-medium text-foreground text-sm">Estimated Delivery</p>
+                          <p className="text-sm text-muted-foreground">{product.delivery_time}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                        <Shield className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="font-medium text-foreground text-sm">Escrow Protection</p>
+                          <p className="text-sm text-muted-foreground">Your payment is held securely until delivery is confirmed</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/5 border border-blue-500/10">
+                        <CheckCircle className="h-5 w-5 text-blue-400" />
+                        <div>
+                          <p className="font-medium text-foreground text-sm">Instant Access</p>
+                          <p className="text-sm text-muted-foreground">Digital delivery — no shipping required</p>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </div>
-          </div>
-        </div>
-        {relatedProducts.length > 0 && (
-          <div className="mt-12 pt-8 border-t border-border">
-            <h2 className="font-display text-lg font-semibold text-foreground mb-4">You May Also Like</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {relatedProducts.map((rp) => (
-                <Link
-                  key={rp.id}
-                  href={`/marketplace/${rp.id}`}
-                  className="bg-card border border-border rounded-lg overflow-hidden hover:border-foreground/30 transition-colors"
-                >
-                  <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                    <Image
-                      src={rp.image_url || "/generated/hero-product.png"}
-                      alt={rp.title}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                      className="object-cover"
+
+            <div>
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6 sm:sticky sm:top-24 shadow-card">
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-3xl font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${product.price.toFixed(2)}</span>
+                    {product.original_price && (
+                      <span className="text-lg text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
+                    )}
+                  </div>
+                  {product.original_price && (
+                    <p className="text-xs text-emerald-400 mt-1 font-medium">
+                      Save {Math.round((1 - product.price / product.original_price) * 100)}% from original price
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-2.5 pt-4 border-t border-border">
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={adding}
+                    className="h-11 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium rounded-lg shadow-lg shadow-primary/25 border-0"
+                  >
+                    {adding ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <ShoppingCart className="h-4 w-4" />
+                    )}
+                    Add to Cart
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setChatOpen(true)}
+                    className="h-11 gap-2 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary text-sm font-medium rounded-lg"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Message Seller
+                  </Button>
+                  <div className="flex gap-2">
+                    <WishlistButton productId={product.id} />
+                  </div>
+                </div>
+
+                {!alertSet ? (
+                  <div className="flex gap-2 pt-4 border-t border-border mt-4">
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={alertPrice}
+                      onChange={(e) => setAlertPrice(e.target.value)}
+                      placeholder="Target price"
+                      className="bg-muted border-border h-9 w-32"
                     />
+                    <Button
+                      variant="outline"
+                      onClick={setPriceAlert}
+                      disabled={alertSubmitting}
+                      className="gap-2 border-border flex-1 h-9 text-xs"
+                    >
+                      <Bell className="h-3.5 w-3.5" />
+                      {alertSubmitting ? "Setting..." : "Price Alert"}
+                    </Button>
                   </div>
-                  <div className="p-3">
-                    <p className="text-sm font-medium text-foreground truncate">{rp.title}</p>
-                    <p className="text-sm font-mono text-muted-foreground">${rp.price.toFixed(2)}</p>
+                ) : (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1 pt-4 border-t border-border mt-4">
+                    <CheckCircle className="h-3 w-3 text-emerald-400" />
+                    Price alert set. We'll notify you when the price drops.
+                  </p>
+                )}
+
+                <div className="pt-4 border-t border-border mt-4 text-sm space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-xs">Stock</span>
+                    <span className={`font-mono text-sm font-semibold ${product.stock > 10 ? "text-emerald-400" : product.stock > 0 ? "text-amber-400" : "text-red-400"}`}>
+                      {product.stock} left
+                    </span>
                   </div>
-                </Link>
-              ))}
+                  {product.stock <= 5 && product.stock > 0 && (
+                    <p className="text-xs text-amber-400 font-medium flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      Only {product.stock} left — order soon
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-xs">Delivery</span>
+                    <span className="text-foreground text-sm">{product.delivery_time}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground text-xs">Protection</span>
+                    <span className="text-primary text-sm flex items-center gap-1 font-medium">
+                      <Shield className="h-3 w-3" /> Escrow
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-border mt-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-md">
+                      {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-medium text-sm text-foreground">{product.seller?.full_name || "Unknown"}</span>
+                        {product.seller?.role !== "buyer" && <Shield className="h-3.5 w-3.5 text-emerald-400" />}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        <span className="text-foreground font-medium">{avgRatingDisplay}</span>
+                        <span>·</span>
+                        <span>{product.reviews?.length || 0} reviews</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground mt-4 pt-4 border-t border-border w-full transition-colors">
+                  <Flag className="h-3 w-3" />
+                  Report this listing
+                </button>
+              </div>
             </div>
           </div>
-        )}
+          {relatedProducts.length > 0 && (
+            <div className="mt-12 pt-8 border-t border-border">
+              <h2 className="font-display text-lg font-semibold text-foreground mb-4">You May Also Like</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {relatedProducts.map((rp) => (
+                  <Link
+                    key={rp.id}
+                    href={`/marketplace/${rp.id}`}
+                    className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden hover:border-primary/30 transition-colors shadow-card"
+                  >
+                    <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                      <Image
+                        src={rp.image_url || "/generated/hero-product.png"}
+                        alt={rp.title}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm font-medium text-foreground truncate">{rp.title}</p>
+                      <p className="text-sm font-mono text-primary font-semibold">${rp.price.toFixed(2)}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <Dialog open={chatOpen} onOpenChange={setChatOpen}>
-        <DialogContent className="bg-card border-border max-w-lg">
+        <DialogContent className="bg-card/95 backdrop-blur-md border-border max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display text-foreground">Message Seller</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="bg-muted rounded-lg p-3">
+            <div className="bg-muted/50 rounded-lg p-3">
               <p className="text-sm text-muted-foreground">Product: <span className="text-foreground font-medium">{product?.title}</span></p>
               <p className="text-sm text-muted-foreground">Seller: <span className="text-foreground">{product?.seller?.full_name || "Unknown"}</span></p>
             </div>
@@ -745,13 +754,13 @@ export default function ProductDetailPage() {
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               placeholder="Ask the seller a question about this product..."
-              className="bg-muted border-border min-h-[100px]"
+              className="bg-card border-border min-h-[100px]"
             />
             <div className="flex gap-3">
               <Button
                 onClick={sendMessageToSeller}
                 disabled={sendingChat || !chatMessage.trim()}
-                className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0"
               >
                 {sendingChat ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
