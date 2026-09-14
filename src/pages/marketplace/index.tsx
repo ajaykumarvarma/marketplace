@@ -178,12 +178,9 @@ export default function MarketplacePage() {
         }}
       />
       <div className="relative min-h-screen overflow-hidden">
-        {/* Rich background layers */}
+        {/* Simplified background — just subtle mesh, no dots */}
         <div className="absolute inset-0 bg-mesh-violet" />
-        <div className="absolute inset-0 bg-dot-pattern opacity-40" />
-        <div className="absolute top-20 right-[10%] w-80 h-80 bg-gradient-to-br from-violet-500/15 to-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 left-[5%] w-96 h-96 bg-gradient-to-tr from-cyan-500/10 to-blue-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-bl from-amber-500/8 to-transparent rounded-full blur-3xl -translate-x-1/2" />
+        <div className="absolute top-20 right-[10%] w-80 h-80 bg-gradient-to-br from-violet-500/10 to-purple-500/5 rounded-full blur-3xl" />
 
         <div className="relative container px-4 sm:px-6 py-8 md:py-12 flex flex-col gap-6">
           <div>
@@ -211,7 +208,7 @@ export default function MarketplacePage() {
                   <Link
                     key={product.id}
                     href={`/marketplace/${product.id}`}
-                    className="flex-shrink-0 w-40 bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden hover:border-primary/40 transition-colors"
+                    className="flex-shrink-0 w-40 bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-colors"
                   >
                     <div className="aspect-square bg-muted relative overflow-hidden">
                       <Image
@@ -246,7 +243,7 @@ export default function MarketplacePage() {
                   const isInstant = product.delivery_time.toLowerCase().includes("instant") || product.delivery_time.toLowerCase().includes("auto");
 
                   return (
-                    <div key={product.id} className="group bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all">
+                    <div key={product.id} className="group bg-card border border-border rounded-xl overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all">
                       <Link href={`/marketplace/${product.id}`} className="block">
                         <div className="aspect-[16/10] bg-muted relative overflow-hidden">
                           <Image
@@ -318,7 +315,7 @@ export default function MarketplacePage() {
                           </div>
                           <Button
                             size="sm"
-                            className="h-9 px-3 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 gap-1.5 text-xs font-medium shadow-md shadow-primary/20 border-0"
+                            className="h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5 text-xs font-medium"
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();

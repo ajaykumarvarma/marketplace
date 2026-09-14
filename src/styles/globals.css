@@ -80,27 +80,23 @@
   .bg-mesh-violet {
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(at 40% 20%, hsla(260, 60%, 55%, 0.15) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(190, 70%, 55%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(340, 60%, 55%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(260, 60%, 55%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(190, 70%, 55%, 0.1) 0px, transparent 50%);
+      radial-gradient(at 40% 20%, hsla(260, 60%, 55%, 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(190, 70%, 55%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(340, 60%, 55%, 0.04) 0px, transparent 50%);
   }
 
   .bg-mesh-warm {
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(at 20% 30%, hsla(30, 80%, 60%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 10%, hsla(10, 70%, 55%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 50% 80%, hsla(45, 80%, 55%, 0.08) 0px, transparent 50%);
+      radial-gradient(at 20% 30%, hsla(30, 80%, 60%, 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 10%, hsla(10, 70%, 55%, 0.04) 0px, transparent 50%);
   }
 
   .bg-mesh-cool {
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(at 10% 20%, hsla(200, 70%, 55%, 0.12) 0px, transparent 50%),
-      radial-gradient(at 90% 80%, hsla(240, 60%, 55%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 50% 50%, hsla(180, 60%, 50%, 0.06) 0px, transparent 50%);
+      radial-gradient(at 10% 20%, hsla(200, 70%, 55%, 0.06) 0px, transparent 50%),
+      radial-gradient(at 90% 80%, hsla(240, 60%, 55%, 0.05) 0px, transparent 50%);
   }
 
   /* Section tint backgrounds */

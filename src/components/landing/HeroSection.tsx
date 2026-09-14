@@ -25,19 +25,17 @@ export function HeroSection() {
 
       <div className="container px-4 sm:px-6 relative pt-16 pb-20 md:pt-24 md:pb-32">
         <div className="max-w-3xl">
-          {/* Tagline with glass effect */}
-          <p className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-primary text-sm font-medium mb-6 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          {/* Tagline — solid background, no glass */}
+          <p className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             <Zap className="h-4 w-4" />
             Digital goods, delivered before the tab cools.
           </p>
 
-          {/* Main heading with gradient */}
-          <h1 className={`font-display text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            <span className="bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent">
-              Buy once.
-            </span>
+          {/* Main heading — SOLID WHITE, no gradient clip */}
+          <h1 className={`font-display text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6 text-white transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            Buy once.
             <br />
-            <span className="text-foreground">Play now.</span>
+            <span className="text-white/80">Play now.</span>
           </h1>
 
           {/* Subcopy */}
@@ -48,13 +46,13 @@ export function HeroSection() {
           {/* CTAs */}
           <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             <Link href="/marketplace">
-              <Button className="h-12 px-6 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium gap-2 rounded-lg shadow-lg shadow-primary/25">
+              <Button className="h-12 px-6 bg-white text-black hover:bg-white/90 text-sm font-semibold gap-2 rounded-lg">
                 Browse the drop
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
             <Link href="/sell">
-              <Button variant="outline" className="h-12 px-6 text-sm font-medium gap-2 border-primary/30 text-primary hover:bg-primary/10 rounded-lg backdrop-blur-sm">
+              <Button variant="outline" className="h-12 px-6 text-sm font-semibold gap-2 border-white/30 text-white hover:bg-white/10 rounded-lg">
                 Are you a vendor?
               </Button>
             </Link>
@@ -95,10 +93,9 @@ export function HeroSection() {
         {/* Right side floating product cards */}
         <div className="hidden lg:block absolute top-1/2 right-[5%] -translate-y-1/2 w-80">
           <div className={`transition-all duration-1000 delay-500 ${loaded ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`}>
-            {/* Floating card 1 */}
-            <div className="bg-card/80 backdrop-blur-md border border-border/50 rounded-xl p-4 shadow-card-hover mb-4 transform rotate-2 hover:rotate-0 transition-transform">
+            <div className="bg-card border border-border rounded-xl p-4 shadow-lg mb-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-sm font-bold text-white shadow-md">
+                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-sm font-bold text-white">
                   N
                 </div>
                 <div>
@@ -108,10 +105,9 @@ export function HeroSection() {
                 <span className="ml-auto font-mono text-sm font-bold text-emerald-400">$4.99</span>
               </div>
             </div>
-            {/* Floating card 2 */}
-            <div className="bg-card/80 backdrop-blur-md border border-border/50 rounded-xl p-4 shadow-card-hover mb-4 transform -rotate-1 hover:rotate-0 transition-transform ml-8">
+            <div className="bg-card border border-border rounded-xl p-4 shadow-lg mb-4 ml-8">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-md">
+                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white">
                   S
                 </div>
                 <div>
@@ -121,10 +117,9 @@ export function HeroSection() {
                 <span className="ml-auto font-mono text-sm font-bold text-emerald-400">$8.50</span>
               </div>
             </div>
-            {/* Floating card 3 */}
-            <div className="bg-card/80 backdrop-blur-md border border-border/50 rounded-xl p-4 shadow-card-hover transform rotate-1 hover:rotate-0 transition-transform">
+            <div className="bg-card border border-border rounded-xl p-4 shadow-lg">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-sm font-bold text-white shadow-md">
+                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-sm font-bold text-white">
                   A
                 </div>
                 <div>
