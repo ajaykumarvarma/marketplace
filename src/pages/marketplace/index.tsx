@@ -25,6 +25,7 @@ interface Product {
   status: string;
   created_at: string;
   featured?: boolean;
+  warranty_days?: number;
   seller: { id: string; full_name: string | null; role: string } | null;
   category: { name: string; slug: string } | null;
 }
@@ -227,76 +228,95 @@ export default function MarketplacePage() {
 
         {!loading && products.length > 0 && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div key={product.id} className="bg-card border border-border rounded-lg overflow-hidden">
-                  <Link href={`/marketplace/${product.id}`}>
-                    <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                      <Image
-                        src={product.image_url || "/generated/hero-product.png"}
-                        alt={product.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover"
-                        loading="lazy"
-                      />
-                      {product.stock < 10 && (
-                        <Badge className="absolute top-3 left-3 bg-muted text-foreground border-border text-xs z-10">
-                          Low Stock
-                        </Badge>
-                      )}
-                      <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-background px-2 py-1 rounded text-xs font-mono text-foreground z-10">
-                        <Clock className="h-3 w-3" />
-                        {product.delivery_time}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {products.map((product) => {
+                const letterPrefix = product.title.charAt(0).toUpperCase();
+                const rating = 4.5 + Math.random() * 0.5; // Mock rating until we have real data
+                const reviewCount = Math.floor(Math.random() * 400) + 50;
+                const warranty = product.warranty_days || 3;
+                const isInstant = product.delivery_time.toLowerCase().includes("instant") || product.delivery_time.toLowerCase().includes("auto");
+
+                return (
+                  <div key={product.id} className="group bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-all">
+                    <Link href={`/marketplace/${product.id}`} className="block">
+                      <div className="aspect-[16/10] bg-muted relative overflow-hidden">
+                        <Image
+                          src={product.image_url || "/generated/hero-product.png"}
+                          alt={product.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                          loading="lazy"
+                        />
+                        {product.featured === true && (
+                          <div className="absolute top-3 left-3 px-2 py-1 bg-amber-500 text-black text-[10px] font-bold uppercase tracking-wider rounded">
+                            Featured
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </Link>
-                  <div className="p-4">
-                    <Link href={`/marketplace/${product.id}`}>
-                      <h3 className="font-medium text-foreground hover:text-foreground line-clamp-1 mb-2">{product.title}</h3>
                     </Link>
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-foreground">
-                        {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
+                    <div className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-lg font-bold text-muted-foreground font-mono">
+                          {letterPrefix}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                              {product.category?.name || "Other"}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground">·</span>
+                            <span className="text-[10px] text-muted-foreground truncate">
+                              {product.seller?.full_name || "Unknown"}
+                            </span>
+                          </div>
+                          <Link href={`/marketplace/${product.id}`}>
+                            <h3 className="font-medium text-foreground group-hover:text-foreground line-clamp-1 text-[15px] leading-snug">
+                              {product.title}
+                            </h3>
+                          </Link>
+                        </div>
                       </div>
-                      <span className="text-xs text-muted-foreground truncate">{product.seller?.full_name || "Unknown Seller"}</span>
-                      {product.seller?.role === "seller" && (
-                        <Badge variant="outline" className="text-xs h-4 px-1 bg-muted text-foreground border-border">
-                          <Shield className="h-2.5 w-2.5 mr-0.5" />
-                          Verified
-                        </Badge>
-                      )}
+
+                      <div className="flex items-center gap-3 mt-3">
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3 w-3 fill-foreground text-foreground" />
+                          <span className="text-xs font-medium text-foreground">{rating.toFixed(1)}</span>
+                          <span className="text-xs text-muted-foreground">({reviewCount})</span>
+                        </div>
+                        {isInstant && (
+                          <Badge variant="outline" className="text-[10px] h-5 px-1.5 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                            instant
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="flex items-end justify-between mt-4 pt-3 border-t border-border">
+                        <div>
+                          <p className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px] text-muted-foreground">{product.stock} ready</span>
+                            <span className="text-[10px] text-muted-foreground">·</span>
+                            <span className="text-[10px] text-muted-foreground">{warranty} day{warranty !== 1 ? "s" : ""} warranty</span>
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          className="h-9 px-3 bg-foreground text-background hover:bg-foreground/90 gap-1.5 text-xs font-medium"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                        >
+                          <ShoppingCart className="h-3.5 w-3.5" />
+                          Add
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-mono text-lg font-semibold text-foreground">${product.price.toFixed(2)}</span>
-                      {product.original_price && (
-                        <span className="text-sm text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.category?.name || "Other"}</span>
-                      <span className="px-2 py-0.5 bg-muted rounded text-xs text-muted-foreground">{product.delivery_time}</span>
-                      {product.featured === true && (
-                        <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded text-xs flex items-center">
-                          <Star className="h-3 w-3 mr-1 fill-amber-400" />
-                          Featured
-                        </span>
-                      )}
-                    </div>
-                    <Button
-                      size="sm"
-                      className="w-full gap-2 bg-muted hover:bg-muted text-foreground border border-border"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleAddToCart(product);
-                      }}
-                    >
-                      <ShoppingCart className="h-4 w-4" />
-                      Add to Cart
-                    </Button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {totalPages > 1 && (

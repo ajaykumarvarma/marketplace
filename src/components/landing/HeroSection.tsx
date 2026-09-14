@@ -1,113 +1,66 @@
-import { useEffect, useState } from "react";
-import { Shield, TrendingUp, Users, Package, Clock } from "lucide-react";
-
-const stats = [
-  { icon: Package, label: "Products Sold", value: 2847, suffix: "+" },
-  { icon: Users, label: "Active Users", value: 1253, suffix: "+" },
-  { icon: TrendingUp, label: "Success Rate", value: 99.7, suffix: "%" },
-  { icon: Clock, label: "Avg. Delivery", value: 3, suffix: "min" },
-];
-
-function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const increment = value / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= value) {
-        setCount(value);
-        clearInterval(timer);
-      } else {
-        setCount(Number(current.toFixed(value % 1 !== 0 ? 1 : 0)));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [value]);
-
-  return <span className="tabular-nums">{count.toLocaleString()}{suffix}</span>;
-}
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { ArrowRight, Shield, Clock, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
+  const [loaded, setLoaded] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="container px-4 sm:px-6 relative pt-20 pb-16 md:pt-28 md:pb-24">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <div className="flex-1 flex flex-col gap-8 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium">
-              <Shield className="h-4 w-4" />
-              <span>Escrow-Protected Transactions</span>
-            </div>
+    <section ref={ref} className="relative overflow-hidden border-b border-border">
+      <div className="container px-4 sm:px-6 relative pt-16 pb-20 md:pt-24 md:pb-32">
+        <div className="max-w-3xl">
+          {/* Tagline */}
+          <p className={`text-sm font-medium text-muted-foreground uppercase tracking-[0.2em] mb-6 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            Digital goods, delivered before the tab cools.
+          </p>
 
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight">
-              The Secure Marketplace for Digital Goods
-            </h1>
+          {/* Main heading */}
+          <h1 className={`font-display text-5xl sm:text-6xl md:text-7xl font-bold text-foreground leading-[1.05] tracking-tight mb-6 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            Buy once.
+            <br />
+            <span className="text-muted-foreground">Play now.</span>
+          </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
-              Buy and sell game keys, accounts, software licenses, and digital services with 
-              built-in fraud protection, instant delivery, and escrow-backed trust.
-            </p>
+          {/* Subcopy */}
+          <p className={`text-lg text-muted-foreground leading-relaxed max-w-xl mb-8 transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            Game keys, licences, subscriptions and gift cards from vendors we can actually stand behind. No suspense. No duplicate keys. Just the code.
+          </p>
 
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className={`h-8 w-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs font-medium text-foreground ${i > 1 ? "-ml-2" : ""}`}>
-                    {String.fromCharCode(64 + i)}
-                  </div>
-                ))}
-              </div>
-              <span>Trusted by <span className="text-foreground font-semibold">1,200+</span> sellers worldwide</span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center bg-card border border-border rounded-lg py-3">
-                  <div className="font-mono text-xl font-bold text-foreground">
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1 font-medium">{stat.label}</div>
-                </div>
-              ))}
-            </div>
+          {/* CTA */}
+          <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            <Link href="/marketplace">
+              <Button className="h-12 px-6 bg-foreground text-background hover:bg-foreground/90 text-sm font-medium gap-2 rounded-lg">
+                Browse the drop
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/sell">
+              <Button variant="ghost" className="h-12 px-6 text-sm font-medium gap-2 text-muted-foreground hover:text-foreground">
+                Are you a vendor?
+              </Button>
+            </Link>
           </div>
 
-          <div className="flex-1 w-full max-w-lg lg:max-w-none">
-            <div className="bg-card border border-border rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Live Transaction</span>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground" />
-                  <span className="text-xs text-muted-foreground font-mono">ONLINE</span>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Order ID</span>
-                  <span className="font-mono text-foreground font-semibold">TV-2847-XF</span>
-                </div>
-                <div className="h-2 w-full bg-muted rounded-full overflow-hidden mb-2">
-                  <div className="h-full w-3/4 bg-primary rounded-full" />
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Processing escrow...</span>
-                  <span className="font-mono text-foreground font-semibold">74%</span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-border">
-                <div className="flex items-center justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Amount</span>
-                  <span className="font-mono text-foreground font-semibold">$47.99</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Method</span>
-                  <span className="font-mono text-foreground font-semibold">Escrow</span>
-                </div>
-              </div>
+          {/* Trust pills */}
+          <div className={`flex flex-wrap items-center gap-4 mt-12 pt-8 border-t border-border transition-all duration-700 delay-500 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <CheckCircle className="h-3.5 w-3.5" />
+              Every key pre-checked
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Shield className="h-3.5 w-3.5" />
+              Escrow protected
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              Instant delivery
             </div>
           </div>
         </div>
