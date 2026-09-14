@@ -230,22 +230,30 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "card" ? "border-foreground bg-muted" : "border-border bg-card hover:border-border"}`}
+                  className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
+                    paymentMethod === "card"
+                      ? "border-primary bg-primary/5 shadow-md shadow-primary/10"
+                      : "border-border bg-card hover:border-primary/30"
+                  }`}
                 >
-                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <CreditCard className={`h-5 w-5 ${paymentMethod === "card" ? "text-primary" : "text-muted-foreground"}`} />
                   <div className="text-left">
-                    <p className="font-medium text-foreground text-sm">Credit Card</p>
+                    <p className={`font-medium text-sm ${paymentMethod === "card" ? "text-foreground" : "text-muted-foreground"}`}>Credit Card</p>
                     <p className="text-xs text-muted-foreground">Visa, Mastercard</p>
                   </div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("crypto")}
-                  className={`flex items-center gap-3 p-4 rounded-lg border ${paymentMethod === "crypto" ? "border-foreground bg-muted" : "border-border bg-card hover:border-border"}`}
+                  className={`flex items-center gap-3 p-4 rounded-lg border transition-colors ${
+                    paymentMethod === "crypto"
+                      ? "border-amber-500 bg-amber-500/5 shadow-md shadow-amber-500/10"
+                      : "border-border bg-card hover:border-amber-500/30"
+                  }`}
                 >
-                  <Bitcoin className="h-5 w-5 text-muted-foreground" />
+                  <Bitcoin className={`h-5 w-5 ${paymentMethod === "crypto" ? "text-amber-400" : "text-muted-foreground"}`} />
                   <div className="text-left">
-                    <p className="font-medium text-foreground text-sm">Cryptocurrency</p>
+                    <p className={`font-medium text-sm ${paymentMethod === "crypto" ? "text-foreground" : "text-muted-foreground"}`}>Cryptocurrency</p>
                     <p className="text-xs text-muted-foreground">BTC, ETH, USDT</p>
                   </div>
                 </button>
@@ -259,12 +267,12 @@ export default function CheckoutPage() {
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
                       <Input
                         placeholder="Enter promo code"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
-                        className="pl-9 border-border bg-card"
+                        className="pl-9 border-border bg-card focus:border-primary focus:ring-primary/20"
                         onKeyDown={(e) => e.key === "Enter" && applyPromoCode()}
                       />
                     </div>
@@ -272,36 +280,36 @@ export default function CheckoutPage() {
                       onClick={applyPromoCode}
                       disabled={promoLoading || !promoCode.trim()}
                       variant="outline"
-                      className="border-border"
+                      className="border-primary text-primary hover:bg-primary/10"
                     >
                       {promoLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
                     </Button>
                   </div>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <Gift className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Gift className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-amber-400" />
                       <Input
                         placeholder="Referral code (optional)"
                         value={referralCode}
                         onChange={(e) => setReferralCode(e.target.value)}
-                        className="pl-9 border-border bg-card"
+                        className="pl-9 border-border bg-card focus:border-amber-400 focus:ring-amber-400/20"
                       />
                     </div>
                     <Button
                       onClick={() => validateReferral(referralCode)}
                       disabled={checkingReferral || !referralCode.trim()}
                       variant="outline"
-                      className="border-border"
+                      className="border-amber-400 text-amber-400 hover:bg-amber-400/10"
                     >
                       {checkingReferral ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
                     </Button>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted border border-border">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
+                  <CheckCircle className="h-5 w-5 text-emerald-400" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-sm font-medium text-emerald-400">
                       {appliedCoupon.code} — {appliedCoupon.discount_percent}% off
                     </p>
                   </div>
@@ -311,7 +319,7 @@ export default function CheckoutPage() {
                 </div>
               )}
               {promoError && (
-                <p className="text-sm text-red-500 mt-2">{promoError}</p>
+                <p className="text-sm text-red-400 mt-2">{promoError}</p>
               )}
             </div>
 
@@ -342,14 +350,14 @@ export default function CheckoutPage() {
               )}
 
               <div className="flex items-start gap-3 pt-4 mb-4">
-                <Shield className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+                <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-foreground mb-1">Escrow Protected</p>
                   <p className="text-xs text-muted-foreground">Your payment is held securely until you confirm delivery. If the seller fails to deliver, you get a full refund.</p>
                 </div>
               </div>
 
-              <Button onClick={handleStripeCheckout} disabled={processing} className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
+              <Button onClick={handleStripeCheckout} disabled={processing} className="w-full h-12 bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white gap-2 shadow-lg shadow-primary/25 border-0">
                 {processing ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -363,13 +371,13 @@ export default function CheckoutPage() {
           </div>
 
           <div>
-            <div className="bg-card border border-border rounded-lg p-4 md:p-6 sm:sticky sm:top-24">
+            <div className="bg-card border border-border rounded-xl p-4 md:p-6 sm:sticky sm:top-24">
               <h2 className="font-display font-semibold text-foreground mb-4">Order Summary</h2>
               
               {fraudResult && fraudResult.riskScore >= 40 && (
-                <div className="p-3 rounded-lg mb-4 bg-muted border border-border">
+                <div className="p-3 rounded-lg mb-4 bg-amber-500/5 border border-amber-500/20">
                   <div className="flex items-center gap-2 mb-1">
-                    <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                    <AlertTriangle className="h-4 w-4 text-amber-400" />
                     <span className="text-sm font-medium text-foreground">
                       {fraudResult.blocked ? "Transaction Blocked" : "Security Review"}
                     </span>
@@ -379,7 +387,7 @@ export default function CheckoutPage() {
                       <p key={i} className="text-xs text-muted-foreground">• {flag}</p>
                     ))}
                   </div>
-                  <p className="text-xs font-mono text-muted-foreground">Risk Score: {fraudResult.riskScore}/100</p>
+                  <p className="text-xs font-mono text-amber-400">Risk Score: {fraudResult.riskScore}/100</p>
                 </div>
               )}
 
@@ -399,7 +407,7 @@ export default function CheckoutPage() {
                 {appliedCoupon && (
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-muted-foreground">Discount ({appliedCoupon.discount_percent}%)</span>
-                    <span className="font-mono text-green-500">-${discountAmount.toFixed(2)}</span>
+                    <span className="font-mono text-emerald-400">-${discountAmount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between mb-2">
@@ -408,7 +416,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-border pt-2 flex items-center justify-between">
                   <span className="font-medium text-foreground">Total</span>
-                  <span className="font-mono text-lg font-bold text-foreground">${finalTotal.toFixed(2)}</span>
+                  <span className="font-mono text-lg font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
