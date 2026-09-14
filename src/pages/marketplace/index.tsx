@@ -231,8 +231,10 @@ export default function MarketplacePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {products.map((product) => {
                 const letterPrefix = product.title.charAt(0).toUpperCase();
-                const rating = 4.5 + Math.random() * 0.5; // Mock rating until we have real data
-                const reviewCount = Math.floor(Math.random() * 400) + 50;
+                // Deterministic pseudo-random from product id to prevent flicker
+                const hash = product.id.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 0);
+                const rating = 4.0 + ((hash % 10) / 10);
+                const reviewCount = 50 + (hash % 400);
                 const warranty = product.warranty_days || 3;
                 const isInstant = product.delivery_time.toLowerCase().includes("instant") || product.delivery_time.toLowerCase().includes("auto");
 

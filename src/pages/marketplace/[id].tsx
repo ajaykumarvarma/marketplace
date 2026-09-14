@@ -394,7 +394,7 @@ export default function ProductDetailPage() {
           } : undefined
         }}
       />
-      <div className="container py-8 md:py-12">
+      <div className="container px-4 sm:px-6 py-8 md:py-12">
         <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8">
           <ArrowLeft className="h-4 w-4" />
           Back to Marketplace
@@ -402,7 +402,7 @@ export default function ProductDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="aspect-[16/9] bg-muted rounded-lg relative overflow-hidden mb-6">
+            <div className="aspect-[16/9] bg-muted rounded-xl relative overflow-hidden mb-6">
               <Image
                 src={product.image_url || "/generated/hero-product.png"}
                 alt={product.title}
@@ -413,23 +413,58 @@ export default function ProductDetailPage() {
               />
             </div>
 
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="border-border text-muted-foreground">{product.category?.name || "Other"}</Badge>
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                  {product.category?.name || "Other"}
+                </span>
+                <span className="text-[10px] text-muted-foreground">·</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {product.seller?.full_name || "Unknown"}
+                </span>
                 {product.seller?.role !== "buyer" && (
-                  <Badge className="bg-muted text-foreground border-border">
-                    <Shield className="h-3 w-3 mr-1" /> Verified Seller
-                  </Badge>
+                  <>
+                    <span className="text-[10px] text-muted-foreground">·</span>
+                    <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+                      <Shield className="h-3 w-3" />
+                      Verified
+                    </span>
+                  </>
                 )}
               </div>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground">{product.title}</h1>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-xl font-bold text-muted-foreground font-mono">
+                  {product.title.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">{product.title}</h1>
+                  <div className="flex items-center gap-3 mt-1">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3.5 w-3.5 fill-foreground text-foreground" />
+                      <span className="text-sm font-medium text-foreground">{avgRatingDisplay}</span>
+                      <span className="text-sm text-muted-foreground">({product.reviews?.length || 0})</span>
+                    </div>
+                    {product.auto_delivery && (
+                      <Badge variant="outline" className="text-[10px] h-5 px-1.5 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                        instant
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <Tabs defaultValue="description" className="w-full">
-              <TabsList className="bg-muted border border-border">
-                <TabsTrigger value="description" className="data-[state=active]:bg-card">Description</TabsTrigger>
-                <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({product.reviews?.length || 0})</TabsTrigger>
-                <TabsTrigger value="delivery" className="data-[state=active]:bg-card">Delivery Info</TabsTrigger>
+              <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-6 h-auto p-0">
+                <TabsTrigger value="description" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
+                  Description
+                </TabsTrigger>
+                <TabsTrigger value="reviews" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
+                  Reviews ({product.reviews?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="delivery" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
+                  Delivery
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="description" className="mt-4">
                 <p className="text-muted-foreground mb-4">{product.description}</p>
@@ -547,7 +582,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <div className="bg-card border border-border rounded-lg p-6 sm:sticky sm:top-24">
+            <div className="bg-card border border-border rounded-xl p-6 sm:sticky sm:top-24">
               <div className="mb-6">
                 <div className="flex items-baseline gap-3">
                   <span className="font-mono text-3xl font-bold text-foreground">${product.price.toFixed(2)}</span>
@@ -556,144 +591,106 @@ export default function ProductDetailPage() {
                   )}
                 </div>
                 {product.original_price && (
-                  <Badge className="mt-2 bg-muted text-foreground border-border">
-                    Save {Math.round((1 - product.price / product.original_price) * 100)}%
-                  </Badge>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                <div className="flex gap-3">
-                  <Button
-                    onClick={handleAddToCart}
-                    disabled={adding}
-                    className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-                  >
-                    {adding ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <ShoppingCart className="h-4 w-4" />
-                    )}
-                    Add to Cart
-                  </Button>
-                  <WishlistButton productId={product.id} />
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={() => setChatOpen(true)}
-                  className="gap-2 border-border"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Message Seller
-                </Button>
-
-                {!alertSet ? (
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={alertPrice}
-                      onChange={(e) => setAlertPrice(e.target.value)}
-                      placeholder="Target price"
-                      className="bg-muted border-border w-32"
-                    />
-                    <Button
-                      variant="outline"
-                      onClick={setPriceAlert}
-                      disabled={alertSubmitting}
-                      className="gap-2 border-border flex-1"
-                    >
-                      <Bell className="h-4 w-4" />
-                      {alertSubmitting ? "Setting..." : "Price Alert"}
-                    </Button>
-                  </div>
-                ) : (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <CheckCircle className="h-3 w-3" />
-                    Price alert set. We'll notify you when the price drops.
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Save {Math.round((1 - product.price / product.original_price) * 100)}% from original price
                   </p>
                 )}
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex flex-col gap-2.5 pt-4 border-t border-border">
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={shareOnTwitter}
-                  className="flex-1 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={handleAddToCart}
+                  disabled={adding}
+                  className="h-11 gap-2 bg-foreground text-background hover:bg-foreground/90 text-sm font-medium rounded-lg"
                 >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  Tweet
+                  {adding ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <ShoppingCart className="h-4 w-4" />
+                  )}
+                  Add to Cart
                 </Button>
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={shareOnFacebook}
-                  className="flex-1 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                  variant="outline"
+                  onClick={() => setChatOpen(true)}
+                  className="h-11 gap-2 border-border text-sm font-medium rounded-lg"
                 >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                  Share
+                  <MessageSquare className="h-4 w-4" />
+                  Message Seller
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={copyLink}
-                  className="flex-1 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-                >
-                  <Share2 className="h-4 w-4" />
-                  Copy Link
-                </Button>
+                <div className="flex gap-2">
+                  <WishlistButton productId={product.id} />
+                </div>
               </div>
 
-              <div className="pt-4 border-t border-border mb-4">
+              {!alertSet ? (
+                <div className="flex gap-2 pt-4 border-t border-border mt-4">
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={alertPrice}
+                    onChange={(e) => setAlertPrice(e.target.value)}
+                    placeholder="Target price"
+                    className="bg-muted border-border h-9 w-32"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={setPriceAlert}
+                    disabled={alertSubmitting}
+                    className="gap-2 border-border flex-1 h-9 text-xs"
+                  >
+                    <Bell className="h-3.5 w-3.5" />
+                    {alertSubmitting ? "Setting..." : "Price Alert"}
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground flex items-center gap-1 pt-4 border-t border-border mt-4">
+                  <CheckCircle className="h-3 w-3" />
+                  Price alert set. We'll notify you when the price drops.
+                </p>
+              )}
+
+              <div className="pt-4 border-t border-border mt-4 text-sm space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-xs">Stock</span>
+                  <span className="font-mono text-foreground text-sm">{product.stock} left</span>
+                </div>
+                {product.stock <= 5 && product.stock > 0 && (
+                  <p className="text-xs text-foreground">Only {product.stock} left — order soon</p>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-xs">Delivery</span>
+                  <span className="text-foreground text-sm">{product.delivery_time}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-xs">Protection</span>
+                  <span className="text-foreground text-sm flex items-center gap-1">
+                    <Shield className="h-3 w-3" /> Escrow
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-border mt-4">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-foreground">
                     {product.seller?.full_name?.[0]?.toUpperCase() || "S"}
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-medium text-foreground">{product.seller?.full_name || "Unknown"}</span>
-                      {product.seller?.role !== "buyer" && <Shield className="h-4 w-4 text-success" />}
+                      <span className="font-medium text-sm text-foreground">{product.seller?.full_name || "Unknown"}</span>
+                      {product.seller?.role !== "buyer" && <Shield className="h-3.5 w-3.5 text-emerald-400" />}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-0.5">
-                        <Star className="h-3 w-3 fill-foreground text-foreground" />
-                        <span>{avgRatingDisplay}</span>
-                      </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Star className="h-3 w-3 fill-foreground text-foreground" />
+                      <span>{avgRatingDisplay}</span>
+                      <span>·</span>
+                      <span>{product.reviews?.length || 0} reviews</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-border text-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-muted-foreground">Stock</span>
-                  <span className="font-mono text-foreground">{product.stock} left</span>
-                </div>
-                {product.stock <= 5 && product.stock > 0 && (
-                  <p className="text-xs text-foreground mb-2">Only {product.stock} left — order soon!</p>
-                )}
-                {product.auto_delivery === true && (
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary">
-                      Instant Delivery
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">Keys delivered instantly after payment</span>
-                  </div>
-                )}
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-muted-foreground">Delivery</span>
-                  <span className="text-foreground">{product.delivery_time}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Protection</span>
-                  <span className="text-foreground flex items-center gap-1">
-                    <Shield className="h-3 w-3" /> Escrow
-                  </span>
-                </div>
-              </div>
-
-              <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground mt-4">
+              <button className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground mt-4 pt-4 border-t border-border w-full">
                 <Flag className="h-3 w-3" />
                 Report this listing
               </button>
