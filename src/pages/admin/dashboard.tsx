@@ -146,284 +146,292 @@ export default function AdminDashboardPage() {
   return (
     <>
       <SEO title="Admin Dashboard — TradeVault" description="Platform administration, fraud detection, and moderation." />
-      <div className="container px-4 sm:px-6 py-8 md:py-12">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Shield className="h-5 w-5 text-muted-foreground" />
-              <h1 className="font-display text-3xl font-bold text-foreground">Admin Command</h1>
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-mesh-violet" />
+        <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+        <div className="absolute top-24 left-[8%] w-72 h-72 bg-gradient-to-br from-primary/15 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-[10%] w-80 h-80 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-violet-500/10 to-transparent rounded-full blur-3xl -translate-x-1/2" />
+
+        <div className="relative container px-4 sm:px-6 py-8 md:py-12">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Shield className="h-5 w-5 text-primary" />
+                <h1 className="font-display text-3xl font-bold text-foreground">Admin Command</h1>
+              </div>
+              <p className="text-muted-foreground">Fraud detection, user management, and platform analytics</p>
             </div>
-            <p className="text-muted-foreground">Fraud detection, user management, and platform analytics</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link href="/admin/backups">
-              <Button variant="outline" size="sm" className="gap-2 border-border">
-                <Database className="h-4 w-4" />
-                Backups
-              </Button>
-            </Link>
-            <Badge className={`gap-1 ${openAlerts > 0 ? "bg-muted text-foreground border-border" : "bg-muted text-foreground border-border"}`}>
-              <AlertTriangle className="h-3 w-3" />
-              {openAlerts} Open Alert{openAlerts !== 1 ? "s" : ""}
-            </Badge>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {[
-            { label: "Total Users", value: users.length.toLocaleString(), icon: Users, color: "from-blue-500 to-cyan-500" },
-            { label: "Active Orders", value: stats.active_orders.toLocaleString(), icon: ShoppingCart, color: "from-emerald-500 to-teal-500" },
-            { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign, color: "from-violet-500 to-purple-500" },
-            { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, color: "from-red-500 to-rose-500" },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-lg p-5 hover:border-primary/20 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
-                  <stat.icon className="h-4 w-4 text-white" />
-                </div>
-                {stat.label === "Fraud Score" && <span className="text-xs font-medium text-red-400">Monitor</span>}
-              </div>
-              <div>
-                <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
-              </div>
+            <div className="flex items-center gap-2">
+              <Link href="/admin/backups">
+                <Button variant="outline" size="sm" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                  <Database className="h-4 w-4" />
+                  Backups
+                </Button>
+              </Link>
+              <Badge className={`gap-1 ${openAlerts > 0 ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"}`}>
+                <AlertTriangle className="h-3 w-3" />
+                {openAlerts} Open Alert{openAlerts !== 1 ? "s" : ""}
+              </Badge>
             </div>
-          ))}
-        </div>
+          </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-muted border border-border">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-card">Overview</TabsTrigger>
-            <TabsTrigger value="fraud" className="data-[state=active]:bg-card">Fraud Alerts ({openAlerts})</TabsTrigger>
-            <TabsTrigger value="users" className="data-[state=active]:bg-card">Users ({users.length})</TabsTrigger>
-            <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({stats.total_orders})</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="mt-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-display font-semibold text-foreground">Live Activity</h3>
-                  <div className="flex items-center gap-1.5">
-                    <Activity className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground font-mono">{liveOrders} orders</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {[
+              { label: "Total Users", value: users.length.toLocaleString(), icon: Users, color: "from-blue-500 to-cyan-500" },
+              { label: "Active Orders", value: stats.active_orders.toLocaleString(), icon: ShoppingCart, color: "from-emerald-500 to-teal-500" },
+              { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign, color: "from-violet-500 to-purple-500" },
+              { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, color: "from-red-500 to-rose-500" },
+            ].map((stat) => (
+              <div key={stat.label} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 hover:border-primary/20 hover:shadow-card-hover transition-all shadow-card">
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
+                    <stat.icon className="h-4 w-4 text-white" />
                   </div>
+                  {stat.label === "Fraud Score" && <span className="text-xs font-medium text-red-400">Monitor</span>}
                 </div>
-                {loading ? (
-                  <div>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="h-12 bg-muted rounded mb-3" />
-                    ))}
-                  </div>
-                ) : (
-                  <div>
-                    {fraudLogs.slice(0, 5).map((log) => (
-                      <div key={log.id} className="flex items-start gap-3 text-sm mb-3">
-                        <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.severity === "high" ? "bg-destructive" : log.severity === "medium" ? "bg-warning" : "bg-muted"}`} />
-                        <div className="flex-1">
-                          <p className="text-foreground">{log.alert_type.toUpperCase()} — Severity: {log.severity}</p>
-                          <p className="text-muted-foreground text-xs">{(log.description || "").slice(0, 80)}...</p>
-                        </div>
-                        <span className="text-xs text-muted-foreground font-mono">{new Date(log.created_at).toLocaleTimeString()}</span>
-                      </div>
-                    ))}
-                    {fraudLogs.length === 0 && <p className="text-muted-foreground text-sm">No recent activity</p>}
-                  </div>
-                )}
+                <div>
+                  <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </div>
               </div>
+            ))}
+          </div>
 
-              <div className="bg-card border border-border rounded-lg p-6">
-                <h3 className="font-display font-semibold text-foreground mb-4">Risk Distribution</h3>
-                {(() => {
-                  const high = fraudLogs.filter((f) => f.severity === "high").length;
-                  const med = fraudLogs.filter((f) => f.severity === "medium").length;
-                  const low = fraudLogs.filter((f) => f.severity === "low" || !f.severity).length;
-                  const total = fraudLogs.length || 1;
-                  return (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="bg-card/80 backdrop-blur-sm border border-border/60">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-card">Overview</TabsTrigger>
+              <TabsTrigger value="fraud" className="data-[state=active]:bg-card">Fraud Alerts ({openAlerts})</TabsTrigger>
+              <TabsTrigger value="users" className="data-[state=active]:bg-card">Users ({users.length})</TabsTrigger>
+              <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({stats.total_orders})</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className="mt-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-6 shadow-card">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-display font-semibold text-foreground">Live Activity</h3>
+                    <div className="flex items-center gap-1.5">
+                      <Activity className="h-4 w-4 text-emerald-400" />
+                      <span className="text-xs text-muted-foreground font-mono">{liveOrders} orders</span>
+                    </div>
+                  </div>
+                  {loading ? (
                     <div>
-                      {[
-                        { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-emerald-500", bg: "bg-emerald-500/10" },
-                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-amber-500", bg: "bg-amber-500/10" },
-                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-red-500", bg: "bg-red-500/10" },
-                      ].map((r) => (
-                        <div key={r.label} className="mb-4">
-                          <div className="flex items-center justify-between text-sm mb-1">
-                            <span className="text-muted-foreground">{r.label} ({r.count})</span>
-                            <span className="font-mono text-foreground">{r.pct}%</span>
-                          </div>
-                          <div className="h-2 bg-muted rounded-full overflow-hidden">
-                            <div className={`h-full ${r.color} rounded-full shadow-sm`} style={{ width: `${r.pct}%` }} />
-                          </div>
-                        </div>
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="h-12 bg-muted rounded mb-3" />
                       ))}
                     </div>
-                  );
-                })()}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="fraud" className="mt-4">
-            {fraudLogs.length === 0 && !loading ? (
-              <div className="bg-card border border-border rounded-lg p-12 text-center">
-                <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
-                  <Inbox className="h-8 w-8 text-emerald-400" />
+                  ) : (
+                    <div>
+                      {fraudLogs.slice(0, 5).map((log) => (
+                        <div key={log.id} className="flex items-start gap-3 text-sm mb-3">
+                          <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0 ${log.severity === "high" ? "bg-red-500" : log.severity === "medium" ? "bg-amber-500" : "bg-emerald-500"}`} />
+                          <div className="flex-1">
+                            <p className="text-foreground">{log.alert_type.toUpperCase()} — Severity: {log.severity}</p>
+                            <p className="text-muted-foreground text-xs">{(log.description || "").slice(0, 80)}...</p>
+                          </div>
+                          <span className="text-xs text-muted-foreground font-mono">{new Date(log.created_at).toLocaleTimeString()}</span>
+                        </div>
+                      ))}
+                      {fraudLogs.length === 0 && <p className="text-muted-foreground text-sm">No recent activity</p>}
+                    </div>
+                  )}
                 </div>
-                <h3 className="font-display text-lg font-medium text-foreground mb-2">No fraud alerts</h3>
-                <p className="text-sm text-muted-foreground mb-4">The fraud detection system is active and monitoring transactions.</p>
-                <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10" onClick={loadDashboard}>
-                  Refresh Data
-                </Button>
+
+                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-6 shadow-card">
+                  <h3 className="font-display font-semibold text-foreground mb-4">Risk Distribution</h3>
+                  {(() => {
+                    const high = fraudLogs.filter((f) => f.severity === "high").length;
+                    const med = fraudLogs.filter((f) => f.severity === "medium").length;
+                    const low = fraudLogs.filter((f) => f.severity === "low" || !f.severity).length;
+                    const total = fraudLogs.length || 1;
+                    return (
+                      <div>
+                        {[
+                          { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-emerald-500", bg: "bg-emerald-500/10" },
+                          { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-amber-500", bg: "bg-amber-500/10" },
+                          { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-red-500", bg: "bg-red-500/10" },
+                        ].map((r) => (
+                          <div key={r.label} className="mb-4">
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <span className="text-muted-foreground">{r.label} ({r.count})</span>
+                              <span className="font-mono text-foreground">{r.pct}%</span>
+                            </div>
+                            <div className="h-2 bg-muted rounded-full overflow-hidden">
+                              <div className={`h-full ${r.color} rounded-full shadow-sm`} style={{ width: `${r.pct}%` }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </div>
               </div>
-            ) : (
-              <div className="bg-card border border-border rounded-lg overflow-hidden">
+            </TabsContent>
+
+            <TabsContent value="fraud" className="mt-4">
+              {fraudLogs.length === 0 && !loading ? (
+                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                  <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                    <Inbox className="h-8 w-8 text-emerald-400" />
+                  </div>
+                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No fraud alerts</h3>
+                  <p className="text-sm text-muted-foreground mb-4">The fraud detection system is active and monitoring transactions.</p>
+                  <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10" onClick={loadDashboard}>
+                    Refresh Data
+                  </Button>
+                </div>
+              ) : (
+                <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border bg-muted/50">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Severity</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Description</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {fraudLogs.map((log) => (
+                          <tr key={log.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                            <td className="px-4 py-3 text-foreground capitalize">{log.alert_type}</td>
+                            <td className="px-4 py-3">
+                              <Badge variant="outline" className={`text-xs ${
+                                log.severity === "high" ? "bg-red-500/10 text-red-400 border-red-500/20" :
+                                log.severity === "medium" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+                                "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                              }`}>
+                                {log.severity}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.description || "—"}</td>
+                            <td className="px-4 py-3">
+                              <Badge variant="outline" className={`text-xs ${
+                                log.status === "resolved" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                              }`}>
+                                {log.status === "resolved" ? "Resolved" : "Open"}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-1">
+                                {log.status !== "resolved" && (
+                                  <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Resolve" aria-label="Resolve alert">
+                                    <CheckCircle className="h-4 w-4" />
+                                  </button>
+                                )}
+                                <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Block User" aria-label="Block user">
+                                  <Ban className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="users" className="mt-4">
+              <div className="mb-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search users by name, ID, or email..."
+                    value={userSearch}
+                    onChange={(e) => setUserSearch(e.target.value)}
+                    className="pl-9 bg-card/80 backdrop-blur-sm border-border/60"
+                  />
+                </div>
+              </div>
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-border bg-muted">
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Severity</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Description</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                      <tr className="border-b border-border bg-muted/50">
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Role</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Joined</th>
                         <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {fraudLogs.map((log) => (
-                        <tr key={log.id} className="border-b border-border hover:bg-muted transition-colors">
-                          <td className="px-4 py-3 text-foreground capitalize">{log.alert_type}</td>
+                      {paginatedUsers.map((user) => (
+                        <tr key={user.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                           <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${
-                              log.severity === "high" ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                              log.severity === "medium" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
-                              "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                            }`}>
-                              {log.severity}
+                            <div>
+                              <p className="text-foreground">{user.full_name || "Anonymous"}</p>
+                              <p className="text-xs text-muted-foreground font-mono">{user.id.slice(0, 12)}...</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge variant="outline" className="text-xs capitalize border-border text-muted-foreground">
+                              {user.role}
                             </Badge>
                           </td>
-                          <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.description || "—"}</td>
-                          <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${
-                              log.status === "resolved" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                            }`}>
-                              {log.status === "resolved" ? "Resolved" : "Open"}
-                            </Badge>
-                          </td>
+                          <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1">
-                              {log.status !== "resolved" && (
-                                <button onClick={() => resolveFraud(log.id)} className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Resolve" aria-label="Resolve alert">
-                                  <CheckCircle className="h-4 w-4" />
-                                </button>
-                              )}
-                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Block User" aria-label="Block user">
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
+                                <Eye className="h-4 w-4" />
+                              </button>
+                              <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Ban" aria-label="Ban user">
                                 <Ban className="h-4 w-4" />
                               </button>
                             </div>
                           </td>
                         </tr>
                       ))}
+                      {paginatedUsers.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No users found</td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
+                {totalUserPages > 1 && (
+                  <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={usersPage === 1}
+                      onClick={() => setUsersPage(p => p - 1)}
+                      className="border-border hover:border-primary hover:text-primary"
+                    >
+                      Previous
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      Page {usersPage} of {totalUserPages} ({filteredUsers.length} total)
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={usersPage === totalUserPages}
+                      onClick={() => setUsersPage(p => p + 1)}
+                      className="border-border hover:border-primary hover:text-primary"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                )}
               </div>
-            )}
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="users" className="mt-4">
-            <div className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search users by name, ID, or email..."
-                  value={userSearch}
-                  onChange={(e) => setUserSearch(e.target.value)}
-                  className="pl-9 bg-muted border-border"
-                />
+            <TabsContent value="orders" className="mt-4">
+              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-8 text-center shadow-card">
+                <ShoppingCart className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="font-display font-semibold text-foreground">{stats.total_orders.toLocaleString()} Total Orders</h3>
+                <p className="text-sm text-muted-foreground mt-2">Full order moderation tools available in the database console.</p>
               </div>
-            </div>
-            <div className="bg-card border border-border rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted">
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">User</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Role</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Joined</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedUsers.map((user) => (
-                      <tr key={user.id} className="border-b border-border hover:bg-muted transition-colors">
-                        <td className="px-4 py-3">
-                          <div>
-                            <p className="text-foreground">{user.full_name || "Anonymous"}</p>
-                            <p className="text-xs text-muted-foreground font-mono">{user.id.slice(0, 12)}...</p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className="text-xs capitalize border-border text-muted-foreground">
-                            {user.role}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground">{new Date(user.created_at).toLocaleDateString()}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-1">
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="View" aria-label="View user">
-                              <Eye className="h-4 w-4" />
-                            </button>
-                            <button className="h-9 w-9 flex items-center justify-center rounded-md border border-transparent hover:border-border text-muted-foreground hover:text-foreground" title="Ban" aria-label="Ban user">
-                              <Ban className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                    {paginatedUsers.length === 0 && (
-                      <tr>
-                        <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No users found</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-              {totalUserPages > 1 && (
-                <div className="flex items-center justify-between px-4 py-3 border-t border-border">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={usersPage === 1}
-                    onClick={() => setUsersPage(p => p - 1)}
-                    className="border-border"
-                  >
-                    Previous
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    Page {usersPage} of {totalUserPages} ({filteredUsers.length} total)
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={usersPage === totalUserPages}
-                    onClick={() => setUsersPage(p => p + 1)}
-                    className="border-border"
-                  >
-                    Next
-                  </Button>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="orders" className="mt-4">
-            <div className="bg-card border border-border rounded-lg p-8 text-center">
-              <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="font-display font-semibold text-foreground">{stats.total_orders.toLocaleString()} Total Orders</h3>
-              <p className="text-sm text-muted-foreground mt-2">Full order moderation tools available in the database console.</p>
-            </div>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </>
   );

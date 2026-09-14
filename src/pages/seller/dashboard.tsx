@@ -364,494 +364,502 @@ export default function SellerDashboardPage() {
   return (
     <>
       <SEO title="Seller Dashboard — TradeVault" description="Manage your products, orders, and analytics on TradeVault." />
-      <div className="container px-4 sm:px-6 py-8 md:py-12">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="font-display text-3xl font-bold text-foreground">Seller Dashboard</h1>
-            <p className="text-muted-foreground">Manage your shop, track orders, and grow your business</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={() => setBulkModalOpen(true)} className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
-              <FileText className="h-4 w-4" />
-              Bulk Upload
-            </Button>
-            <Link href="/seller/products/new">
-              <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
-                <Store className="h-4 w-4" />
-                Add Product
-              </Button>
-            </Link>
-          </div>
-        </div>
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-mesh-warm" />
+        <div className="absolute inset-0 bg-dot-pattern opacity-25" />
+        <div className="absolute top-20 right-[15%] w-72 h-72 bg-gradient-to-bl from-amber-500/12 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-32 left-[5%] w-80 h-80 bg-gradient-to-tr from-orange-500/8 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-violet-500/8 to-transparent rounded-full blur-3xl -translate-x-1/2" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {[
-            { label: "Total Revenue", value: `$${stats.revenue.toFixed(2)}`, change: "+12.5%", up: true, icon: DollarSign, color: "from-emerald-500 to-teal-500" },
-            { label: "Active Orders", value: stats.activeOrders.toString(), change: "+3", up: true, icon: ShoppingCart, color: "from-blue-500 to-cyan-500" },
-            { label: "Products", value: stats.productCount.toString(), change: "+2", up: true, icon: Package, color: "from-violet-500 to-purple-500" },
-            { label: "Rating", value: stats.rating.toString(), change: "+0.1", up: true, icon: Star, color: "from-amber-400 to-orange-500" },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-lg p-5 hover:border-primary/20 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
-                  <stat.icon className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-xs font-medium flex items-center gap-0.5 text-emerald-400">
-                  {stat.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                  {stat.change}
-                </span>
-              </div>
-              <div>
-                <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
-              </div>
+        <div className="relative container px-4 sm:px-6 py-8 md:py-12">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="font-display text-3xl font-bold text-foreground">Seller Dashboard</h1>
+              <p className="text-muted-foreground">Manage your shop, track orders, and grow your business</p>
             </div>
-          ))}
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+            <div className="flex items-center gap-3">
+              <Button variant="outline" onClick={() => setBulkModalOpen(true)} className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                <FileText className="h-4 w-4" />
+                Bulk Upload
+              </Button>
+              <Link href="/seller/products/new">
+                <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                  <Store className="h-4 w-4" />
+                  Add Product
+                </Button>
+              </Link>
+            </div>
           </div>
-        ) : (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-muted border border-border">
-              <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({orders.length})</TabsTrigger>
-              <TabsTrigger value="products" className="data-[state=active]:bg-card">Products ({products.length})</TabsTrigger>
-              <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({reviews.length})</TabsTrigger>
-              <TabsTrigger value="analytics" className="data-[state=active]:bg-card">Analytics</TabsTrigger>
-            </TabsList>
 
-            <TabsContent value="orders" className="mt-4">
-              {orders.length === 0 && !loading ? (
-                <div className="bg-card border border-border rounded-lg p-12 text-center">
-                  <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
-                    <Inbox className="h-8 w-8 text-blue-400" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {[
+              { label: "Total Revenue", value: `$${stats.revenue.toFixed(2)}`, change: "+12.5%", up: true, icon: DollarSign, color: "from-emerald-500 to-teal-500" },
+              { label: "Active Orders", value: stats.activeOrders.toString(), change: "+3", up: true, icon: ShoppingCart, color: "from-blue-500 to-cyan-500" },
+              { label: "Products", value: stats.productCount.toString(), change: "+2", up: true, icon: Package, color: "from-violet-500 to-purple-500" },
+              { label: "Rating", value: stats.rating.toString(), change: "+0.1", up: true, icon: Star, color: "from-amber-400 to-orange-500" },
+            ].map((stat) => (
+              <div key={stat.label} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 hover:border-primary/20 hover:shadow-card-hover transition-all shadow-card">
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
+                    <stat.icon className="h-4 w-4 text-white" />
                   </div>
-                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No orders yet</h3>
-                  <p className="text-sm text-muted-foreground mb-4">When buyers purchase your products, orders will appear here.</p>
-                  <Link href="/seller/products/new">
-                    <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
-                      <Plus className="h-4 w-4" />
-                      Add Your First Product
-                    </Button>
-                  </Link>
+                  <span className="text-xs font-medium flex items-center gap-0.5 text-emerald-400">
+                    {stat.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                    {stat.change}
+                  </span>
                 </div>
-              ) : (
-                <div className="bg-card border border-border rounded-lg overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border bg-muted">
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {paginatedOrders.map((order) => (
-                          <tr key={order.id} className="border-b border-border hover:bg-muted transition-colors">
-                            <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
-                            <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
-                            <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
-                            <td className="px-4 py-3">
-                              <Badge variant="outline" className={`text-xs ${statusBadge(order.status)}`}>{order.status}</Badge>
-                            </td>
-                            <td className="px-4 py-3 text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
-                            <td className="px-4 py-3">
-                              {order.status === "paid" && (
-                                <Button
-                                  size="sm"
-                                  onClick={() => openFulfillModal(order)}
-                                  className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
-                                >
-                                  <Upload className="h-3.5 w-3.5" />
-                                  Fulfill
-                                </Button>
-                              )}
-                              {order.status === "delivered" && (
-                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Awaiting Confirmation
-                                </Badge>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  {totalOrderPages > 1 && (
-                    <div className="flex items-center justify-between px-4 py-3 border-t border-border">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={ordersPage === 1}
-                        onClick={() => setOrdersPage(p => p - 1)}
-                        className="border-border"
-                      >
-                        Previous
-                      </Button>
-                      <span className="text-sm text-muted-foreground">
-                        Page {ordersPage} of {totalOrderPages}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={ordersPage === totalOrderPages}
-                        onClick={() => setOrdersPage(p => p + 1)}
-                        className="border-border"
-                      >
-                        Next
-                      </Button>
+                <div>
+                  <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+            </div>
+          ) : (
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="bg-card/80 backdrop-blur-sm border border-border/60">
+                <TabsTrigger value="orders" className="data-[state=active]:bg-card">Orders ({orders.length})</TabsTrigger>
+                <TabsTrigger value="products" className="data-[state=active]:bg-card">Products ({products.length})</TabsTrigger>
+                <TabsTrigger value="reviews" className="data-[state=active]:bg-card">Reviews ({reviews.length})</TabsTrigger>
+                <TabsTrigger value="analytics" className="data-[state=active]:bg-card">Analytics</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="orders" className="mt-4">
+                {orders.length === 0 && !loading ? (
+                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                    <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
+                      <Inbox className="h-8 w-8 text-blue-400" />
                     </div>
-                  )}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="products" className="mt-4">
-              {products.length === 0 && !loading ? (
-                <div className="bg-card border border-border rounded-lg p-12 text-center">
-                  <div className="h-16 w-16 rounded-full bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
-                    <Package className="h-8 w-8 text-violet-400" />
+                    <h3 className="font-display text-lg font-medium text-foreground mb-2">No orders yet</h3>
+                    <p className="text-sm text-muted-foreground mb-4">When buyers purchase your products, orders will appear here.</p>
+                    <Link href="/seller/products/new">
+                      <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                        <Plus className="h-4 w-4" />
+                        Add Your First Product
+                      </Button>
+                    </Link>
                   </div>
-                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No products listed</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Start selling by adding your first digital product.</p>
-                  <Link href="/seller/products/new">
-                    <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
-                      <Plus className="h-4 w-4" />
-                      Add Product
-                    </Button>
-                  </Link>
-                </div>
-              ) : (
-                <div className="bg-card border border-border rounded-lg overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border bg-muted">
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Featured</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {paginatedProducts.map((product) => (
-                          <tr key={product.id} className="border-b border-border hover:bg-muted transition-colors">
-                            <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-foreground">{product.title}</span>
-                                {product.stock <= 5 && product.stock > 0 && (
-                                  <Badge variant="outline" className="text-xs bg-destructive/10 text-destructive border-destructive/30">
-                                    <AlertTriangle className="h-3 w-3 mr-1" />
-                                    Low Stock ({product.stock})
+                ) : (
+                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border bg-muted/50">
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Order ID</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Amount</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {paginatedOrders.map((order) => (
+                            <tr key={order.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                              <td className="px-4 py-3 font-mono text-foreground">{order.id.slice(0, 8).toUpperCase()}</td>
+                              <td className="px-4 py-3 text-foreground">{order.product?.title || "Unknown"}</td>
+                              <td className="px-4 py-3 font-mono text-foreground">{order.total_amount ? `$${order.total_amount.toFixed(2)}` : "—"}</td>
+                              <td className="px-4 py-3">
+                                <Badge variant="outline" className={`text-xs ${statusBadge(order.status)}`}>{order.status}</Badge>
+                              </td>
+                              <td className="px-4 py-3 text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
+                              <td className="px-4 py-3">
+                                {order.status === "paid" && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => openFulfillModal(order)}
+                                    className="gap-1.5 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-xs border-0 shadow-sm"
+                                  >
+                                    <Upload className="h-3.5 w-3.5" />
+                                    Fulfill
+                                  </Button>
+                                )}
+                                {order.status === "delivered" && (
+                                  <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
+                                    <CheckCircle className="h-3 w-3 mr-1" />
+                                    Awaiting Confirmation
                                   </Badge>
                                 )}
-                                {product.stock === 0 && (
-                                  <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-border">
-                                    Out of Stock
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {totalOrderPages > 1 && (
+                      <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={ordersPage === 1}
+                          onClick={() => setOrdersPage(p => p - 1)}
+                          className="border-border hover:border-primary hover:text-primary"
+                        >
+                          Previous
+                        </Button>
+                        <span className="text-sm text-muted-foreground">
+                          Page {ordersPage} of {totalOrderPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={ordersPage === totalOrderPages}
+                          onClick={() => setOrdersPage(p => p + 1)}
+                          className="border-border hover:border-primary hover:text-primary"
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="products" className="mt-4">
+                {products.length === 0 && !loading ? (
+                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                    <div className="h-16 w-16 rounded-full bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
+                      <Package className="h-8 w-8 text-violet-400" />
+                    </div>
+                    <h3 className="font-display text-lg font-medium text-foreground mb-2">No products listed</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Start selling by adding your first digital product.</p>
+                    <Link href="/seller/products/new">
+                      <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                        <Plus className="h-4 w-4" />
+                        Add Product
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border bg-muted/50">
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Product</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Price</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Stock</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Featured</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {paginatedProducts.map((product) => (
+                            <tr key={product.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                              <td className="px-4 py-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-foreground">{product.title}</span>
+                                  {product.stock <= 5 && product.stock > 0 && (
+                                    <Badge variant="outline" className="text-xs bg-red-500/10 text-red-400 border-red-500/20">
+                                      <AlertTriangle className="h-3 w-3 mr-1" />
+                                      Low Stock ({product.stock})
+                                    </Badge>
+                                  )}
+                                  {product.stock === 0 && (
+                                    <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-border">
+                                      Out of Stock
+                                    </Badge>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
+                              <td className="px-4 py-3 text-foreground">{product.stock}</td>
+                              <td className="px-4 py-3">
+                                {product.featured === true ? (
+                                  <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
+                                    <Star className="h-3 w-3 mr-1 fill-amber-400" />
+                                    Featured
                                   </Badge>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">—</span>
                                 )}
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 font-mono text-foreground">${product.price.toFixed(2)}</td>
-                            <td className="px-4 py-3 text-foreground">{product.stock}</td>
-                            <td className="px-4 py-3">
-                              {product.featured === true ? (
-                                <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30">
-                                  <Star className="h-3 w-3 mr-1 fill-amber-400" />
-                                  Featured
-                                </Badge>
-                              ) : (
-                                <span className="text-xs text-muted-foreground">—</span>
-                              )}
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="flex gap-2">
-                                <Link href={`/seller/products/${product.id}/edit`}>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex gap-2">
+                                  <Link href={`/seller/products/${product.id}/edit`}>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="gap-1.5 border-border text-xs hover:border-primary hover:text-primary"
+                                    >
+                                      <Pencil className="h-3.5 w-3.5" />
+                                      Edit
+                                    </Button>
+                                  </Link>
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    className="gap-1.5 border-border text-xs"
+                                    onClick={() => toggleFeatured(product.id, product.featured === true)}
+                                    className="gap-1.5 border-border text-xs hover:border-primary hover:text-primary"
                                   >
-                                    <Pencil className="h-3.5 w-3.5" />
-                                    Edit
+                                    <Star className="h-3.5 w-3.5" />
+                                    {product.featured === true ? "Unfeature" : "Feature"}
                                   </Button>
-                                </Link>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {totalProductPages > 1 && (
+                      <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={productsPage === 1}
+                          onClick={() => setProductsPage(p => p - 1)}
+                          className="border-border hover:border-primary hover:text-primary"
+                        >
+                          Previous
+                        </Button>
+                        <span className="text-sm text-muted-foreground">
+                          Page {productsPage} of {totalProductPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={productsPage === totalProductPages}
+                          onClick={() => setProductsPage(p => p + 1)}
+                          className="border-border hover:border-primary hover:text-primary"
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="reviews" className="mt-4">
+                {reviews.length === 0 && !reviewsLoading ? (
+                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-12 text-center shadow-card">
+                    <div className="h-16 w-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
+                      <Star className="h-8 w-8 text-amber-400" />
+                    </div>
+                    <h3 className="font-display text-lg font-medium text-foreground mb-2">No reviews yet</h3>
+                    <p className="text-sm text-muted-foreground">When buyers review your products, they will appear here.</p>
+                  </div>
+                ) : (
+                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden shadow-card">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border bg-muted/50">
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Review</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Rating</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Helpful</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
+                            <th className="text-left px-4 py-3 font-medium text-muted-foreground">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {reviews.map((review) => (
+                            <tr key={String(review.id)} className="border-b border-border hover:bg-muted/50 transition-colors">
+                              <td className="px-4 py-3">
+                                <p className="text-foreground text-sm line-clamp-2">{String(review.comment)}</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {((review.product as Record<string, unknown>)?.title as string) || "Product"} — {new Date(String(review.created_at)).toLocaleDateString()}
+                                </p>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex items-center gap-0.5">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star key={i} className={`h-3.5 w-3.5 ${i < Number(review.rating) ? "fill-amber-400 text-amber-400" : "text-muted"}`} />
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-foreground">
+                                <div className="flex items-center gap-2">
+                                  <ThumbsUp className="h-3.5 w-3.5 text-muted-foreground" />
+                                  {Number(review.helpful_count || 0)}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <Badge variant="outline" className={`text-xs ${review.approved !== false ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-muted text-muted-foreground"}`}>
+                                  {review.approved !== false ? "Public" : "Hidden"}
+                                </Badge>
+                              </td>
+                              <td className="px-4 py-3">
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => toggleFeatured(product.id, product.featured === true)}
-                                  className="gap-1.5 border-border text-xs"
+                                  onClick={() => toggleReviewApproval(String(review.id), review.approved !== false)}
+                                  className="gap-1.5 border-border text-xs hover:border-primary hover:text-primary"
                                 >
-                                  <Star className="h-3.5 w-3.5" />
-                                  {product.featured === true ? "Unfeature" : "Feature"}
+                                  {review.approved !== false ? (
+                                    <>
+                                      <EyeOff className="h-3.5 w-3.5" />
+                                      Hide
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye className="h-3.5 w-3.5" />
+                                      Approve
+                                    </>
+                                  )}
                                 </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  {totalProductPages > 1 && (
-                    <div className="flex items-center justify-between px-4 py-3 border-t border-border">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={productsPage === 1}
-                        onClick={() => setProductsPage(p => p - 1)}
-                        className="border-border"
-                      >
-                        Previous
-                      </Button>
-                      <span className="text-sm text-muted-foreground">
-                        Page {productsPage} of {totalProductPages}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={productsPage === totalProductPages}
-                        onClick={() => setProductsPage(p => p + 1)}
-                        className="border-border"
-                      >
-                        Next
-                      </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  )}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="reviews" className="mt-4">
-              {reviews.length === 0 && !reviewsLoading ? (
-                <div className="bg-card border border-border rounded-lg p-12 text-center">
-                  <div className="h-16 w-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
-                    <Star className="h-8 w-8 text-amber-400" />
                   </div>
-                  <h3 className="font-display text-lg font-medium text-foreground mb-2">No reviews yet</h3>
-                  <p className="text-sm text-muted-foreground">When buyers review your products, they will appear here.</p>
-                </div>
-              ) : (
-                <div className="bg-card border border-border rounded-lg overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border bg-muted">
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Review</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Rating</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Helpful</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {reviews.map((review) => (
-                          <tr key={String(review.id)} className="border-b border-border hover:bg-muted transition-colors">
-                            <td className="px-4 py-3">
-                              <p className="text-foreground text-sm line-clamp-2">{String(review.comment)}</p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {((review.product as Record<string, unknown>)?.title as string) || "Product"} — {new Date(String(review.created_at)).toLocaleDateString()}
-                              </p>
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="flex items-center gap-0.5">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star key={i} className={`h-3.5 w-3.5 ${i < Number(review.rating) ? "fill-foreground text-foreground" : "text-muted"}`} />
-                                ))}
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 text-foreground">
-                              <div className="flex items-center gap-2">
-                                <ThumbsUp className="h-3.5 w-3.5 text-muted-foreground" />
-                                {Number(review.helpful_count || 0)}
-                              </div>
-                            </td>
-                            <td className="px-4 py-3">
-                              <Badge variant="outline" className={`text-xs ${review.approved !== false ? "bg-muted text-foreground border-border" : "bg-muted text-muted-foreground"}`}>
-                                {review.approved !== false ? "Public" : "Hidden"}
-                              </Badge>
-                            </td>
-                            <td className="px-4 py-3">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => toggleReviewApproval(String(review.id), review.approved !== false)}
-                                className="gap-1.5 border-border text-xs"
-                              >
-                                {review.approved !== false ? (
-                                  <>
-                                    <EyeOff className="h-3.5 w-3.5" />
-                                    Hide
-                                  </>
-                                ) : (
-                                  <>
-                                    <Eye className="h-3.5 w-3.5" />
-                                    Approve
-                                  </>
-                                )}
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
+                )}
+              </TabsContent>
 
-            <TabsContent value="analytics" className="mt-4">
-              <RevenueStats
-                stats={{
-                  totalRevenue: stats.revenue,
-                  totalOrders: orders.length,
-                  totalProducts: stats.productCount,
-                  uniqueBuyers: 0,
-                  revenueChange: 12.5,
-                  ordersChange: 3,
-                }}
-              />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <SalesChart data={orders.map((o) => ({ date: o.created_at, revenue: o.total_amount || 0, orders: 1 }))} />
-                <TopProductsChart data={topProductsData} />
-              </div>
-            </TabsContent>
-          </Tabs>
-        )}
-        <Dialog open={fulfillModalOpen} onOpenChange={setFulfillModalOpen}>
-          <DialogContent className="bg-card border-border max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="font-display text-foreground">Fulfill Order</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Order</p>
-                <p className="font-mono text-foreground">#{fulfillOrder?.id.slice(0, 8).toUpperCase()}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Product</p>
-                <p className="text-foreground">{fulfillOrder?.product?.title || "Unknown"}</p>
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">Delivery Content</p>
-                <Textarea
-                  value={deliveryText}
-                  onChange={(e) => setDeliveryText(e.target.value)}
-                  placeholder="Enter license keys, account credentials, download links, or any delivery instructions..."
-                  className="bg-muted border-border min-h-[120px]"
+              <TabsContent value="analytics" className="mt-4">
+                <RevenueStats
+                  stats={{
+                    totalRevenue: stats.revenue,
+                    totalOrders: orders.length,
+                    totalProducts: stats.productCount,
+                    uniqueBuyers: 0,
+                    revenueChange: 12.5,
+                    ordersChange: 3,
+                  }}
                 />
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">Attach Files</p>
-                {uploadedFiles.map((file, i) => (
-                  <div key={i} className="flex items-center gap-2 p-2 bg-muted rounded mb-2">
-                    <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground flex-1">{file.name}</span>
-                    <Button variant="ghost" size="icon" onClick={() => removeUploadedFile(i)} className="h-6 w-6">
-                      <X className="h-3 w-3 text-muted-foreground" />
-                    </Button>
-                  </div>
-                ))}
-                <FileUploader onUpload={handleFileUpload} />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <Button
-                  onClick={submitFulfillment}
-                  disabled={fulfilling}
-                  className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  {fulfilling ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="h-4 w-4" />
-                      Mark as Delivered
-                    </>
-                  )}
-                </Button>
-                <Button variant="outline" onClick={() => setFulfillModalOpen(false)} className="border-border">
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-        <Dialog open={bulkModalOpen} onOpenChange={setBulkModalOpen}>
-          <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="font-display text-foreground">Bulk Upload Products</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">Upload multiple products via CSV. One product per row.</p>
-                <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-1.5 border-border text-xs">
-                  <FileText className="h-3.5 w-3.5" />
-                  Download Template
-                </Button>
-              </div>
-
-              <Textarea
-                value={csvText}
-                onChange={(e) => setCsvText(e.target.value)}
-                placeholder={'title,description,price,original_price,category,stock,delivery_time,tags,auto_delivery,keys\n"Steam Key","Global Steam key",9.99,29.99,Game Keys,50,Instant,"steam,global",true,"XXXX-XXXX\nYYYY-YYYY"\n"Netflix Account","1 month premium",4.99,9.99,Accounts,20,Instant,"netflix,streaming",false,'}
-                className="bg-muted border-border min-h-[200px] font-mono text-xs"
-              />
-
-              {bulkResults && (
-                <div className="bg-muted rounded-lg p-4">
-                  <p className="text-sm font-medium text-foreground mb-2">
-                    Results: {bulkResults.success} created, {bulkResults.errors.length} errors
-                  </p>
-                  {bulkResults.errors.length > 0 && (
-                    <div className="space-y-1 max-h-[150px] overflow-y-auto">
-                      {bulkResults.errors.map((err) => (
-                        <p key={err.row} className="text-xs text-foreground">
-                          Row {err.row}: {err.error}
-                        </p>
-                      ))}
-                    </div>
-                  )}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                  <SalesChart data={orders.map((o) => ({ date: o.created_at, revenue: o.total_amount || 0, orders: 1 }))} />
+                  <TopProductsChart data={topProductsData} />
                 </div>
-              )}
+              </TabsContent>
+            </Tabs>
+          )}
+          <Dialog open={fulfillModalOpen} onOpenChange={setFulfillModalOpen}>
+            <DialogContent className="bg-card/95 backdrop-blur-md border-border/60 max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="font-display text-foreground">Fulfill Order</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Order</p>
+                  <p className="font-mono text-foreground">#{fulfillOrder?.id.slice(0, 8).toUpperCase()}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Product</p>
+                  <p className="text-foreground">{fulfillOrder?.product?.title || "Unknown"}</p>
+                </div>
 
-              <div className="flex gap-3 pt-2">
-                <Button
-                  onClick={parseAndUploadCSV}
-                  disabled={bulkParsing || !csvText.trim()}
-                  className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  {bulkParsing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4" />
-                      Upload {csvText.trim() ? csvText.trim().split("\n").length - 1 : 0} Products
-                    </>
-                  )}
-                </Button>
-                <Button variant="outline" onClick={() => { setBulkModalOpen(false); setCsvText(""); setBulkResults(null); }} className="border-border">
-                  Close
-                </Button>
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Delivery Content</p>
+                  <Textarea
+                    value={deliveryText}
+                    onChange={(e) => setDeliveryText(e.target.value)}
+                    placeholder="Enter license keys, account credentials, download links, or any delivery instructions..."
+                    className="bg-muted border-border min-h-[120px]"
+                  />
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Attach Files</p>
+                  {uploadedFiles.map((file, i) => (
+                    <div key={i} className="flex items-center gap-2 p-2 bg-muted rounded mb-2">
+                      <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-foreground flex-1">{file.name}</span>
+                      <Button variant="ghost" size="icon" onClick={() => removeUploadedFile(i)} className="h-6 w-6">
+                        <X className="h-3 w-3 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  ))}
+                  <FileUploader onUpload={handleFileUpload} />
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={submitFulfillment}
+                    disabled={fulfilling}
+                    className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-md"
+                  >
+                    {fulfilling ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="h-4 w-4" />
+                        Mark as Delivered
+                      </>
+                    )}
+                  </Button>
+                  <Button variant="outline" onClick={() => setFulfillModalOpen(false)} className="border-border">
+                    Cancel
+                  </Button>
+                </div>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={bulkModalOpen} onOpenChange={setBulkModalOpen}>
+            <DialogContent className="bg-card/95 backdrop-blur-md border-border/60 max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-display text-foreground">Bulk Upload Products</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">Upload multiple products via CSV. One product per row.</p>
+                  <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-1.5 border-border text-xs">
+                    <FileText className="h-3.5 w-3.5" />
+                    Download Template
+                  </Button>
+                </div>
+
+                <Textarea
+                  value={csvText}
+                  onChange={(e) => setCsvText(e.target.value)}
+                  placeholder={'title,description,price,original_price,category,stock,delivery_time,tags,auto_delivery,keys\n"Steam Key","Global Steam key",9.99,29.99,Game Keys,50,Instant,"steam,global",true,"XXXX-XXXX\nYYYY-YYYY"\n"Netflix Account","1 month premium",4.99,9.99,Accounts,20,Instant,"netflix,streaming",false,'}
+                  className="bg-muted border-border min-h-[200px] font-mono text-xs"
+                />
+
+                {bulkResults && (
+                  <div className="bg-muted rounded-lg p-4">
+                    <p className="text-sm font-medium text-foreground mb-2">
+                      Results: {bulkResults.success} created, {bulkResults.errors.length} errors
+                    </p>
+                    {bulkResults.errors.length > 0 && (
+                      <div className="space-y-1 max-h-[150px] overflow-y-auto">
+                        {bulkResults.errors.map((err) => (
+                          <p key={err.row} className="text-xs text-foreground">
+                            Row {err.row}: {err.error}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={parseAndUploadCSV}
+                    disabled={bulkParsing || !csvText.trim()}
+                    className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-md"
+                  >
+                    {bulkParsing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4" />
+                        Upload {csvText.trim() ? csvText.trim().split("\n").length - 1 : 0} Products
+                      </>
+                    )}
+                  </Button>
+                  <Button variant="outline" onClick={() => { setBulkModalOpen(false); setCsvText(""); setBulkResults(null); }} className="border-border">
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </>
   );

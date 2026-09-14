@@ -61,85 +61,92 @@ export default function OrdersPage() {
   return (
     <>
       <SEO title="My Orders — TradeVault" description="Track your orders and delivery status." />
-      <div className="container py-8 md:py-12">
-        <div className="mb-8">
-          <h1 className="font-display text-3xl font-bold text-foreground">My Orders</h1>
-          <p className="text-muted-foreground">Track deliveries and manage your purchases</p>
-        </div>
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-mesh-cool" />
+        <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+        <div className="absolute top-20 right-[10%] w-72 h-72 bg-gradient-to-bl from-blue-500/15 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-[8%] w-80 h-80 bg-gradient-to-tr from-violet-500/10 to-cyan-500/5 rounded-full blur-3xl" />
 
-        {loading ? (
-          <div>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-card border border-border rounded-lg p-5 mb-4">
-                <div className="h-4 bg-muted rounded w-1/4 mb-3" />
-                <div className="h-3 bg-muted rounded w-1/2" />
-              </div>
-            ))}
+        <div className="relative container px-4 sm:px-6 py-8 md:py-12">
+          <div className="mb-8">
+            <h1 className="font-display text-3xl font-bold text-foreground">My Orders</h1>
+            <p className="text-muted-foreground">Track deliveries and manage your purchases</p>
           </div>
-        ) : (
-          <div>
-            {orders.map((order) => {
-              const config = statusConfig[order.status] || statusConfig.pending;
-              const Icon = config.icon;
-              return (
-                <div key={order.id} className="bg-card border border-border rounded-lg p-5 mb-4">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                    <div className="flex items-start gap-4">
-                      <div className="h-12 w-12 bg-primary/10 rounded-md flex items-center justify-center shrink-0">
-                        <Package className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-sm text-muted-foreground">{order.id.slice(0, 8).toUpperCase()}</span>
-                          <Badge variant="outline" className={`text-xs ${config.bg} ${config.color}`}>
-                            <Icon className={`h-3 w-3 mr-1 ${config.color}`} />
-                            {config.label}
-                          </Badge>
-                        </div>
-                        <h3 className="font-medium text-foreground mt-1">{order.product?.title || "Unknown Product"}</h3>
-                        <p className="text-sm text-muted-foreground">Sold by {order.seller?.full_name || "Unknown"} · {new Date(order.created_at).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono font-semibold text-foreground">${order.total_amount.toFixed(2)}</span>
-                      <Link href={`/orders/${order.id}`}>
-                        <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary hover:bg-primary/10">
-                          Details
-                          <ArrowRight className="h-3 w-3" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
 
-                  {order.status === "pending" && (
-                    <div className="bg-primary/5 border border-primary/20 rounded-md p-3 flex items-start gap-3 text-sm">
-                      <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-foreground font-medium">Escrow Protection Active</p>
-                        <p className="text-muted-foreground">Your payment is held securely. Confirm delivery once you receive your digital goods to release funds to the seller.</p>
-                      </div>
-                    </div>
-                  )}
+          {loading ? (
+            <div>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 mb-4 shadow-card">
+                  <div className="h-4 bg-muted rounded w-1/4 mb-3" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
                 </div>
-              );
-            })}
-          </div>
-        )}
-
-        {!loading && orders.length === 0 && (
-          <div className="text-center py-16">
-            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Package className="h-8 w-8 text-primary" />
+              ))}
             </div>
-            <h3 className="font-display text-lg font-medium text-foreground mb-4">No orders yet</h3>
-            <Link href="/marketplace">
-              <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
-                Browse Marketplace
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        )}
+          ) : (
+            <div>
+              {orders.map((order) => {
+                const config = statusConfig[order.status] || statusConfig.pending;
+                const Icon = config.icon;
+                return (
+                  <div key={order.id} className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg p-5 mb-4 shadow-card hover:shadow-card-hover transition-all">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                      <div className="flex items-start gap-4">
+                        <div className="h-12 w-12 bg-primary/10 rounded-md flex items-center justify-center shrink-0">
+                          <Package className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-sm text-muted-foreground">{order.id.slice(0, 8).toUpperCase()}</span>
+                            <Badge variant="outline" className={`text-xs ${config.bg} ${config.color}`}>
+                              <Icon className={`h-3 w-3 mr-1 ${config.color}`} />
+                              {config.label}
+                            </Badge>
+                          </div>
+                          <h3 className="font-medium text-foreground mt-1">{order.product?.title || "Unknown Product"}</h3>
+                          <p className="text-sm text-muted-foreground">Sold by {order.seller?.full_name || "Unknown"} · {new Date(order.created_at).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono font-semibold text-foreground">${order.total_amount.toFixed(2)}</span>
+                        <Link href={`/orders/${order.id}`}>
+                          <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary hover:bg-primary/10">
+                            Details
+                            <ArrowRight className="h-3 w-3" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {order.status === "pending" && (
+                      <div className="bg-primary/5 border border-primary/20 rounded-md p-3 flex items-start gap-3 text-sm">
+                        <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-foreground font-medium">Escrow Protection Active</p>
+                          <p className="text-muted-foreground">Your payment is held securely. Confirm delivery once you receive your digital goods to release funds to the seller.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {!loading && orders.length === 0 && (
+            <div className="text-center py-16">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Package className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="font-display text-lg font-medium text-foreground mb-4">No orders yet</h3>
+              <Link href="/marketplace">
+                <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
+                  Browse Marketplace
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
