@@ -41,9 +41,14 @@ const trustItems = [
 
 export function TrustSignalsSection() {
   return (
-    <section className="py-16 md:py-24 border-b border-border">
-      <div className="container px-4 sm:px-6">
+    <section className="py-16 md:py-24 border-b border-border bg-tint-violet relative">
+      <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+      <div className="container px-4 sm:px-6 relative">
         <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-primary text-xs font-medium mb-4">
+            <Shield className="h-3 w-3" />
+            Security First
+          </span>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
             Why TradeVault?
           </h2>
@@ -57,14 +62,14 @@ export function TrustSignalsSection() {
           {trustItems.map((item) => (
             <div
               key={item.title}
-              className="p-6 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors"
+              className="p-6 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:border-primary/30 hover:shadow-card-hover transition-all group"
             >
               <div className="flex items-start gap-4">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} shadow-md shrink-0`}>
-                  <item.icon className="h-5 w-5 text-white" />
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${item.color} shadow-lg shadow-${item.color.split(" ")[1].replace("to-", "")}/20 shrink-0 group-hover:scale-110 transition-transform`}>
+                  <item.icon className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-display font-semibold text-foreground mb-1.5">{item.title}</h3>
+                  <h3 className="font-display font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors">{item.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                 </div>
               </div>

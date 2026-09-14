@@ -50,10 +50,16 @@ export function TopSellersSection() {
   };
 
   return (
-    <section className="py-16 md:py-24 border-y border-border bg-muted">
-      <div className="container px-4 sm:px-6">
+    <section className="py-16 md:py-24 border-y border-border bg-tint-amber relative">
+      <div className="absolute inset-0 bg-dot-pattern opacity-20" />
+      <div className="absolute top-20 right-[10%] w-64 h-64 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-full blur-3xl" />
+      <div className="container px-4 sm:px-6 relative">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-1">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/5 border border-amber-500/10 text-amber-400 text-xs font-medium mb-4">
+              <Shield className="h-3 w-3" />
+              Verified
+            </span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
               Top Sellers
             </h2>
@@ -69,17 +75,17 @@ export function TopSellersSection() {
               <div>
                 {sellers.map((seller) => (
                   <Link key={seller.id} href={`/sellers/${seller.id}`}>
-                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 mb-3 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-md">
+                    <div className="flex items-center gap-3 p-4 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:border-primary/30 hover:shadow-card-hover mb-3 transition-all group">
+                      <div className="h-12 w-12 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-md group-hover:scale-110 transition-transform">
                         {(seller.full_name || "S")[0].toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-foreground text-sm truncate">{seller.full_name || "Unnamed Seller"}</span>
+                          <span className="font-medium text-foreground text-sm truncate group-hover:text-primary transition-colors">{seller.full_name || "Unnamed Seller"}</span>
                           <Shield className="h-3 w-3 text-emerald-400 shrink-0" />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className={`px-1.5 py-0.5 rounded text-xs border font-medium ${tierBadge(seller.verification_tier)}`}>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] border font-medium ${tierBadge(seller.verification_tier)}`}>
                             {(seller.verification_tier || "verified").toUpperCase()}
                           </span>
                         </div>
@@ -112,7 +118,7 @@ export function TopSellersSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {products.map((product) => (
                   <Link key={product.id} href={`/marketplace/${product.id}`}>
-                    <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors">
+                    <div className="p-5 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:border-primary/30 hover:shadow-card-hover transition-all group">
                       <div className="flex items-start justify-between mb-3">
                         <span className="text-xs font-mono uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                           {product.category || "Digital"}
@@ -132,7 +138,7 @@ export function TopSellersSection() {
 
                       <div className="flex items-center justify-between pt-3 border-t border-border">
                         <span className="text-xs text-muted-foreground">by {product.seller?.full_name || "Unknown"}</span>
-                        <Button size="sm" className="h-8 text-xs bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-sm">
+                        <Button size="sm" className="h-8 text-xs bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-md shadow-primary/20">
                           View
                         </Button>
                       </div>

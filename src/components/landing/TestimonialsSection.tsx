@@ -69,11 +69,13 @@ export function TestimonialsSection() {
   const canNext = currentIndex + 3 < testimonials.length;
 
   return (
-    <section className="border-t border-border py-16 md:py-20">
-      <div className="container px-4 sm:px-6">
+    <section className="border-t border-border py-16 md:py-20 bg-tint-blue relative">
+      <div className="absolute inset-0 bg-dot-pattern opacity-20" />
+      <div className="absolute top-10 left-[10%] w-64 h-64 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl" />
+      <div className="container px-4 sm:px-6 relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 text-primary text-xs font-medium mb-4">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/10 text-blue-400 text-xs font-medium mb-4">
               <Quote className="h-3 w-3" />
               Buyer Reviews
             </span>
@@ -90,7 +92,7 @@ export function TestimonialsSection() {
               {visible.map((t) => (
                 <div
                   key={t.id}
-                  className="bg-card border border-border rounded-lg p-6 flex flex-col"
+                  className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6 flex flex-col hover:border-primary/20 hover:shadow-card-hover transition-all"
                 >
                   <div className="flex items-center gap-1 mb-3">
                     {Array.from({ length: 5 }).map((_, i) => (

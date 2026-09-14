@@ -47,18 +47,23 @@ export function CategoriesSection() {
   }
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container px-4 sm:px-6">
+    <section className="py-16 md:py-24 bg-mesh-cool relative">
+      <div className="absolute inset-0 bg-dot-pattern opacity-20" />
+      <div className="container px-4 sm:px-6 relative">
         <div className="flex items-end justify-between mb-10">
           <div>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/10 text-blue-400 text-xs font-medium mb-4">
+              <Gamepad2 className="h-3 w-3" />
+              Browse
+            </span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-              Browse Categories
+              Categories
             </h2>
             <p className="text-muted-foreground">
               Find exactly what you need across our curated digital goods catalog.
             </p>
           </div>
-          <Link href="/categories" className="hidden md:inline-flex text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Link href="/categories" className="hidden md:inline-flex text-sm font-medium text-primary hover:text-primary/80">
             View All →
           </Link>
         </div>
@@ -73,12 +78,12 @@ export function CategoriesSection() {
               <Link
                 key={cat.label}
                 href={`/marketplace?category=${cat.slug}`}
-                className="p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors group"
+                className="p-6 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:border-primary/30 hover:shadow-card-hover transition-all group"
               >
-                <div className={`inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${cat.color} mb-3 shadow-md`}>
-                  <cat.icon className="h-5 w-5 text-white" />
+                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${cat.color} mb-4 shadow-lg shadow-${cat.color.split(" ")[1].replace("to-", "")}/20 group-hover:scale-110 transition-transform`}>
+                  <cat.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground mb-1">{cat.label}</h3>
+                <h3 className="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">{cat.label}</h3>
                 <p className="text-sm text-muted-foreground font-mono">{(counts[cat.slug] || 0).toLocaleString()} listings</p>
               </Link>
             ))}
