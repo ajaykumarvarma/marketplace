@@ -419,7 +419,7 @@ export default function ProductDetailPage() {
                 />
               </div>
 
-              <div className="mb-8 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6">
+              <div className="mb-8 bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] uppercase tracking-wider text-primary font-semibold bg-primary/10 px-2 py-0.5 rounded-full">
                     {product.category?.name || "Other"}
@@ -460,7 +460,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl overflow-hidden">
+              <div className="bg-card border border-border rounded-xl overflow-hidden">
                 <Tabs defaultValue="description" className="w-full">
                   <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start gap-6 h-auto p-0 px-6 pt-2">
                     <TabsTrigger value="description" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-foreground rounded-none pb-3 px-0 text-sm font-medium text-muted-foreground data-[state=active]:text-foreground">
@@ -590,10 +590,10 @@ export default function ProductDetailPage() {
             </div>
 
             <div>
-              <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-6 sm:sticky sm:top-24 shadow-card">
+              <div className="bg-card border border-border rounded-xl p-6 sm:sticky sm:top-24 shadow-card">
                 <div className="mb-6">
                   <div className="flex items-baseline gap-3">
-                    <span className="font-mono text-3xl font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${product.price.toFixed(2)}</span>
+                    <span className="font-mono text-3xl font-bold text-foreground">${product.price.toFixed(2)}</span>
                     {product.original_price && (
                       <span className="text-lg text-muted-foreground line-through">${product.original_price.toFixed(2)}</span>
                     )}
@@ -609,7 +609,7 @@ export default function ProductDetailPage() {
                   <Button
                     onClick={handleAddToCart}
                     disabled={adding}
-                    className="h-11 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium rounded-lg shadow-lg shadow-primary/25 border-0"
+                    className="h-11 gap-2 bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium rounded-lg"
                   >
                     {adding ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -718,7 +718,7 @@ export default function ProductDetailPage() {
                   <Link
                     key={rp.id}
                     href={`/marketplace/${rp.id}`}
-                    className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-lg overflow-hidden hover:border-primary/30 transition-colors shadow-card"
+                    className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-colors shadow-card"
                   >
                     <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                       <Image

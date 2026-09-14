@@ -65,12 +65,12 @@ export default function CartPage() {
             <h1 className="font-display text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
 
             {items.length === 0 ? (
-              <div className="text-center py-20 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl">
+              <div className="text-center py-20 bg-card border border-border rounded-xl">
                 <ShoppingCart className="h-12 w-12 text-primary mx-auto mb-4" />
                 <h3 className="font-display text-lg font-medium text-foreground mb-2">Your cart is empty</h3>
                 <p className="text-sm text-muted-foreground mb-6">Browse the drop to find keys, licences and subscriptions</p>
                 <Link href="/marketplace">
-                  <Button className="h-11 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium rounded-lg shadow-lg shadow-primary/25">
+                  <Button className="h-11 gap-2 bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium rounded-lg">
                     Browse Marketplace
                     <ArrowRight className="h-4 w-4" />
                   </Button>
@@ -80,7 +80,7 @@ export default function CartPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-3">
                   {items.map((item) => (
-                    <div key={item.id} className={`bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-4 flex items-center gap-4 ${removingItem === item.id ? "opacity-50" : ""} shadow-card`}>
+                    <div key={item.id} className={`bg-card border border-border rounded-xl p-4 flex items-center gap-4 ${removingItem === item.id ? "opacity-50" : ""} shadow-card`}>
                       <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0 shadow-md">
                         <span className="text-lg font-bold text-white font-mono">
                           {item.title.charAt(0).toUpperCase()}
@@ -123,7 +123,7 @@ export default function CartPage() {
                 </div>
 
                 <div>
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-5 sm:sticky sm:top-24 shadow-card">
+                  <div className="bg-card border border-border rounded-xl p-5 sm:sticky sm:top-24 shadow-card">
                     <h3 className="font-display font-semibold text-foreground mb-4 text-sm uppercase tracking-wider">Order Summary</h3>
                     <div className="text-sm mb-4 space-y-2">
                       <div className="flex items-center justify-between">
@@ -138,11 +138,11 @@ export default function CartPage() {
                     <div className="pt-3 border-t border-border mb-4">
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-foreground">Total</span>
-                        <span className="font-mono text-xl font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">${totalPrice.toFixed(2)}</span>
+                        <span className="font-mono text-xl font-bold text-foreground">${totalPrice.toFixed(2)}</span>
                       </div>
                     </div>
                     <Link href="/checkout">
-                      <Button className="w-full gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 text-sm font-medium h-11 rounded-lg shadow-lg shadow-primary/25 border-0">
+                      <Button className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium h-11 rounded-lg">
                         Proceed to Checkout
                         <ArrowRight className="h-4 w-4" />
                       </Button>

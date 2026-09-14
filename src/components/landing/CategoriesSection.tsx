@@ -78,9 +78,9 @@ export function CategoriesSection() {
               <Link
                 key={cat.label}
                 href={`/marketplace?category=${cat.slug}`}
-                className="p-6 bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl hover:border-primary/30 hover:shadow-card-hover transition-all group"
+                className="p-6 bg-card border border-border rounded-xl hover:border-primary/30 hover:shadow-lg transition-all group"
               >
-                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${cat.color} mb-4 shadow-lg shadow-${cat.color.split(" ")[1].replace("to-", "")}/20 group-hover:scale-110 transition-transform`}>
+                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${cat.color} mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
                   <cat.icon className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">{cat.label}</h3>
