@@ -348,14 +348,14 @@ export default function SellerDashboardPage() {
 
   const statusBadge = (status: string) => {
     const map: Record<string, string> = {
-      delivered: "bg-muted text-foreground border-border",
-      completed: "bg-muted text-foreground border-border",
-      pending: "bg-muted text-foreground border-border",
-      processing: "bg-muted text-foreground border-border",
-      disputed: "bg-muted text-foreground border-border",
-      active: "bg-muted text-foreground border-border",
-      low_stock: "bg-muted text-foreground border-border",
-      out_of_stock: "bg-muted text-foreground border-border",
+      delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      completed: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+      pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      processing: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+      disputed: "bg-red-500/10 text-red-400 border-red-500/20",
+      active: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      low_stock: "bg-red-500/10 text-red-400 border-red-500/20",
+      out_of_stock: "bg-muted text-muted-foreground",
       paused: "bg-muted text-muted-foreground",
     };
     return map[status] || "bg-muted text-muted-foreground";
@@ -371,12 +371,12 @@ export default function SellerDashboardPage() {
             <p className="text-muted-foreground">Manage your shop, track orders, and grow your business</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={() => setBulkModalOpen(true)} className="gap-2 border-border">
+            <Button variant="outline" onClick={() => setBulkModalOpen(true)} className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
               <FileText className="h-4 w-4" />
               Bulk Upload
             </Button>
             <Link href="/seller/products/new">
-              <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
                 <Store className="h-4 w-4" />
                 Add Product
               </Button>
@@ -386,15 +386,17 @@ export default function SellerDashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Total Revenue", value: `$${stats.revenue.toFixed(2)}`, change: "+12.5%", up: true, icon: DollarSign },
-            { label: "Active Orders", value: stats.activeOrders.toString(), change: "+3", up: true, icon: ShoppingCart },
-            { label: "Products", value: stats.productCount.toString(), change: "+2", up: true, icon: Package },
-            { label: "Rating", value: stats.rating.toString(), change: "+0.1", up: true, icon: Star },
+            { label: "Total Revenue", value: `$${stats.revenue.toFixed(2)}`, change: "+12.5%", up: true, icon: DollarSign, color: "from-emerald-500 to-teal-500" },
+            { label: "Active Orders", value: stats.activeOrders.toString(), change: "+3", up: true, icon: ShoppingCart, color: "from-blue-500 to-cyan-500" },
+            { label: "Products", value: stats.productCount.toString(), change: "+2", up: true, icon: Package, color: "from-violet-500 to-purple-500" },
+            { label: "Rating", value: stats.rating.toString(), change: "+0.1", up: true, icon: Star, color: "from-amber-400 to-orange-500" },
           ].map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-lg p-5">
+            <div key={stat.label} className="bg-card border border-border rounded-lg p-5 hover:border-primary/20 transition-colors">
               <div className="flex items-center justify-between mb-3">
-                <stat.icon className="h-5 w-5 text-muted-foreground" />
-                <span className="text-xs font-medium flex items-center gap-0.5 text-foreground">
+                <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
+                  <stat.icon className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-xs font-medium flex items-center gap-0.5 text-emerald-400">
                   {stat.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
                   {stat.change}
                 </span>
@@ -423,11 +425,13 @@ export default function SellerDashboardPage() {
             <TabsContent value="orders" className="mt-4">
               {orders.length === 0 && !loading ? (
                 <div className="bg-card border border-border rounded-lg p-12 text-center">
-                  <Inbox className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
+                    <Inbox className="h-8 w-8 text-blue-400" />
+                  </div>
                   <h3 className="font-display text-lg font-medium text-foreground mb-2">No orders yet</h3>
                   <p className="text-sm text-muted-foreground mb-4">When buyers purchase your products, orders will appear here.</p>
                   <Link href="/seller/products/new">
-                    <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                    <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
                       <Plus className="h-4 w-4" />
                       Add Your First Product
                     </Button>
@@ -512,11 +516,13 @@ export default function SellerDashboardPage() {
             <TabsContent value="products" className="mt-4">
               {products.length === 0 && !loading ? (
                 <div className="bg-card border border-border rounded-lg p-12 text-center">
-                  <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <div className="h-16 w-16 rounded-full bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
+                    <Package className="h-8 w-8 text-violet-400" />
+                  </div>
                   <h3 className="font-display text-lg font-medium text-foreground mb-2">No products listed</h3>
                   <p className="text-sm text-muted-foreground mb-4">Start selling by adding your first digital product.</p>
                   <Link href="/seller/products/new">
-                    <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                    <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
                       <Plus className="h-4 w-4" />
                       Add Product
                     </Button>
@@ -626,7 +632,9 @@ export default function SellerDashboardPage() {
             <TabsContent value="reviews" className="mt-4">
               {reviews.length === 0 && !reviewsLoading ? (
                 <div className="bg-card border border-border rounded-lg p-12 text-center">
-                  <Star className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <div className="h-16 w-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
+                    <Star className="h-8 w-8 text-amber-400" />
+                  </div>
                   <h3 className="font-display text-lg font-medium text-foreground mb-2">No reviews yet</h3>
                   <p className="text-sm text-muted-foreground">When buyers review your products, they will appear here.</p>
                 </div>

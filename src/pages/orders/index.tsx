@@ -18,11 +18,11 @@ interface Order {
   seller: { full_name: string | null } | null;
 }
 
-const statusConfig: Record<string, { icon: typeof Package; color: string; label: string }> = {
-  pending: { icon: Clock, color: "text-muted-foreground", label: "Awaiting Delivery" },
-  shipped: { icon: Package, color: "text-muted-foreground", label: "In Transit" },
-  delivered: { icon: CheckCircle, color: "text-muted-foreground", label: "Delivered" },
-  cancelled: { icon: AlertTriangle, color: "text-muted-foreground", label: "Cancelled" },
+const statusConfig: Record<string, { icon: typeof Package; color: string; label: string; bg: string }> = {
+  pending: { icon: Clock, color: "text-amber-400", label: "Awaiting Delivery", bg: "bg-amber-500/10 border-amber-500/20" },
+  shipped: { icon: Package, color: "text-blue-400", label: "In Transit", bg: "bg-blue-500/10 border-blue-500/20" },
+  delivered: { icon: CheckCircle, color: "text-emerald-400", label: "Delivered", bg: "bg-emerald-500/10 border-emerald-500/20" },
+  cancelled: { icon: AlertTriangle, color: "text-red-400", label: "Cancelled", bg: "bg-red-500/10 border-red-500/20" },
 };
 
 export default function OrdersPage() {
@@ -85,13 +85,13 @@ export default function OrdersPage() {
                 <div key={order.id} className="bg-card border border-border rounded-lg p-5 mb-4">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
-                      <div className="h-12 w-12 bg-muted rounded-md flex items-center justify-center shrink-0">
-                        <Package className="h-6 w-6 text-muted-foreground" />
+                      <div className="h-12 w-12 bg-primary/10 rounded-md flex items-center justify-center shrink-0">
+                        <Package className="h-6 w-6 text-primary" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-sm text-muted-foreground">{order.id.slice(0, 8).toUpperCase()}</span>
-                          <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
+                          <Badge variant="outline" className={`text-xs ${config.bg} ${config.color}`}>
                             <Icon className={`h-3 w-3 mr-1 ${config.color}`} />
                             {config.label}
                           </Badge>
@@ -103,7 +103,7 @@ export default function OrdersPage() {
                     <div className="flex items-center gap-3">
                       <span className="font-mono font-semibold text-foreground">${order.total_amount.toFixed(2)}</span>
                       <Link href={`/orders/${order.id}`}>
-                        <Button variant="ghost" size="sm" className="gap-1 text-foreground">
+                        <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary hover:bg-primary/10">
                           Details
                           <ArrowRight className="h-3 w-3" />
                         </Button>
@@ -112,8 +112,8 @@ export default function OrdersPage() {
                   </div>
 
                   {order.status === "pending" && (
-                    <div className="bg-card border border-border rounded-md p-3 flex items-start gap-3 text-sm">
-                      <Shield className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                    <div className="bg-primary/5 border border-primary/20 rounded-md p-3 flex items-start gap-3 text-sm">
+                      <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                       <div>
                         <p className="text-foreground font-medium">Escrow Protection Active</p>
                         <p className="text-muted-foreground">Your payment is held securely. Confirm delivery once you receive your digital goods to release funds to the seller.</p>
@@ -128,10 +128,12 @@ export default function OrdersPage() {
 
         {!loading && orders.length === 0 && (
           <div className="text-center py-16">
-            <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Package className="h-8 w-8 text-primary" />
+            </div>
             <h3 className="font-display text-lg font-medium text-foreground mb-4">No orders yet</h3>
             <Link href="/marketplace">
-              <Button className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-lg shadow-primary/25">
                 Browse Marketplace
                 <ArrowRight className="h-4 w-4" />
               </Button>

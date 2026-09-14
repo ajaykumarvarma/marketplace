@@ -171,15 +171,17 @@ export default function AdminDashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Total Users", value: users.length.toLocaleString(), icon: Users },
-            { label: "Active Orders", value: stats.active_orders.toLocaleString(), icon: ShoppingCart },
-            { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign },
-            { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, good: true },
+            { label: "Total Users", value: users.length.toLocaleString(), icon: Users, color: "from-blue-500 to-cyan-500" },
+            { label: "Active Orders", value: stats.active_orders.toLocaleString(), icon: ShoppingCart, color: "from-emerald-500 to-teal-500" },
+            { label: "GMV (All Time)", value: `$${stats.total_revenue.toLocaleString()}`, icon: DollarSign, color: "from-violet-500 to-purple-500" },
+            { label: "Fraud Score", value: fraudLogs.length > 0 ? `${(fraudLogs.filter((f) => !f.reviewed_at).length / fraudLogs.length * 100).toFixed(1)}%` : "0%", icon: Shield, color: "from-red-500 to-rose-500" },
           ].map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-lg p-5">
+            <div key={stat.label} className="bg-card border border-border rounded-lg p-5 hover:border-primary/20 transition-colors">
               <div className="flex items-center justify-between mb-3">
-                <stat.icon className="h-5 w-5 text-muted-foreground" />
-                {stat.good && <span className="text-xs font-medium text-foreground">Resolved</span>}
+                <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-md`}>
+                  <stat.icon className="h-4 w-4 text-white" />
+                </div>
+                {stat.label === "Fraud Score" && <span className="text-xs font-medium text-red-400">Monitor</span>}
               </div>
               <div>
                 <p className="font-mono text-2xl font-bold text-foreground">{stat.value}</p>
@@ -240,9 +242,9 @@ export default function AdminDashboardPage() {
                   return (
                     <div>
                       {[
-                        { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-muted" },
-                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-warning" },
-                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-destructive" },
+                        { label: "Low Risk", count: low, pct: (low / total * 100).toFixed(1), color: "bg-emerald-500", bg: "bg-emerald-500/10" },
+                        { label: "Medium Risk", count: med, pct: (med / total * 100).toFixed(1), color: "bg-amber-500", bg: "bg-amber-500/10" },
+                        { label: "High Risk", count: high, pct: (high / total * 100).toFixed(1), color: "bg-red-500", bg: "bg-red-500/10" },
                       ].map((r) => (
                         <div key={r.label} className="mb-4">
                           <div className="flex items-center justify-between text-sm mb-1">
@@ -250,7 +252,7 @@ export default function AdminDashboardPage() {
                             <span className="font-mono text-foreground">{r.pct}%</span>
                           </div>
                           <div className="h-2 bg-muted rounded-full overflow-hidden">
-                            <div className={`h-full ${r.color} rounded-full`} style={{ width: `${r.pct}%` }} />
+                            <div className={`h-full ${r.color} rounded-full shadow-sm`} style={{ width: `${r.pct}%` }} />
                           </div>
                         </div>
                       ))}
@@ -264,10 +266,12 @@ export default function AdminDashboardPage() {
           <TabsContent value="fraud" className="mt-4">
             {fraudLogs.length === 0 && !loading ? (
               <div className="bg-card border border-border rounded-lg p-12 text-center">
-                <Inbox className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                  <Inbox className="h-8 w-8 text-emerald-400" />
+                </div>
                 <h3 className="font-display text-lg font-medium text-foreground mb-2">No fraud alerts</h3>
                 <p className="text-sm text-muted-foreground mb-4">The fraud detection system is active and monitoring transactions.</p>
-                <Button variant="outline" className="border-border" onClick={loadDashboard}>
+                <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10" onClick={loadDashboard}>
                   Refresh Data
                 </Button>
               </div>
@@ -289,13 +293,19 @@ export default function AdminDashboardPage() {
                         <tr key={log.id} className="border-b border-border hover:bg-muted transition-colors">
                           <td className="px-4 py-3 text-foreground capitalize">{log.alert_type}</td>
                           <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${riskColor(log.severity === "high" ? 80 : log.severity === "medium" ? 50 : 20)}`}>
+                            <Badge variant="outline" className={`text-xs ${
+                              log.severity === "high" ? "bg-red-500/10 text-red-400 border-red-500/20" :
+                              log.severity === "medium" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+                              "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            }`}>
                               {log.severity}
                             </Badge>
                           </td>
                           <td className="px-4 py-3 text-muted-foreground max-w-[250px] truncate">{log.description || "—"}</td>
                           <td className="px-4 py-3">
-                            <Badge variant="outline" className={`text-xs ${log.status === "resolved" ? "bg-muted text-foreground" : "bg-muted text-foreground"}`}>
+                            <Badge variant="outline" className={`text-xs ${
+                              log.status === "resolved" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                            }`}>
                               {log.status === "resolved" ? "Resolved" : "Open"}
                             </Badge>
                           </td>
