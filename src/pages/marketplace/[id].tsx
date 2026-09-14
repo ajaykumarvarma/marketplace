@@ -504,7 +504,7 @@ export default function ProductDetailPage() {
                           onClick={submitReview}
                           disabled={submittingReview}
                           size="sm"
-                          className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-sm"
+                          className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
                         >
                           <Send className="h-4 w-4" />
                           {submittingReview ? "Submitting..." : "Submit Review"}
@@ -760,7 +760,7 @@ export default function ProductDetailPage() {
               <Button
                 onClick={sendMessageToSeller}
                 disabled={sendingChat || !chatMessage.trim()}
-                className="flex-1 gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0"
+                className="flex-1 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {sendingChat ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
