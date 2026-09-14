@@ -183,35 +183,6 @@ export default function MarketplacePage() {
           <p className="text-muted-foreground">Browse verified digital goods from trusted sellers</p>
         </div>
 
-        {/* Horizontal pill category filter with colors */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {categories.map((c) => {
-            const isActive = (c.id === "all" && activeCategory === "All") || activeCategory === c.id;
-            const categoryColors: Record<string, string> = {
-              all: "from-violet-500 to-purple-600",
-              gaming: "from-rose-500 to-pink-600",
-              software: "from-blue-500 to-cyan-500",
-              subscriptions: "from-emerald-500 to-teal-500",
-              accounts: "from-amber-500 to-orange-500",
-              services: "from-indigo-500 to-violet-500",
-            };
-            const colorClass = categoryColors[c.id.toLowerCase()] || "from-slate-500 to-slate-600";
-            return (
-              <button
-                key={c.id}
-                onClick={() => onCategoryChange(c.id === "all" ? "All" : c.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                  isActive
-                    ? `bg-gradient-to-r ${colorClass} text-white shadow-lg shadow-${colorClass.split(" ")[1].replace("to-", "")}/30`
-                    : "bg-muted text-muted-foreground hover:text-foreground border border-border"
-                }`}
-              >
-                {c.name}
-              </button>
-            );
-          })}
-        </div>
-
         <SearchFilters
           categories={categories}
           activeCategory={activeCategory}
