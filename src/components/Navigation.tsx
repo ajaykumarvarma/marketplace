@@ -32,9 +32,9 @@ export function Navigation() {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded bg-muted border border-border">
-            <Shield className="h-[18px] w-[18px] text-muted-foreground" />
-            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-muted-foreground" />
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent shadow-md">
+            <Shield className="h-[18px] w-[18px] text-white" />
+            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 border border-background" />
           </div>
           <span className="font-display text-lg font-semibold tracking-tight text-foreground">
             TradeVault
@@ -42,16 +42,16 @@ export function Navigation() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          <Link href="/marketplace" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Link href="/marketplace" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             {t("marketplace")}
           </Link>
-          <Link href="/categories" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Link href="/categories" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             {t("categories")}
           </Link>
-          <Link href="/sellers" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Link href="/sellers" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             {t("topSellers")}
           </Link>
-          <Link href="/sell" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Link href="/sell" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             {t("startSelling")}
           </Link>
         </nav>
@@ -63,7 +63,7 @@ export function Navigation() {
                 <Link href="/cart" className="relative">
                   <ShoppingCart className="h-5 w-5 text-muted-foreground hover:text-foreground" />
                   {totalItems > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-xs bg-primary text-primary-foreground">
+                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-xs bg-gradient-to-r from-primary to-blue-500 text-white border-0 shadow-sm">
                       {totalItems}
                     </Badge>
                   )}
@@ -158,7 +158,7 @@ export function Navigation() {
                 </Button>
               </Link>
               <Link href="/auth/register">
-                <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button size="sm" className="gap-2 bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 shadow-md shadow-primary/20 border-0">
                   <Store className="h-4 w-4" />
                   <span>{t("getStarted")}</span>
                 </Button>

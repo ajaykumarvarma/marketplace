@@ -42,10 +42,10 @@ export function TopSellersSection() {
 
   const tierBadge = (tier: string | null) => {
     switch (tier) {
-      case "gold": return "bg-muted text-foreground border-border";
-      case "silver": return "bg-muted text-foreground border-border";
-      case "bronze": return "bg-muted text-foreground border-border";
-      default: return "bg-muted text-foreground border-border";
+      case "gold": return "bg-gradient-to-r from-yellow-400 to-amber-500 text-black border-0 shadow-md";
+      case "silver": return "bg-gradient-to-r from-slate-300 to-slate-400 text-black border-0 shadow-md";
+      case "bronze": return "bg-gradient-to-r from-amber-600 to-orange-700 text-white border-0 shadow-md";
+      default: return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
     }
   };
 
@@ -69,14 +69,14 @@ export function TopSellersSection() {
               <div>
                 {sellers.map((seller) => (
                   <Link key={seller.id} href={`/sellers/${seller.id}`}>
-                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-border mb-3">
-                      <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-bold text-foreground">
+                    <div className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:border-primary/30 mb-3 transition-colors">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-sm font-bold text-white shadow-md">
                         {(seller.full_name || "S")[0].toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-foreground text-sm truncate">{seller.full_name || "Unnamed Seller"}</span>
-                          <Shield className="h-3 w-3 text-muted-foreground shrink-0" />
+                          <Shield className="h-3 w-3 text-emerald-400 shrink-0" />
                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           <span className={`px-1.5 py-0.5 rounded text-xs border font-medium ${tierBadge(seller.verification_tier)}`}>
@@ -112,14 +112,14 @@ export function TopSellersSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {products.map((product) => (
                   <Link key={product.id} href={`/marketplace/${product.id}`}>
-                    <div className="p-5 bg-card border border-border rounded-lg hover:border-border">
+                    <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors">
                       <div className="flex items-start justify-between mb-3">
-                        <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground bg-card border border-border px-2 py-0.5 rounded">
+                        <span className="text-xs font-mono uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                           {product.category || "Digital"}
                         </span>
                       </div>
 
-                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-foreground transition-colors">
+                      <h4 className="font-display font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
                         {product.title}
                       </h4>
 
@@ -132,7 +132,7 @@ export function TopSellersSection() {
 
                       <div className="flex items-center justify-between pt-3 border-t border-border">
                         <span className="text-xs text-muted-foreground">by {product.seller?.full_name || "Unknown"}</span>
-                        <Button size="sm" className="h-8 text-xs bg-primary hover:bg-primary/90 text-primary-foreground">
+                        <Button size="sm" className="h-8 text-xs bg-gradient-to-r from-primary to-blue-500 text-white hover:opacity-90 border-0 shadow-sm">
                           View
                         </Button>
                       </div>

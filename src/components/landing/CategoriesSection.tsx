@@ -4,14 +4,14 @@ import { Gamepad2, Key, Palette, Code, Megaphone, GraduationCap, Crown, Wrench, 
 import { supabase } from "@/integrations/supabase/client";
 
 const categoryConfig = [
-  { slug: "game-keys", icon: Gamepad2, label: "Game Keys" },
-  { slug: "accounts", icon: Key, label: "Accounts" },
-  { slug: "design-assets", icon: Palette, label: "Design Assets" },
-  { slug: "software", icon: Code, label: "Software" },
-  { slug: "marketing", icon: Megaphone, label: "Marketing" },
-  { slug: "courses", icon: GraduationCap, label: "Courses" },
-  { slug: "premium", icon: Crown, label: "Premium" },
-  { slug: "services", icon: Wrench, label: "Services" },
+  { slug: "game-keys", icon: Gamepad2, label: "Game Keys", color: "from-rose-500 to-pink-600" },
+  { slug: "accounts", icon: Key, label: "Accounts", color: "from-blue-500 to-cyan-500" },
+  { slug: "design-assets", icon: Palette, label: "Design Assets", color: "from-violet-500 to-purple-500" },
+  { slug: "software", icon: Code, label: "Software", color: "from-emerald-500 to-teal-500" },
+  { slug: "marketing", icon: Megaphone, label: "Marketing", color: "from-amber-400 to-orange-500" },
+  { slug: "courses", icon: GraduationCap, label: "Courses", color: "from-indigo-500 to-violet-500" },
+  { slug: "premium", icon: Crown, label: "Premium", color: "from-yellow-400 to-amber-500" },
+  { slug: "services", icon: Wrench, label: "Services", color: "from-sky-500 to-blue-500" },
 ];
 
 export function CategoriesSection() {
@@ -73,10 +73,10 @@ export function CategoriesSection() {
               <Link
                 key={cat.label}
                 href={`/marketplace?category=${cat.slug}`}
-                className="p-5 bg-card border border-border rounded-lg hover:bg-muted transition-colors group"
+                className="p-5 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors group"
               >
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-muted border border-border mb-3 group-hover:bg-muted">
-                  <cat.icon className="h-5 w-5 text-muted-foreground" />
+                <div className={`inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${cat.color} mb-3 shadow-md`}>
+                  <cat.icon className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="font-display font-semibold text-foreground mb-1">{cat.label}</h3>
                 <p className="text-sm text-muted-foreground font-mono">{(counts[cat.slug] || 0).toLocaleString()} listings</p>

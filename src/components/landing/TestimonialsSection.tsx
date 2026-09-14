@@ -73,7 +73,7 @@ export function TestimonialsSection() {
       <div className="container px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border text-muted-foreground text-xs font-medium mb-4">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 text-primary text-xs font-medium mb-4">
               <Quote className="h-3 w-3" />
               Buyer Reviews
             </span>
@@ -96,18 +96,23 @@ export function TestimonialsSection() {
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-4 w-4 ${i < t.rating ? "fill-foreground text-foreground" : "text-muted"}`}
+                        className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "text-muted"}`}
                       />
                     ))}
                   </div>
                   <p className="text-sm text-foreground mb-4 flex-1 leading-relaxed">
                     &ldquo;{t.comment}&rdquo;
                   </p>
-                  <div className="pt-4 border-t border-border">
-                    <p className="text-sm font-medium text-foreground">{t.reviewer_name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Purchased {t.product_title} · {new Date(t.created_at).toLocaleDateString()}
-                    </p>
+                  <div className="pt-4 border-t border-border flex items-center gap-2">
+                    <div className="h-7 w-7 rounded-full bg-gradient-to-br from-violet-500 to-primary flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+                      {t.reviewer_name[0]?.toUpperCase() || "?"}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{t.reviewer_name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Purchased {t.product_title} · {new Date(t.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}

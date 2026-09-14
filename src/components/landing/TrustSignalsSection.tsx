@@ -3,31 +3,37 @@ import { Shield, Lock, Eye, BadgeCheck, Clock, Headphones } from "lucide-react";
 const trustItems = [
   {
     icon: Shield,
+    color: "from-emerald-500 to-teal-500",
     title: "Escrow Protection",
     description: "Funds held in secure escrow until delivery is confirmed. No more chargebacks or scams.",
   },
   {
     icon: Lock,
+    color: "from-blue-500 to-cyan-500",
     title: "Fraud Detection",
     description: "Velocity checks, IP reputation, and device fingerprinting flag suspicious transactions before they complete.",
   },
   {
     icon: Eye,
+    color: "from-violet-500 to-purple-500",
     title: "Transparent Reviews",
     description: "Verified purchase reviews only. Every rating is tied to a completed, escrow-backed transaction.",
   },
   {
     icon: BadgeCheck,
+    color: "from-amber-400 to-orange-500",
     title: "Verified Sellers",
     description: "Sellers undergo identity verification and transaction history review before badge approval.",
   },
   {
     icon: Clock,
+    color: "from-rose-500 to-pink-500",
     title: "Instant Delivery",
     description: "Automated delivery system sends purchased goods the moment payment clears escrow.",
   },
   {
     icon: Headphones,
+    color: "from-indigo-500 to-violet-500",
     title: "24/7 Dispute Support",
     description: "Dedicated resolution team handles disputes within 24 hours with full transaction audit trails.",
   },
@@ -51,11 +57,11 @@ export function TrustSignalsSection() {
           {trustItems.map((item) => (
             <div
               key={item.title}
-              className="p-6 bg-card border border-border rounded-lg hover:border-border transition-colors"
+              className="p-6 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted border border-border shrink-0">
-                  <item.icon className="h-5 w-5 text-muted-foreground" />
+                <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} shadow-md shrink-0`}>
+                  <item.icon className="h-5 w-5 text-white" />
                 </div>
                 <div>
                   <h3 className="font-display font-semibold text-foreground mb-1.5">{item.title}</h3>

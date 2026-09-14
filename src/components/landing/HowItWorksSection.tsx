@@ -1,15 +1,15 @@
 import { Search, ShoppingCart, PackageCheck, Store, BarChart3, Wallet } from "lucide-react";
 
 const buyerSteps = [
-  { icon: Search, title: "Browse & Search", description: "Filter by category, price, seller rating. Find verified listings with transparent reviews." },
-  { icon: ShoppingCart, title: "Purchase with Escrow", description: "Pay securely. Funds held in escrow — released only when you confirm delivery." },
-  { icon: PackageCheck, title: "Receive & Confirm", description: "Get your digital goods instantly. Confirm delivery to complete the transaction." },
+  { icon: Search, color: "from-blue-500 to-cyan-500", title: "Browse & Search", description: "Filter by category, price, seller rating. Find verified listings with transparent reviews." },
+  { icon: ShoppingCart, color: "from-emerald-500 to-teal-500", title: "Purchase with Escrow", description: "Pay securely. Funds held in escrow — released only when you confirm delivery." },
+  { icon: PackageCheck, color: "from-violet-500 to-purple-500", title: "Receive & Confirm", description: "Get your digital goods instantly. Confirm delivery to complete the transaction." },
 ];
 
 const sellerSteps = [
-  { icon: Store, title: "Create Your Store", description: "Set up a verified seller profile. List products with descriptions, prices, and delivery methods." },
-  { icon: BarChart3, title: "Sell & Fulfill", description: "Receive orders, deliver via our automated system or manual delivery. Track your sales." },
-  { icon: Wallet, title: "Get Paid", description: "Request payouts to your preferred method. Weekly or on-demand withdrawals available." },
+  { icon: Store, color: "from-amber-400 to-orange-500", title: "Create Your Store", description: "Set up a verified seller profile. List products with descriptions, prices, and delivery methods." },
+  { icon: BarChart3, color: "from-rose-500 to-pink-500", title: "Sell & Fulfill", description: "Receive orders, deliver via our automated system or manual delivery. Track your sales." },
+  { icon: Wallet, color: "from-indigo-500 to-violet-500", title: "Get Paid", description: "Request payouts to your preferred method. Weekly or on-demand withdrawals available." },
 ];
 
 export function HowItWorksSection() {
@@ -36,10 +36,10 @@ export function HowItWorksSection() {
               {buyerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted border border-border shrink-0">
-                      <step.icon className="h-5 w-5 text-muted-foreground" />
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${step.color} shadow-md shrink-0`}>
+                      <step.icon className="h-5 w-5 text-white" />
                     </div>
-                    {i < buyerSteps.length - 1 && <div className="w-px h-full bg-border mt-2" />}
+                    {i < buyerSteps.length - 1 && <div className="w-px h-full bg-gradient-to-b from-primary/50 to-transparent mt-2" />}
                   </div>
                   <div className="pb-6">
                     <h3 className="font-display font-semibold text-foreground mb-1">{step.title}</h3>
@@ -60,10 +60,10 @@ export function HowItWorksSection() {
               {sellerSteps.map((step, i) => (
                 <div key={step.title} className="flex gap-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted border border-border shrink-0">
-                      <step.icon className="h-5 w-5 text-muted-foreground" />
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${step.color} shadow-md shrink-0`}>
+                      <step.icon className="h-5 w-5 text-white" />
                     </div>
-                    {i < sellerSteps.length - 1 && <div className="w-px h-full bg-border mt-2" />}
+                    {i < sellerSteps.length - 1 && <div className="w-px h-full bg-gradient-to-b from-primary/50 to-transparent mt-2" />}
                   </div>
                   <div className="pb-6">
                     <h3 className="font-display font-semibold text-foreground mb-1">{step.title}</h3>
